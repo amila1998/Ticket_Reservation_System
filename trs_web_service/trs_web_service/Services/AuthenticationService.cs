@@ -17,12 +17,15 @@ namespace trs_web_service.Services
         public string Authenticate(string nic, string password)
         {
             var user = _userRepository.GetByNICAsync(nic);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Result.Password))
+            if (user.Result == null || !BCrypt.Net.BCrypt.Verify(password, user.Result.Password))
             {
                 throw new Exception("Invalid email or password.");
             }
 
-            var token = _tokenGenerator.GenerateToken(user.Result.NIC,user.Result.Role);
+
+            // Convert the ObjectId to the desired format
+            string formattedId = user.Result.Id.ToString().Substring(0, 24);
+            var token = _tokenGenerator.GenerateToken(formattedId, user.Result.Role);
 
             return token;
         }

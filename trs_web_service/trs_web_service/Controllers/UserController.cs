@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
 using trs_web_service.Services;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,8 +16,7 @@ namespace trs_web_service.Controllers
     {
         private readonly UserService _userService;
 
-        public UserController(UserService userService)
-        {
+        public UserController(UserService userService)        {
             _userService = userService;
         }
 
