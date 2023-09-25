@@ -29,10 +29,21 @@ namespace trs_web_service.Services
             User newUser = new User();
             newUser.NIC = user.NIC;
             newUser.Name = user.Name;
-            newUser.Password = user.Password;
+            newUser.Password = EncryptPassword(user.Password);
             newUser.Role = user.Role;
 
             await _repository.CreateAsync(newUser);
+        }
+
+        private static string EncryptPassword(string password)
+        {
+            // Generate a salt for the password hash
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+
+            // Hash the password using the salt and bcrypt algorithm
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+
+            return hashedPassword;
         }
 
     }

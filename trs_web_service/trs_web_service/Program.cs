@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidateAudience = false,
             ValidateIssuer = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtSettings:SecretKey").Value!))
         };
     });
 
@@ -51,8 +51,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     // Define policies for roles
-    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("User", policy => policy.RequireRole("User"));
+    options.AddPolicy("backoffice", policy => policy.RequireRole("backoffice"));
+    options.AddPolicy("travel_agent", policy => policy.RequireRole("travel_agent"));
+    options.AddPolicy("traveler", policy => policy.RequireRole("traveler"));
 });
 
 
@@ -73,6 +74,8 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<TokenGenerator>();
 
 var app = builder.Build();
 
