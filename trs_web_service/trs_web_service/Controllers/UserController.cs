@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Amazon.Auth.AccessControlPolicy;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using trs_web_service.Models.Domains;
@@ -21,29 +23,85 @@ namespace trs_web_service.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUserss()
+        public async Task<IActionResult> GetAllUsers()
         {
-            var travelers = await _userService.GetAllUsersAsync();
-            return Ok(travelers);
+            try
+            {
+                var travelers = await _userService.GetAllUsersAsync();
+                return Ok(travelers);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        [Authorize]
         [HttpGet("{nic}")]
-        public async Task<IActionResult> GetTravelerByNIC(string nic)
+        public async Task<IActionResult> GetUserByNIC(string nic)
         {
-            var traveler = await _userService.GetTravelerByNICAsync(nic);
-            if (traveler == null)
+            try
             {
-                return NotFound();
+                var traveler = await _userService.GetUserByNICAsync(nic);
+                if (traveler == null)
+                {
+                    return NotFound();
+                }
+                return Ok(traveler);
             }
-            return Ok(traveler);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+         
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateTraveler(UserRegisterDto user)
+        public async Task<IActionResult> Register(UserRegisterDto user)
         {
-            await _userService.CreateTravelerAsync(user);
-            return CreatedAtAction(nameof(GetTravelerByNIC), new { nic = user.NIC }, user); ;
+            try
+            {
+                await _userService.CreateTravelerAsync(user);
+                return Ok("register succsses");
+            }
+            catch (Exception ex)
+            {
+               return BadRequest(ex.Message);
+            }
+            
+        }
+
+        [Authorize]
+        [HttpPut ("deactivate/{nic}")]
+        public async Task<IActionResult> DeactivateUser(string nic)
+        {
+            try
+            {
+                await _userService.DeactivateUserAsync(nic);
+                return Ok("account deactivated");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+          
+        }
+
+        [Authorize(Policy= "backoffice")]
+        [HttpPut("activate/{nic}")]
+        public async Task<IActionResult> ActivateUser(string nic)
+        {
+            try
+            {
+                await _userService.ActivateUserAsync(nic);
+                return Ok("account activated");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
+
 }
