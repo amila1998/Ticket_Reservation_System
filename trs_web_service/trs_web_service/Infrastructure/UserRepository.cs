@@ -25,7 +25,30 @@ namespace trs_web_service.Infrastructure
 
         public async Task<User> GetByIdAsync(ObjectId id)
         {
-            return await _collection.Find(u => u.Id == id).FirstOrDefaultAsync();
+            return await _collection.Find(t => t.Id == id).FirstOrDefaultAsync();
+        }
+
+
+        public async Task<User> DeactivateUserAsync(string nic)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
+            var update = Builders<User>.Update.Set(u => u.IsActive, false);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
+        }
+
+        public async Task<User> ActivateUserAsync(string nic)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
+            var update = Builders<User>.Update.Set(u => u.IsActive, true);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
         }
 
         public async Task CreateAsync(User user)
