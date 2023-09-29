@@ -22,6 +22,8 @@ namespace trs_web_service.Controllers
             _userService = userService;
         }
 
+
+        [Authorize (Policy= "backoffice")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -35,7 +37,7 @@ namespace trs_web_service.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "nottraveler")]
         [HttpGet("{nic}")]
         public async Task<IActionResult> GetUserByNIC(string nic)
         {
