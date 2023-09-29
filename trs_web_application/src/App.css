@@ -21,7 +21,8 @@
 
 .main{
   overflow-y: auto;
-  padding: 20px;
+  padding: 10px;
+  margin: auto;
 }
 
 .App-header {
@@ -96,4 +97,50 @@
   text-align: center;
   cursor: pointer;
   color: rgb(133, 178, 255);
+}
+
+.nav_item{
+  padding: 20px;
+  align-items: baseline;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  border-bottom: 1px solid rgb(58, 58, 58,0.8);
+  cursor: pointer;
+}
+
+.nav_item_selected{
+  padding: 20px;
+  align-items: baseline;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  background-color:rgb(35, 115, 252,0.9);
+  border-bottom: 1px solid rgb(58, 58, 58,0.8);
+  cursor: pointer;
+}
+
+.nav_side_bar{
+  width: 20%;
+  min-width: fit-content;
+  height: 85vh;
+   background-color:rgb(35, 115, 252,0.5);
+}
+
+.nav_item:hover{
+   background-color:rgb(35, 115, 252);
+}
+ .nav_text{
+    margin-left: 10px;
+  }
+
+@media screen and (max-width:991px) {
+  .nav_text{
+    display: none;
+  }
+  .nav_side_bar{
+  width: fit-content;
+  height: 85vh;
+   background-color:rgb(35, 115, 252,0.5);
+}
 }
