@@ -20,7 +20,6 @@
 }
 
 .main{
-  overflow-y: auto;
   padding: 10px;
   margin: auto;
 }
@@ -143,4 +142,21 @@
   height: 85vh;
    background-color:rgb(35, 115, 252,0.5);
 }
+.dash{
+  padding: 10px;
+  width: 95%;
+}
+}
+
+.dash{
+  padding: 10px;
+  width: 80%;
+}
+
+.pointer{
+  cursor: pointer !important;
+}
+
+.t_head{
+  background-color: black !important;
 }

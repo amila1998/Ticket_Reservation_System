@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import user_icon from "../assets/icons/user-solid.svg";
 import dashboard_icon from "../assets/icons/gauge-solid.svg";
@@ -76,7 +75,7 @@ const Dashboard = () => {
           <div className="nav_text">Train Management</div>
         </div>
       </div>
-      <div style={{ width: "80%", marginLeft: "5px", overflow: "auto" }}>
+      <div className="dash">
         {isDasboardSelected && <DashboardComp />}
         {isUserManagementSelected && <UserManagement />}
         {isTicketBookingManagementSelected && <TicketBookingManagement />}
