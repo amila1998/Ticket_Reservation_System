@@ -3,9 +3,11 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import authSlice from "./authSlice";
+import loadingSlice from "./loadingSlice";
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
+  loading: loadingSlice.reducer
 });
 
 const persistConfig = {

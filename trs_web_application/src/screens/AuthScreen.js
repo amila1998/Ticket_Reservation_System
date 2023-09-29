@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
-import Login from '../components/Login';
-import ForgotPassword from '../components/ForgotPassword';
+import Login from "../components/Login";
+import ForgotPassword from "../components/ForgotPassword";
 import logo from "../assets/train.png";
 
 const AuthScreen = () => {
-    const [showLogin, setShowLogin] = useState(true);
+  const [showLogin, setShowLogin] = useState(true);
 
-    const handleToggle = () => {
-      setShowLogin(!showLogin);
-    };
+  const handleToggle = () => {
+    setShowLogin(!showLogin);
+  };
   return (
     <div className="auth">
       <center>
@@ -46,6 +46,6 @@ const AuthScreen = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AuthScreen
+export default AuthScreen;

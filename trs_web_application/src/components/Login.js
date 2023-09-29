@@ -17,8 +17,8 @@ const Login = () => {
         nic,
         password,
       });
-      console.log("🚀 ~ file: Login.js:20 ~ res ~ res:", res)
-      localStorage.setItem("isLogin",true)
+      console.log("🚀 ~ file: Login.js:20 ~ res ~ res:", res);
+      localStorage.setItem("isLogin", true);
       localStorage.setItem("token", res.data.token);
       dispatch(authActions.login(res.data.token));
       toast.info("Login Successfull !", {

@@ -7,5 +7,3 @@ export const getAxiosInstance = () => {
     baseURL: configs.SERVER_URL,
   });
 };
-
-

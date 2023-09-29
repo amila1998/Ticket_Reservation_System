@@ -5,40 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { getAxiosInstance } from "../utils/axios";
 import { AutherizationAPI } from "../utils/api";
+import { loadingActions } from "../store/loadingSlice";
 
 const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if(!isLoggedIn && !token){
-          const isLocalLogin = localStorage.getItem("isLogin");
-          const localToken = localStorage.getItem("token");
-          if (isLocalLogin) {
-            dispatch(authActions.login(localToken));
-          }
-    }
-
-  }, [isLoggedIn, token]);
-
-  useEffect(() => {
-    if (isLoggedIn && isLoggedIn) {
-      const getInfo = async () => {
-        try {
-          const res = await getAxiosInstance().get(AutherizationAPI.info, {
-            headers: { Authorization: `bearer ${token}` },
-          });
-          dispatch(authActions.setInfo({ user: res.data }));
-        } catch (error) {
-          console.log("🚀 ~ file: Header.js:17 ~ getInfo ~ error:", error);
-          dispatch(authActions.logout());
-        }
-      };
-      getInfo();
-    }
-  }, [isLoggedIn, token]);
 
   return (
     <nav class="navbar navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
