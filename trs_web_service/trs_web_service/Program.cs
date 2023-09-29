@@ -1,15 +1,21 @@
-using CloudinaryDotNet;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Sample.UserManagement.Application;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using trs_web_service.Infrastructure;
 using trs_web_service.Models;
 using trs_web_service.Services;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,18 +62,17 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("backoffice", policy => policy.RequireRole("backoffice"));
     options.AddPolicy("travel_agent", policy => policy.RequireRole("travel_agent"));
     options.AddPolicy("traveler", policy => policy.RequireRole("traveler"));
+    options.AddPolicy("nottraveler", policy => policy.RequireRole("backoffice", "travel_agent"));
 });
 
-//cloudanary
+// Cloudinary
 Account account = new Account(
-  configuration["Cloudinary:CloudName"],
-  configuration["Cloudinary:ApiKey"],
-  configuration["Cloudinary:ApiSecret"]);
+    configuration["Cloudinary:CloudName"],
+    configuration["Cloudinary:ApiKey"],
+    configuration["Cloudinary:ApiSecret"]);
 
 Cloudinary cloudinary = new Cloudinary(account);
 builder.Services.AddSingleton(cloudinary);
-
-
 
 // Configure MongoDB and your services
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("MongoDbSettings"));
@@ -103,7 +108,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseCors(options => options
-    .WithOrigins("http://localhost:3000", "http://localhost:5000")
+    .WithOrigins("http://localhost:3000", "http://localhost:5000") // Add the origins you need
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
