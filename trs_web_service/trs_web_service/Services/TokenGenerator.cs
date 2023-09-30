@@ -26,7 +26,8 @@ namespace trs_web_service.Services
 
         public string GenerateToken(string id, string role)
         {
-            List<Claim> claims = new List<Claim> {
+            List<Claim> claims = new()
+            {
                 new Claim(ClaimTypes.Name, id),
                 new Claim(ClaimTypes.Role, role)
               };

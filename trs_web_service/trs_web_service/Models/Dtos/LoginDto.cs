@@ -2,7 +2,7 @@
 {
     public class LoginDto
     {
-        public string Password { get; set; }
-        public string NIC { get; set; }
+        public required string Password { get; set; }
+        public required string NIC { get; set; }
     }
 }

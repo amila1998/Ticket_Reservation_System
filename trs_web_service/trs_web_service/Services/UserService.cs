@@ -86,13 +86,15 @@ namespace trs_web_service.Services
                 throw new Exception("You can not create another role");
             }
 
-            User newUser = new User();
-            newUser.NIC = user.NIC;
-            newUser.Name = user.Name;
-            newUser.Password = EncryptPassword(user.Password);
-            newUser.Role = user.Role;
-            newUser.ImagePath = "https://res.cloudinary.com/amiladevin1998/image/upload/v1642784922/avatar/pic_1171831236_1_axiiom.png";
-            newUser.ContactNo = user.ContactNo;
+            User newUser = new()
+            {
+                NIC = user.NIC,
+                Name = user.Name,
+                Password = EncryptPassword(user.Password),
+                Role = user.Role,
+                ImagePath = "https://res.cloudinary.com/amiladevin1998/image/upload/v1642784922/avatar/pic_1171831236_1_axiiom.png",
+                ContactNo = user.ContactNo
+            };
             await _repository.CreateAsync(newUser);
         }
 
@@ -104,13 +106,15 @@ namespace trs_web_service.Services
                 throw new Exception("Already have account");
             }
 
-            User newUser = new User();
-            newUser.NIC = user.NIC;
-            newUser.Name = user.Name;
-            newUser.Password = EncryptPassword(user.Password);
-            newUser.Role = user.Role;
-            newUser.ImagePath = "https://res.cloudinary.com/amiladevin1998/image/upload/v1642784922/avatar/pic_1171831236_1_axiiom.png";
-            newUser.ContactNo = user.ContactNo;
+            User newUser = new()
+            {
+                NIC = user.NIC,
+                Name = user.Name,
+                Password = EncryptPassword(user.Password),
+                Role = user.Role,
+                ImagePath = "https://res.cloudinary.com/amiladevin1998/image/upload/v1642784922/avatar/pic_1171831236_1_axiiom.png",
+                ContactNo = user.ContactNo
+            };
             await _repository.CreateAsync(newUser);
         }
 

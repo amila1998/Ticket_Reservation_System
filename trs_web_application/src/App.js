@@ -11,6 +11,7 @@ import { loadingActions } from "./store/loadingSlice";
 import { getAxiosInstance } from "./utils/axios";
 import { AutherizationAPI } from "./utils/api";
 import Footer from "./components/Footer";
+import Unauthorized from "./utils/Unauthorized";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -37,15 +38,16 @@ function App() {
     if (isLoggedIn && isLoggedIn) {
       const getInfo = async () => {
         try {
+          await dispatch(loadingActions.setIsMainLoading());
           const res = await getAxiosInstance().get(AutherizationAPI.info, {
             headers: { Authorization: `bearer ${token}` },
           });
-          dispatch(authActions.setInfo({ user: res.data }));
-          dispatch(loadingActions.removeIsMainLoading());
+          await dispatch(authActions.setInfo({ user: res.data }));
+          await dispatch(loadingActions.removeIsMainLoading());
         } catch (error) {
           console.log("🚀 ~ file: Header.js:17 ~ getInfo ~ error:", error);
-          dispatch(authActions.logout());
-          dispatch(loadingActions.removeIsMainLoading());
+          await dispatch(authActions.logout());
+          await dispatch(loadingActions.removeIsMainLoading());
         }
       };
       getInfo();
@@ -73,7 +75,7 @@ function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={isLoggedIn ? <Dashboard /> : <AuthScreen />}
+                  element={isLoggedIn ? user.role == "traveler" ? <Unauthorized/>:<Dashboard /> : <AuthScreen />}
                 />
               </Routes>
             </Router>
