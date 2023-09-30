@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using trs_web_service.Models.Domains;
+using trs_web_service.Models.Dtos;
 
 namespace trs_web_service.Infrastructure
 {
@@ -44,6 +45,20 @@ namespace trs_web_service.Infrastructure
         {
             var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
             var update = Builders<User>.Update.Set(u => u.IsActive, true);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
+        }
+
+        public async Task<User> UserUpdateProfile(UserUpdateDto user, ObjectId id)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            var update = Builders<User>.Update
+                .Set(u => u.Name, user.Name)
+                .Set(u => u.ImagePath, user.ImagePath)
+                .Set(u => u.ContactNo, user.ContactNo);
 
             // Find and update the user document
             var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
