@@ -56,7 +56,7 @@ function App() {
   }, [isLoggedIn, token]);
 
   return (
-    <div className="App">
+    <>
       {isLoading ? (
         <div
           style={{
@@ -69,7 +69,7 @@ function App() {
           <Loading />
         </div>
       ) : (
-        <div>
+        <>
           <Header />
           <main className="main">
             <Router>
@@ -82,9 +82,9 @@ function App() {
             </Router>
           </main>
           <Footer/>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }
 
