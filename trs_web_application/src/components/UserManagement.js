@@ -16,6 +16,16 @@ const UserManagement = () => {
    const token = useSelector((state) => state.auth.token);
    const auth = useSelector((state) => state.auth.user);
 
+   const [user, setUser] = useState({
+     name: "",
+     password: "000000",
+     role: "",
+     nic: "",
+     imagePath: "",
+     contactNo: "",
+   });
+
+
   const getAllUsers = async () => {
     try {
       setIsLoading(true);
@@ -83,21 +93,38 @@ const UserManagement = () => {
               aria-hidden="true"
             >
               <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
+                <div
+                  style={{
+                    borderRadius: "10px",
+                    backgroundColor: "#ffff",
+                    border: "none",
+                    color: "#0000 !important",
+                  }}
+                  class="modal-content"
+                >
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">
-                      Modal title
+                    <h5
+                      style={{ color: "black" }}
+                      class="modal-title"
+                      id="exampleModalLongTitle"
+                    >
+                      Create New User
                     </h5>
                     <button
+                      style={{
+                        borderRadius: "50px",
+                        backgroundColor: "red",
+                        border: "none",
+                        color: "#ffff",
+                      }}
                       type="button"
-                      class="close"
                       data-dismiss="modal"
                       aria-label="Close"
                     >
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body">...</div>
+                  <div style={{ color: "black" }} class="modal-body"></div>
                   <div class="modal-footer">
                     <button
                       type="button"
@@ -107,7 +134,7 @@ const UserManagement = () => {
                       Close
                     </button>
                     <button type="button" class="btn btn-primary">
-                      Save changes
+                      Create
                     </button>
                   </div>
                 </div>
@@ -138,58 +165,52 @@ const UserManagement = () => {
                       <td>{user.contactNo}</td>
                       <td>{user.isActive ? "Active" : "Deactive"}</td>
                       <td>
-                        <div style={{ display: "flex" }}>
-                          {user.nic == "000000000V" ? (
-                            ""
-                          ) : user.role != auth.role ? (
-                            ""
-                          ) : (
-                            <>
-                              <div
-                                style={{
-                                  cursor: "pointer",
-                                  margin: "5px",
-                                  borderRadius: "50px",
-                                  justifyContent: "center",
-                                  backgroundColor: "rgb(255, 221, 10)",
-                                  alignItems: "center",
-                                }}
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                title="Edit user"
-                              >
-                                <center>
-                                  <img
-                                    style={{ margin: "10px" }}
-                                    width={10}
-                                    src={edit_icon}
-                                  />
-                                </center>
-                              </div>
-                              <div
-                                style={{
-                                  cursor: "pointer",
-                                  margin: "5px",
-                                  borderRadius: "50px",
-                                  justifyContent: "center",
-                                  backgroundColor: "rgb(255, 0, 1)",
-                                  alignItems: "center",
-                                }}
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                title="Delete user"
-                              >
-                                <center>
-                                  <img
-                                    style={{ margin: "10px" }}
-                                    width={10}
-                                    src={delete_icon}
-                                  />
-                                </center>
-                              </div>
-                            </>
-                          )}
-                        </div>
+                        {user.nic != "000000000V" &&  (
+                          <div style={{ display: "flex" }}>
+                            <div
+                              style={{
+                                cursor: "pointer",
+                                margin: "5px",
+                                borderRadius: "50px",
+                                justifyContent: "center",
+                                backgroundColor: "rgb(255, 221, 10)",
+                                alignItems: "center",
+                              }}
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="Edit user"
+                            >
+                              <center>
+                                <img
+                                  style={{ margin: "10px" }}
+                                  width={10}
+                                  src={edit_icon}
+                                />
+                              </center>
+                            </div>
+                            <div
+                              style={{
+                                cursor: "pointer",
+                                margin: "5px",
+                                borderRadius: "50px",
+                                justifyContent: "center",
+                                backgroundColor: "rgb(255, 0, 1)",
+                                alignItems: "center",
+                              }}
+                              data-toggle="tooltip"
+                              data-placement="bottom"
+                              title="Delete user"
+                            >
+                              <center>
+                                <img
+                                  style={{ margin: "10px" }}
+                                  width={10}
+                                  src={delete_icon}
+                                />
+                              </center>
+                            </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

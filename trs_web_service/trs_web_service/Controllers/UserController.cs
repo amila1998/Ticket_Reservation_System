@@ -58,8 +58,8 @@ namespace trs_web_service.Controllers
         }
 
         [Authorize(Policy = "nottraveler")]
-        [HttpPost]
-        public async Task<IActionResult> create(UserRegisterDto user)
+        [HttpPost ("create_user")]
+        public async Task<IActionResult> CreateUser(UserRegisterDto user)
         {
             try
             {

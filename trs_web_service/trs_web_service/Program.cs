@@ -66,12 +66,12 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Cloudinary
-Account account = new Account(
+Account account = new(
     configuration["Cloudinary:CloudName"],
     configuration["Cloudinary:ApiKey"],
     configuration["Cloudinary:ApiSecret"]);
 
-Cloudinary cloudinary = new Cloudinary(account);
+Cloudinary cloudinary = new(account);
 builder.Services.AddSingleton(cloudinary);
 
 // Configure MongoDB and your services
