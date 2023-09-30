@@ -18,6 +18,8 @@ namespace trs_web_service.Models.Domains
         [Required(ErrorMessage = "NIC is required")]
         public string NIC { get; set; }
 
+        public string Email { get; set; }
+
         public User()
         {
             IsActive = true; // Set the default value to true in the constructor
