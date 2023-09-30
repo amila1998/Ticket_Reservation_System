@@ -12,6 +12,7 @@ import { getAxiosInstance } from "./utils/axios";
 import { AutherizationAPI } from "./utils/api";
 import Footer from "./components/Footer";
 import Unauthorized from "./utils/Unauthorized";
+import DeactivateAccounts from "./utils/DeactivateAccounts";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -75,7 +76,7 @@ function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={isLoggedIn ? user.role == "traveler" ? <Unauthorized/>:<Dashboard /> : <AuthScreen />}
+                  element={isLoggedIn ? user.role == "traveler" ? <Unauthorized/> : user.isActive? <Dashboard /> :<DeactivateAccounts/>: <AuthScreen />}
                 />
               </Routes>
             </Router>

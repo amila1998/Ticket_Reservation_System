@@ -79,7 +79,11 @@ const UserManagement = () => {
             data-toggle="modal"
             data-target="#exampleModalCenter"
           >
-            <div>
+            <div
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Create user"
+            >
               <center>
                 <img style={{ margin: "10px" }} width={25} src={plus_icon} />
               </center>
@@ -165,7 +169,7 @@ const UserManagement = () => {
                       <td>{user.contactNo}</td>
                       <td>{user.isActive ? "Active" : "Deactive"}</td>
                       <td>
-                        {user.nic != "000000000V" &&  (
+                        {user.nic != "000000000V" && (
                           <div style={{ display: "flex" }}>
                             <div
                               style={{

@@ -67,6 +67,24 @@ namespace trs_web_service.Services
             return exUser == null ? throw new Exception("Have not an account") : await _repository.DeactivateUserAsync(nic);
         }
 
+        public async Task<User> UserUpdateProfile(UserUpdateDto user, string id)
+        {
+
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+
+            var info = await _repository.GetByIdAsync(objectId) ?? throw new Exception("Have not an account");
+
+            if (info.NIC == "00000000V")
+            {
+                throw new Exception("Can not update Super backoffice account");
+            }
+  
+            return await _repository.UserUpdateProfile(user, objectId);
+        }
+
         public async Task<User> ActivateUserAsync(string nic)
         {
             var exUser = await _repository.GetByNICAsync(nic);
