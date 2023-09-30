@@ -8,6 +8,8 @@ import { getAxiosInstance } from "../utils/axios";
 import { UserManagementAPI } from "../utils/api";
 import { useSelector } from "react-redux";
 import Loading from "../utils/loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -16,6 +18,9 @@ const UserManagement = () => {
   const [callback, setCallback] = useState(true);
    const token = useSelector((state) => state.auth.token);
    const auth = useSelector((state) => state.auth.user);
+   const [filterName,setFilterName]=useState("")
+   const [filterRole,setFilterRole]=useState("")
+   const [filterIsActive,setFilterIsActive]=useState("")
 
    const [user, setUser] = useState({
      name: "",
@@ -55,6 +60,19 @@ const UserManagement = () => {
         "🚀 ~ file: UserManagement.js:13 ~ getAllUsers ~ error:",
         error
       );
+            toast.error(
+              error.message ? error.message : error.response.message,
+              {
+                position: "top-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
     }
   };
 
@@ -62,8 +80,42 @@ const UserManagement = () => {
     callback && getAllUsers();
   }, [callback]);
 
+  const createUser =async(e)=>{
+    e.preventDefault();
+    try {
+      
+    } catch (error) {
+      console.log("🚀 ~ file: UserManagement.js:70 ~ createUser ~ error:", error)
+            toast.error(
+              error.message,
+              {
+                position: "top-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
+    }
+  }
+
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       {isLoading ? (
         <div
           style={{
@@ -100,20 +152,20 @@ const UserManagement = () => {
             >
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name
+                  Filter By Name
                 </label>
                 <input
                   value={user.name}
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  id="exampleFormControlInput10"
                   placeholder="Sean Udayantha"
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                  onChange={(e) => setFilterName( e.target.value )}
                 />
               </div>{" "}
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name
+                  Filter By Role
                 </label>
                 <input
                   value={user.name}
@@ -121,12 +173,12 @@ const UserManagement = () => {
                   class="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Sean Udayantha"
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                  onChange={(e) => setFilterRole( e.target.value)}
                 />
               </div>{" "}
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">
-                  Full Name
+                  Filter By Active Status
                 </label>
                 <input
                   value={user.name}
@@ -134,7 +186,7 @@ const UserManagement = () => {
                   class="form-control"
                   id="exampleFormControlInput1"
                   placeholder="Sean Udayantha"
-                  onChange={(e) => setUser({ ...user, name: e.target.value })}
+                  onChange={(e) => setFilterIsActive(e.target.value)}
                 />
               </div>
             </div>
@@ -376,7 +428,11 @@ const UserManagement = () => {
                     >
                       Close
                     </button>
-                    <button type="button" class="btn btn-primary">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      onClick={createUser}
+                    >
                       {"Create"}
                     </button>
                   </div>

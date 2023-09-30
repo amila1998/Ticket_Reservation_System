@@ -2,7 +2,6 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <>
       <footer style={{width:"100%"}} class="bg-dark text-center text-white position-fixed bottom-0">
         <div
           class="text-center p-3"
@@ -14,7 +13,6 @@ const Footer = () => {
           </a>
         </div>
       </footer>
-    </>
   );
 };
 
