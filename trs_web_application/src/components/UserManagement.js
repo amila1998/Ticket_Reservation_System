@@ -54,6 +54,7 @@ const UserManagement = () => {
       });
       setUsers(res.data)     
       setIsLoading(false);
+      setCallback(false);
     } catch (error) {
       setIsLoading(false);
       console.log(
@@ -61,7 +62,7 @@ const UserManagement = () => {
         error
       );
             toast.error(
-              error.message ? error.message : error.response.message,
+              error.response.data ? error.response.data : error.message,
               {
                 position: "top-left",
                 autoClose: 5000,
@@ -83,11 +84,29 @@ const UserManagement = () => {
   const createUser =async(e)=>{
     e.preventDefault();
     try {
-      
+      const res = await getAxiosInstance().post(
+        UserManagementAPI.user_create,
+        user,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+       toast.success("User created successfully !", {
+         position: "top-left",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+      handleCreateModalClose()
+      setCallback(true)
     } catch (error) {
       console.log("🚀 ~ file: UserManagement.js:70 ~ createUser ~ error:", error)
             toast.error(
-              error.message,
+              error.response.data ? error.response.data : error.message,
               {
                 position: "top-left",
                 autoClose: 5000,
@@ -136,7 +155,7 @@ const UserManagement = () => {
           <div
             style={{
               borderRadius: "20px",
-              backgroundColor: "rgb(35, 115, 252,0.2)",
+              backgroundColor: "rgb(0, 0, 0,0.5)",
               overflow: "auto",
             }}
           >
@@ -150,41 +169,50 @@ const UserManagement = () => {
                 flexWrap: "wrap",
               }}
             >
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput10"
+                  className="form-label"
+                >
                   Filter By Name
                 </label>
                 <input
-                  value={user.name}
+                  value={filterName}
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="exampleFormControlInput10"
                   placeholder="Sean Udayantha"
-                  onChange={(e) => setFilterName( e.target.value )}
+                  onChange={(e) => setFilterName(e.target.value)}
                 />
               </div>{" "}
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput11"
+                  className="form-label"
+                >
                   Filter By Role
                 </label>
                 <input
-                  value={user.name}
+                  value={filterRole}
                   type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
+                  className="form-control"
+                  id="exampleFormControlInput11"
                   placeholder="Sean Udayantha"
-                  onChange={(e) => setFilterRole( e.target.value)}
+                  onChange={(e) => setFilterRole(e.target.value)}
                 />
               </div>{" "}
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput12"
+                  className="form-label"
+                >
                   Filter By Active Status
                 </label>
                 <input
-                  value={user.name}
+                  value={filterIsActive}
                   type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
+                  className="form-control"
+                  id="exampleFormControlInput12"
                   placeholder="Sean Udayantha"
                   onChange={(e) => setFilterIsActive(e.target.value)}
                 />
@@ -214,14 +242,17 @@ const UserManagement = () => {
               </div>
             </div>
             <div
-              class="modal fade"
+              className="modal fade"
               id="exampleModalCenter"
-              tabindex="-1"
+              tabIndex="-1"
               role="dialog"
               aria-labelledby="exampleModalCenterTitle"
               aria-hidden="true"
             >
-              <div class="modal-dialog modal-dialog-centered" role="document">
+              <div
+                className="modal-dialog modal-dialog-centered"
+                role="document"
+              >
                 <div
                   style={{
                     borderRadius: "10px",
@@ -229,12 +260,12 @@ const UserManagement = () => {
                     border: "none",
                     color: "#0000 !important",
                   }}
-                  class="modal-content"
+                  className="modal-content"
                 >
-                  <div class="modal-header">
+                  <div className="modal-header">
                     <h5
                       style={{ color: "black" }}
-                      class="modal-title"
+                      className="modal-title"
                       id="exampleModalLongTitle"
                     >
                       {"Create New User"}
@@ -254,19 +285,19 @@ const UserManagement = () => {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div style={{ color: "black" }} class="modal-body">
+                  <div style={{ color: "black" }} className="modal-body">
                     <form>
-                      <div class="mb-3">
+                      <div className="mb-3">
                         <label
-                          for="exampleFormControlInput1"
-                          class="form-label"
+                          htmlFor="exampleFormControlInput1"
+                          className="form-label"
                         >
                           Full Name
                         </label>
                         <input
                           value={user.name}
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           id="exampleFormControlInput1"
                           placeholder="Sean Udayantha"
                           onChange={(e) =>
@@ -274,17 +305,17 @@ const UserManagement = () => {
                           }
                         />
                       </div>
-                      <div class="mb-3">
+                      <div className="mb-3">
                         <label
-                          for="exampleFormControlInput2"
-                          class="form-label"
+                          htmlFor="exampleFormControlInput2"
+                          className="form-label"
                         >
                           NIC/Passport Number
                         </label>
                         <input
                           value={user.nic}
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           id="exampleFormControlInput2"
                           placeholder="787141785V"
                           onChange={(e) =>
@@ -292,17 +323,17 @@ const UserManagement = () => {
                           }
                         />
                       </div>
-                      <div class="mb-3">
+                      <div className="mb-3">
                         <label
-                          for="exampleFormControlInput3"
-                          class="form-label"
+                          htmlFor="exampleFormControlInput3"
+                          className="form-label"
                         >
                           Password
                         </label>
                         <input
                           value={user.password}
                           type="password"
-                          class="form-control"
+                          className="form-control"
                           id="exampleFormControlInput3"
                           placeholder="787141785V"
                           disabled
@@ -311,17 +342,17 @@ const UserManagement = () => {
                           }
                         />
                       </div>
-                      <div class="mb-3">
+                      <div className="mb-3">
                         <label
-                          for="exampleFormControlInput4"
-                          class="form-label"
+                          htmlFor="exampleFormControlInput4"
+                          className="form-label"
                         >
                           Email
                         </label>
                         <input
                           value={user.email}
                           type="email"
-                          class="form-control"
+                          className="form-control"
                           id="exampleFormControlInput4"
                           placeholder="example@gmail.com"
                           onChange={(e) =>
@@ -329,17 +360,17 @@ const UserManagement = () => {
                           }
                         />
                       </div>
-                      <div class="mb-3">
+                      <div className="mb-3">
                         <label
-                          for="exampleFormControlInput5"
-                          class="form-label"
+                          htmlFor="exampleFormControlInput5"
+                          className="form-label"
                         >
                           Contact Number
                         </label>
                         <input
                           value={user.contactNo}
-                          type="password"
-                          class="form-control"
+                          type="text"
+                          className="form-control"
                           id="exampleFormControlInput5"
                           placeholder="0771234567"
                           onChange={(e) =>
@@ -347,16 +378,16 @@ const UserManagement = () => {
                           }
                         />
                       </div>
-                      <div class="mb-3">
+                      <div className="mb-3">
                         <label
-                          for="exampleFormControlInput6"
-                          class="form-label"
+                          htmlFor="exampleFormControlInput6"
+                          className="form-label"
                         >
                           Role
                         </label>
-                        <div class="form-check">
+                        <div className="form-check">
                           <input
-                            class="form-check-input"
+                            className="form-check-input"
                             type="radio"
                             name="flexRadioDefault"
                             id="flexRadioDefault1"
@@ -366,15 +397,15 @@ const UserManagement = () => {
                             }
                           />
                           <label
-                            class="form-check-label"
-                            for="flexRadioDefault1"
+                            className="form-check-label"
+                            htmlFor="flexRadioDefault1"
                           >
                             Traveler
                           </label>
                         </div>
-                        <div class="form-check">
+                        <div className="form-check">
                           <input
-                            class="form-check-input"
+                            className="form-check-input"
                             type="radio"
                             name="flexRadioDefault"
                             id="flexRadioDefault2"
@@ -388,15 +419,15 @@ const UserManagement = () => {
                             checked={user.role == "travel_agent"}
                           />
                           <label
-                            class="form-check-label"
-                            for="flexRadioDefault2"
+                            className="form-check-label"
+                            htmlFor="flexRadioDefault2"
                           >
                             Travel Agent
                           </label>
                         </div>
-                        <div class="form-check">
+                        <div className="form-check">
                           <input
-                            class="form-check-input"
+                            className="form-check-input"
                             type="radio"
                             name="flexRadioDefault"
                             id="flexRadioDefault3"
@@ -410,8 +441,8 @@ const UserManagement = () => {
                             checked={user.role == "backoffice"}
                           />
                           <label
-                            class="form-check-label"
-                            for="flexRadioDefault3"
+                            className="form-check-label"
+                            htmlFor="flexRadioDefault3"
                           >
                             Back Office
                           </label>
@@ -419,10 +450,10 @@ const UserManagement = () => {
                       </div>
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div className="modal-footer">
                     <button
                       type="button"
-                      class="btn btn-secondary"
+                      className="btn btn-secondary"
                       data-dismiss="modal"
                       onClick={handleCreateModalClose}
                     >
@@ -430,7 +461,8 @@ const UserManagement = () => {
                     </button>
                     <button
                       type="button"
-                      class="btn btn-primary"
+                      className="btn btn-primary"
+                      data-dismiss="modal"
                       onClick={createUser}
                     >
                       {"Create"}
