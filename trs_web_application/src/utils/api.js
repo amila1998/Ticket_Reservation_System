@@ -5,6 +5,6 @@ export const AutherizationAPI = {
   info: "/api/Atherization/info",
 };
 
-export const UserManagementAPI ={
-    
-}
+export const UserManagementAPI = {
+  getAllUsers: "/api/User",
+};
