@@ -93,6 +93,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<TokenGenerator>();
 builder.Services.AddScoped<CloudinaryImageUploadService>();
+builder.Services.AddScoped<TrainRepository>();
+builder.Services.AddScoped<TrainService>();
 
 var app = builder.Build();
 

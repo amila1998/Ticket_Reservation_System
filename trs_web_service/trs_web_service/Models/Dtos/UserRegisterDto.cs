@@ -10,5 +10,6 @@ namespace trs_web_service.Models.Dtos
         public required string NIC { get; set; }
         public string? ImagePath { get; set; }
         public required string ContactNo { get; set; }
+        public required string Email { get; set; }
     }
 }
