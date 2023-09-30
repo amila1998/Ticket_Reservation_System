@@ -32,7 +32,7 @@ const Login = () => {
       });
     } catch (error) {
       console.log("🚀 ~ file: Login.js:14 ~ handleLogin ~ error:", error);
-      toast.error(error.message ? error.message : error.response.message, {
+      toast.error(error.response.data ? error.response.data : error.message, {
         position: "top-left",
         autoClose: 5000,
         hideProgressBar: false,
@@ -66,25 +66,25 @@ const Login = () => {
           <h2>LOGIN</h2>
         </div>
         <form>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="form-label">
               NIC/Passport Number
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="exampleFormControlInput1"
               placeholder="787141785V"
               onChange={(e) => setNic(e.target.value)}
             />
           </div>
-          <label for="inputPassword5" class="form-label">
+          <label htmlFor="inputPassword5" className="form-label">
             Password
           </label>
           <input
             type="password"
             id="inputPassword5"
-            class="form-control"
+            className="form-control"
             aria-describedby="passwordHelpBlock"
             onChange={(e) => setPassword(e.target.value)}
           ></input>

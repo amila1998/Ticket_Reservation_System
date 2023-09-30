@@ -35,25 +35,25 @@ export const ResetPassword = () => {
             <h2>Reset Password</h2>
           </div>
           <form>
-            <div class="mb-3">
-              <label for="inputPassword6" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="inputPassword6" className="form-label">
                 New Password
               </label>
               <input
                 type="password"
-                class="form-control"
+                className="form-control"
                 id="inputPassword6"
                 aria-describedby="passwordHelpBlock"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <label for="inputPassword7" class="form-label">
+            <label htmlFor="inputPassword7" className="form-label">
               Confirm New Password
             </label>
             <input
               type="password"
               id="inputPassword7"
-              class="form-control"
+              className="form-control"
               aria-describedby="passwordHelpBlock"
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></input>

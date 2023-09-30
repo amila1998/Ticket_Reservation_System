@@ -7,4 +7,5 @@ export const AutherizationAPI = {
 
 export const UserManagementAPI = {
   getAllUsers: "/api/User",
+  user_create: "/api/User/create_user",
 };
