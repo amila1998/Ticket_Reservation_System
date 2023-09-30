@@ -10,6 +10,7 @@ import { authActions } from "./store/authSlice";
 import { loadingActions } from "./store/loadingSlice";
 import { getAxiosInstance } from "./utils/axios";
 import { AutherizationAPI } from "./utils/api";
+import Footer from "./components/Footer";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -77,6 +78,7 @@ function App() {
               </Routes>
             </Router>
           </main>
+          <Footer/>
         </div>
       )}
     </div>

@@ -13,7 +13,6 @@ const authSlice = createSlice({
       state.user = user;
     },
     login(state, action) {
-      console.log("🚀 ~ file: authSlice.js:16 ~ login ~ action:", action)
       state.isLoggedIn = true;
       state.token = action.payload;
     },

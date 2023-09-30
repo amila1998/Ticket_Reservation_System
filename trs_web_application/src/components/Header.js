@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import logo from "../assets/train.png";
 import logout from "../assets/logout.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store/authSlice";
+import authSlice, { authActions } from "../store/authSlice";
 import { getAxiosInstance } from "../utils/axios";
 import { AutherizationAPI } from "../utils/api";
 import { loadingActions } from "../store/loadingSlice";
@@ -12,6 +12,10 @@ const Header = () => {
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
+
+  const handleLogout=()=>{
+    dispatch(authActions.logout())
+  }
 
   return (
     <nav class="navbar navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
@@ -68,7 +72,7 @@ const Header = () => {
                         <hr class="dropdown-divider" />
                       </li>
                       <li>
-                        <div class="dropdown-item logout">
+                        <div onClick={handleLogout} class="dropdown-item logout">
                           <i class="fa fa-sign-out"></i>
                           Logout
                         </div>

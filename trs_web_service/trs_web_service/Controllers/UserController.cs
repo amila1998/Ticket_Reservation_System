@@ -23,14 +23,14 @@ namespace trs_web_service.Controllers
         }
 
 
-        [Authorize (Policy= "backoffice")]
+        [Authorize (Policy= "nottraveler")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             try
             {
-                var travelers = await _userService.GetAllUsersAsync();
-                return Ok(travelers);
+                var users = await _userService.GetAllUsersAsync();
+                return Ok(users);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -55,6 +55,22 @@ namespace trs_web_service.Controllers
                 return BadRequest(ex.Message);
             }
          
+        }
+
+        [Authorize(Policy = "nottraveler")]
+        [HttpPost]
+        public async Task<IActionResult> create(UserRegisterDto user)
+        {
+            try
+            {
+                await _userService.CreateUserAsync(user);
+                return Ok("register succsses");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
 
