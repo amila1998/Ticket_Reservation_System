@@ -77,6 +77,18 @@ namespace trs_web_service.Infrastructure
             return updatedUser;
         }
 
+        public async Task<User> ResetPassword(string password, ObjectId id)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            var update = Builders<User>.Update
+                .Set(u => u.Password, password);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
+        }
+
         public async Task<User> UpdateUser(UpdateUserDto user)
         {
             var filter = Builders<User>.Filter.Eq(u => u.NIC, user.NIC);

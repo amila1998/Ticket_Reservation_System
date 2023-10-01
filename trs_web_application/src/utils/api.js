@@ -1,8 +1,10 @@
 export const AuthenticationAPI = {
   login: "/api/Authentication/login",
+  forgot_password: "/api/Authentication/forgot_password",
 };
 export const AutherizationAPI = {
   info: "/api/Atherization/info",
+  reset_password: "/api/Atherization/reset_password",
 };
 
 export const UserManagementAPI = {

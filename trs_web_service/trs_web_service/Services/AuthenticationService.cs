@@ -29,5 +29,16 @@ namespace trs_web_service.Services
 
             return token;
         }
+
+        public string ForgotPassword(string nic, string email)
+        {
+            var user = _userRepository.GetByNICAsync(nic);
+
+            // Convert the ObjectId to the desired format
+            string formattedId = user.Result.Id.ToString().Substring(0, 24);
+            var token = _tokenGenerator.GenerateTokenForForgotPassword(formattedId, user.Result.Role);
+
+            return token;
+        }
     }
 }

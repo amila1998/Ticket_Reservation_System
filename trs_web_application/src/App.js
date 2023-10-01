@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 import Unauthorized from "./utils/Unauthorized";
 import DeactivateAccounts from "./utils/DeactivateAccounts";
 import Profile from "./components/Profile";
+import { ResetPassword } from "./components/ResetPassword";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -107,6 +108,7 @@ function App() {
                     )
                   }
                 />
+                <Route path="/resetPassword/:token" element={<ResetPassword/>}/>
               </Routes>
             </Router>
           </main>
