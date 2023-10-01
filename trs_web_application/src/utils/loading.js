@@ -4,9 +4,9 @@ import React from "react";
 
 const Loading = () => {
   return (
-    <div class="tcontainer">
-      <div class="track"></div>
-      <div class="train"></div>
+    <div className="tcontainer">
+      <div className="track"></div>
+      <div className="train"></div>
     </div>
   );
 };
