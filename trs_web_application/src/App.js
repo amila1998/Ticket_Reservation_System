@@ -12,6 +12,7 @@ import { getAxiosInstance } from "./utils/axios";
 import { AutherizationAPI } from "./utils/api";
 import Footer from "./components/Footer";
 import Unauthorized from "./utils/Unauthorized";
+import DeactivateAccounts from "./utils/DeactivateAccounts";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -55,7 +56,7 @@ function App() {
   }, [isLoggedIn, token]);
 
   return (
-    <div className="App">
+    <>
       {isLoading ? (
         <div
           style={{
@@ -68,22 +69,22 @@ function App() {
           <Loading />
         </div>
       ) : (
-        <div>
+        <>
           <Header />
           <main className="main">
             <Router>
               <Routes>
                 <Route
                   path="/"
-                  element={isLoggedIn ? user.role == "traveler" ? <Unauthorized/>:<Dashboard /> : <AuthScreen />}
+                  element={isLoggedIn ? user.role == "traveler" ? <Unauthorized/> : user.isActive? <Dashboard /> :<DeactivateAccounts/>: <AuthScreen />}
                 />
               </Routes>
             </Router>
           </main>
           <Footer/>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }
 

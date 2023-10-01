@@ -25,7 +25,7 @@ namespace trs_web_service.Services
                 {
                     // Convert the ObjectId to the desired format
                     string formattedId = user.Id.ToString().Substring(0, 24);
-                    UserDto newUser = new(formattedId, user.Name,user.Role,user.NIC,user.ImagePath,user.ContactNo,user.IsActive,user.IsSendActiveStatus);
+                    UserDto newUser = new(formattedId, user.Name,user.Role,user.NIC,user.ImagePath,user.ContactNo,user.IsActive,user.IsSendActiveStatus,user.Email);
                     users.Add(newUser);
                 }
 
@@ -38,7 +38,7 @@ namespace trs_web_service.Services
             return await _repository.GetByNICAsync(nic);
         }
 
-        public async Task<User> GetUserByID(string id)
+        public async Task<UserDto> GetUserByID(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
             {
@@ -53,7 +53,9 @@ namespace trs_web_service.Services
             }
             else
             {
-                return info;
+                string formattedId = info.Id.ToString().Substring(0, 24);
+                UserDto newUser = new(formattedId, info.Name, info.Role, info.NIC, info.ImagePath, info.ContactNo, info.IsActive, info.IsSendActiveStatus, info.Email);
+                return newUser;
             }
         }
 
@@ -65,6 +67,24 @@ namespace trs_web_service.Services
             }
             var exUser = await _repository.GetByNICAsync(nic);
             return exUser == null ? throw new Exception("Have not an account") : await _repository.DeactivateUserAsync(nic);
+        }
+
+        public async Task<User> UserUpdateProfile(UserUpdateDto user, string id)
+        {
+
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+
+            var info = await _repository.GetByIdAsync(objectId) ?? throw new Exception("Have not an account");
+
+            if (info.NIC == "00000000V")
+            {
+                throw new Exception("Can not update Super backoffice account");
+            }
+  
+            return await _repository.UserUpdateProfile(user, objectId);
         }
 
         public async Task<User> ActivateUserAsync(string nic)
@@ -93,7 +113,8 @@ namespace trs_web_service.Services
                 Password = EncryptPassword(user.Password),
                 Role = user.Role,
                 ImagePath = "https://res.cloudinary.com/amiladevin1998/image/upload/v1642784922/avatar/pic_1171831236_1_axiiom.png",
-                ContactNo = user.ContactNo
+                ContactNo = user.ContactNo,
+                Email = user.Email,
             };
             await _repository.CreateAsync(newUser);
         }
@@ -113,7 +134,8 @@ namespace trs_web_service.Services
                 Password = EncryptPassword(user.Password),
                 Role = user.Role,
                 ImagePath = "https://res.cloudinary.com/amiladevin1998/image/upload/v1642784922/avatar/pic_1171831236_1_axiiom.png",
-                ContactNo = user.ContactNo
+                ContactNo = user.ContactNo,
+                Email = user.Email,
             };
             await _repository.CreateAsync(newUser);
         }

@@ -18,20 +18,20 @@ const Header = () => {
   }
 
   return (
-    <nav class="navbar navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+    <nav className="navbar navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="/">
           <img
             src={logo}
             alt="Bootstrap"
             width="30"
             height="24"
-            class="d-inline-block align-text-top"
+            className="d-inline-block align-text-top"
           ></img>
           Express Book
         </a>
         <button
-          class="navbar-toggler"
+          className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
@@ -39,17 +39,17 @@ const Header = () => {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0"></ul>
           <div>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               {isLoggedIn && user && (
                 <>
-                  <li class="nav-item dropdown">
+                  <li className="nav-item dropdown">
                     <a
-                      class="nav-link dropdown-toggle"
+                      className="nav-link dropdown-toggle"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
@@ -62,9 +62,9 @@ const Header = () => {
                       ></img>
                       {user.name}
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                    <ul className="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
                       <li>
-                        <a class="dropdown-item" href="/profile">
+                        <a className="dropdown-item" href="/profile">
                           Profile
                         </a>
                       </li>
@@ -74,14 +74,16 @@ const Header = () => {
                         </a>
                       </li>
                       <li>
-                        <hr class="dropdown-divider" />
+                        <a class="dropdown-item" href="/">
+                          Dashboard
+                        </a>
                       </li>
                       <li>
-                        <div
-                          onClick={handleLogout}
-                          class="dropdown-item logout"
-                        >
-                          <i class="fa fa-sign-out"></i>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <div onClick={handleLogout} className="dropdown-item logout">
+                          <i className="fa fa-sign-out"></i>
                           Logout
                         </div>
                       </li>
