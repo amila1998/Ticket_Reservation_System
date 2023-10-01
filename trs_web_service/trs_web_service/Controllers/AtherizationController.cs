@@ -88,5 +88,34 @@ namespace trs_web_service.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpPut("reset_password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto password)
+        {
+            try
+            {
+                // Get the user's identity
+                var userIdentity = User.Identity as ClaimsIdentity;
+
+                // Retrieve the user's ID and role from the claims
+                var userId = userIdentity.FindFirst(ClaimTypes.Name)?.Value;
+                var userRole = userIdentity.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userRole))
+                {
+                    return BadRequest("Invalid user identity.");
+                }
+                await _userService.ResetPassword(password.Password, userId);
+
+                // Ensure that the user can only retrieve their own information or apply additional authorization logic here.
+
+                return Ok("update successfully completed");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using System.Security.Claims;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
 using trs_web_service.Services;
@@ -105,6 +106,22 @@ namespace trs_web_service.Controllers
           
         }
 
+        [Authorize]
+        [HttpPut("request_active_account/{nic}")]
+        public async Task<IActionResult> RequestActiveAccount(string nic)
+        {
+            try
+            {
+                await _userService.SendActiveStatusAsync(nic);
+                return Ok("account activation request send");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         [Authorize(Policy= "backoffice")]
         [HttpPut("activate/{nic}")]
         public async Task<IActionResult> ActivateUser(string nic)
@@ -119,6 +136,21 @@ namespace trs_web_service.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [Authorize(Policy = "backoffice")]
+        [HttpPut("update_user")]
+        public async Task<IActionResult> UserUpdate(UpdateUserDto user)
+        {
+            try
+            {
+                await _userService.UpdateUser(user);
+                return Ok("update successfully completed");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 

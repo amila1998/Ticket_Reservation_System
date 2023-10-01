@@ -1,11 +1,52 @@
 import React, { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAxiosInstance } from "../utils/axios";
+import { AuthenticationAPI } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [nic, setNic] = useState("");
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+
   const handleForgotPassword = async (e) => {
+     e.preventDefault();
+     try {
+       const res = await getAxiosInstance().post(
+         AuthenticationAPI.forgot_password,
+         {
+           nic,email
+         }
+       );
+       const token = res.data.token;
+       toast.success("Your request send successfully !", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+       navigate(`/resetPassword/${token}`);
+     } catch (error) {
+       console.log(
+         "🚀 ~ file: ForgotPassword.js:12 ~ handleForgotPassword ~ error:",
+         error
+       );
+       toast.error(error.response ? error.response.data : error.message, {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+     }
     
   };
 
