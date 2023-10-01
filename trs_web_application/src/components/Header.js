@@ -69,10 +69,18 @@ const Header = () => {
                         </a>
                       </li>
                       <li>
+                        <a class="dropdown-item" href="/">
+                          Dashboard
+                        </a>
+                      </li>
+                      <li>
                         <hr class="dropdown-divider" />
                       </li>
                       <li>
-                        <div onClick={handleLogout} class="dropdown-item logout">
+                        <div
+                          onClick={handleLogout}
+                          class="dropdown-item logout"
+                        >
                           <i class="fa fa-sign-out"></i>
                           Logout
                         </div>
