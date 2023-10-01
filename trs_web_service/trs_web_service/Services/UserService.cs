@@ -87,6 +87,22 @@ namespace trs_web_service.Services
             return await _repository.UserUpdateProfile(user, objectId);
         }
 
+        public async Task<User> UpdateUser(UpdateUserDto user)
+        {
+            var info = await _repository.GetByNICAsync(user.NIC) ?? throw new Exception("Have not an account");
+
+            if (info.NIC == "00000000V")
+            {
+                throw new Exception("Can not update Super backoffice account");
+            }
+
+            user.Password = EncryptPassword(user.Password);
+
+
+
+            return await _repository.UpdateUser(user);
+        }
+
         public async Task<User> ActivateUserAsync(string nic)
         {
             var exUser = await _repository.GetByNICAsync(nic);

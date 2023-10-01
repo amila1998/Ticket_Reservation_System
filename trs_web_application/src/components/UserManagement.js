@@ -24,6 +24,7 @@ const UserManagement = () => {
   const [filterRole, setFilterRole] = useState("");
   const [filterNIC, setFilterNIC] = useState("");
   const [filterIsActive, setFilterIsActive] = useState("");
+  const [isPasswordReset,setIsPasswordReset]=useState(false)
 
   const [user, setUser] = useState({
     name: "",
@@ -46,6 +47,7 @@ const UserManagement = () => {
       contactNo: "",
       email: "",
     });
+    setIsEdit(false)
   };
 
   const getAllUsers = async () => {
@@ -118,7 +120,7 @@ const UserManagement = () => {
         }
       );
       toast.success("User created successfully !", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -135,7 +137,7 @@ const UserManagement = () => {
         error
       );
       toast.error(error.response.data ? error.response.data : error.message, {
-        position: "top-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -150,13 +152,13 @@ const UserManagement = () => {
   const activateUser =async(nic)=>{
     try {
       const res = await getAxiosInstance().put(
-        UserManagementAPI.activate_user + `/${nic}`,
+        UserManagementAPI.activate_user + `/${nic}`,null,
         {
           headers: { Authorization: `bearer ${token}` },
         }
       );
       toast.success("User actvated successfully !", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -168,21 +170,63 @@ const UserManagement = () => {
       setCallback(true);  
     } catch (error) {
       console.log("🚀 ~ file: UserManagement.js:154 ~ activateUser ~ error:", error)
-            toast.error(
-              error.response.data ? error.response.data : error.message,
-              {
-                position: "top-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
+            toast.error(error.response ? error.response.data : error.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
     }
   }
+
+  const updateUser = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await getAxiosInstance().put(
+        UserManagementAPI.user_update,
+        {
+          nic: user.nic,
+          role: user.role,
+          isPasswordReset:isPasswordReset,
+          password: user.password,
+        },
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      toast.success("User update successfully !", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleCreateModalClose();
+      setCallback(true);
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: UserManagement.js:194 ~ updateUser ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <>
@@ -356,7 +400,7 @@ const UserManagement = () => {
                       className="modal-title"
                       id="exampleModalLongTitle"
                     >
-                      {"Create New User"}
+                      {isEdit ? "Edit User" : "Create New User"}
                     </h5>
                     <button
                       style={{
@@ -391,6 +435,7 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, name: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
                       <div className="mb-3">
@@ -409,8 +454,31 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, nic: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
+                      {isEdit && (
+                        <div className="mb-3">
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="flexCheckDefalt83"
+                              checked={isPasswordReset}
+                              onChange={() => {
+                                setIsPasswordReset(!isPasswordReset);
+                              }}
+                            />
+                            <label
+                              class="form-check-label"
+                              for="flexCheckDefault"
+                            >
+                              Need password change
+                            </label>
+                          </div>
+                        </div>
+                      )}
                       <div className="mb-3">
                         <label
                           htmlFor="exampleFormControlInput3"
@@ -424,7 +492,7 @@ const UserManagement = () => {
                           className="form-control"
                           id="exampleFormControlInput3"
                           placeholder="787141785V"
-                          disabled
+                          disabled={!isPasswordReset}
                           onChange={(e) =>
                             setUser({ ...user, password: e.target.value })
                           }
@@ -446,6 +514,7 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, email: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
                       <div className="mb-3">
@@ -464,6 +533,7 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, contactNo: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
                       <div className="mb-3">
@@ -551,9 +621,9 @@ const UserManagement = () => {
                       type="button"
                       className="btn btn-primary"
                       data-dismiss="modal"
-                      onClick={createUser}
+                      onClick={isEdit?updateUser:createUser}
                     >
-                      {"Create"}
+                      {isEdit?"Update":"Create"}
                     </button>
                   </div>
                 </div>
@@ -575,22 +645,22 @@ const UserManagement = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user) => (
-                      <tr key={user.id} className="pointer">
-                        <th scope="row">{user.nic}</th>
-                        <td>{user.name}</td>
-                        <td>{user.role}</td>
-                        <td>{user.contactNo}</td>
-                        <td>{user.isActive ? "Active" : "Deactive"}</td>
+                    {users.map((u) => (
+                      <tr key={u.id} className="pointer">
+                        <th scope="row">{u.nic}</th>
+                        <td>{u.name}</td>
+                        <td>{u.role}</td>
+                        <td>{u.contactNo}</td>
+                        <td>{u.isActive ? "Active" : "Deactive"}</td>
                         <td>
-                          {user.nic != "000000000V" &&
-                            user.nic != auth.nic &&
+                          {u.nic != "000000000V" &&
+                            u.nic != auth.nic &&
                             auth.role == "backoffice" && (
-                              <div style={{ display: "flex" }}>
-                                {!user.isActive && !user.isSendActiveStatus && (
+                              <div style={{ display: "flex", float: "right" }}>
+                                {!u.isActive && !u.isSendActiveStatus && (
                                   <div
                                     onClick={() => {
-                                      activateUser(user.nic);
+                                      activateUser(u.nic);
                                     }}
                                     style={{
                                       cursor: "pointer",
@@ -614,6 +684,18 @@ const UserManagement = () => {
                                   </div>
                                 )}
                                 <div
+                                  onClick={() => {
+                                    setIsEdit(true);
+                                    setUser({
+                                      ...user,
+                                      name: u.name,
+                                      role: u.role,
+                                      nic: u.nic,
+                                      imagePath: u.imagePath,
+                                      contactNo: u.contactNo,
+                                      email: u.email,
+                                    });
+                                  }}
                                   style={{
                                     cursor: "pointer",
                                     margin: "5px",
@@ -626,15 +708,20 @@ const UserManagement = () => {
                                   data-placement="bottom"
                                   title="Edit user"
                                 >
-                                  <center>
-                                    <img
-                                      style={{ margin: "10px" }}
-                                      width={10}
-                                      src={edit_icon}
-                                    />
-                                  </center>
+                                  <div
+                                    data-toggle="modal"
+                                    data-target="#exampleModalCenter"
+                                  >
+                                    <center>
+                                      <img
+                                        style={{ margin: "10px" }}
+                                        width={10}
+                                        src={edit_icon}
+                                      />
+                                    </center>
+                                  </div>
                                 </div>
-                                <div
+                                {/* <div
                                   style={{
                                     cursor: "pointer",
                                     margin: "5px",
@@ -654,7 +741,7 @@ const UserManagement = () => {
                                       src={delete_icon}
                                     />
                                   </center>
-                                </div>
+                                </div> */}
                               </div>
                             )}
                         </td>

@@ -66,6 +66,28 @@ namespace trs_web_service.Infrastructure
             return updatedUser;
         }
 
+        public async Task<User> UpdateUser(UpdateUserDto user)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NIC, user.NIC);
+            var update = Builders<User>.Update.Set(u => u.Role, user.Role);
+
+            if (user.IsPasswordReset)
+            {
+                // If the password needs to be reset, add the password update to the update definition
+                update = Builders<User>.Update.Combine(update, Builders<User>.Update.Set(u => u.Password, user.Password));
+            }
+
+            // Find and update the user document
+            var options = new FindOneAndUpdateOptions<User>
+            {
+                ReturnDocument = ReturnDocument.After // This option returns the updated document
+            };
+
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update, options);
+
+            return updatedUser;
+        }
+
         public async Task CreateAsync(User user)
         {
             await _collection.InsertOneAsync(user);
