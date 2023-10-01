@@ -41,6 +41,17 @@ namespace trs_web_service.Infrastructure
             return updatedUser;
         }
 
+        public async Task<User> SendActiveStatusAsync(string nic)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
+            var update = Builders<User>.Update.Set(u => u.IsActive, false).Set(u => u.IsSendActiveStatus, true);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
+        }
+
         public async Task<User> ActivateUserAsync(string nic)
         {
             var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);

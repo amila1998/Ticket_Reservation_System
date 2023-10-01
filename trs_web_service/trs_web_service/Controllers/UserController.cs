@@ -106,6 +106,22 @@ namespace trs_web_service.Controllers
           
         }
 
+        [Authorize]
+        [HttpPut("request_active_account/{nic}")]
+        public async Task<IActionResult> RequestActiveAccount(string nic)
+        {
+            try
+            {
+                await _userService.SendActiveStatusAsync(nic);
+                return Ok("account activation request send");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
         [Authorize(Policy= "backoffice")]
         [HttpPut("activate/{nic}")]
         public async Task<IActionResult> ActivateUser(string nic)

@@ -69,6 +69,28 @@ namespace trs_web_service.Services
             return exUser == null ? throw new Exception("Have not an account") : await _repository.DeactivateUserAsync(nic);
         }
 
+        public async Task<User> SendActiveStatusAsync(string nic)
+        {
+            if (nic == "00000000V")
+            {
+                throw new Exception("Have not an account");
+            }
+            var exUser = await _repository.GetByNICAsync(nic);
+            if(exUser == null)
+            {
+                throw new Exception("Have not an account");
+            }
+            if (exUser.IsActive)
+            {
+                throw new Exception("Account is already activated");
+            }
+            if (exUser.IsSendActiveStatus)
+            {
+                throw new Exception("Account activation is already send");
+            }
+            return await _repository.SendActiveStatusAsync(nic);
+        }
+
         public async Task<User> UserUpdateProfile(UserUpdateDto user, string id)
         {
 

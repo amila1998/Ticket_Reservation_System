@@ -657,7 +657,7 @@ const UserManagement = () => {
                             u.nic != auth.nic &&
                             auth.role == "backoffice" && (
                               <div style={{ display: "flex", float: "right" }}>
-                                {!u.isActive && !u.isSendActiveStatus && (
+                                {!u.isActive && u.isSendActiveStatus && (
                                   <div
                                     onClick={() => {
                                       activateUser(u.nic);
