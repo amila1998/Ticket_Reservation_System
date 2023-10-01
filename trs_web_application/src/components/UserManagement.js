@@ -20,6 +20,7 @@ const UserManagement = () => {
    const auth = useSelector((state) => state.auth.user);
    const [filterName,setFilterName]=useState("")
    const [filterRole,setFilterRole]=useState("")
+   console.log("🚀 ~ file: UserManagement.js:23 ~ UserManagement ~ filterRole:", filterRole)
    const [filterIsActive,setFilterIsActive]=useState("")
 
    const [user, setUser] = useState({
@@ -121,6 +122,7 @@ const UserManagement = () => {
     }
   }
 
+
   return (
     <>
       <ToastContainer
@@ -181,7 +183,7 @@ const UserManagement = () => {
                   type="text"
                   className="form-control"
                   id="exampleFormControlInput10"
-                  placeholder="Sean Udayantha"
+                  placeholder="Ex: Sean Udayantha"
                   onChange={(e) => setFilterName(e.target.value)}
                 />
               </div>{" "}
@@ -192,14 +194,20 @@ const UserManagement = () => {
                 >
                   Filter By Role
                 </label>
-                <input
-                  value={filterRole}
-                  type="text"
-                  className="form-control"
-                  id="exampleFormControlInput11"
-                  placeholder="Sean Udayantha"
-                  onChange={(e) => setFilterRole(e.target.value)}
-                />
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  onChange={(e) => {
+                    setFilterRole(e.target.value);
+                  }}
+                >
+                  <option value="" selected>
+                    All
+                  </option>
+                  <option value="traveler">Traveler</option>
+                  <option value="travel_agent">Travel Agent</option>
+                  <option value="backoffice">Backoffice</option>
+                </select>
               </div>{" "}
               <div className="mb-3">
                 <label
@@ -208,14 +216,17 @@ const UserManagement = () => {
                 >
                   Filter By Active Status
                 </label>
-                <input
-                  value={filterIsActive}
-                  type="text"
-                  className="form-control"
-                  id="exampleFormControlInput12"
-                  placeholder="Sean Udayantha"
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
                   onChange={(e) => setFilterIsActive(e.target.value)}
-                />
+                >
+                  <option value="" selected>
+                    All
+                  </option>
+                  <option value={true}>Active</option>
+                  <option value={false}>Deactive</option>
+                </select>
               </div>
             </div>
 
