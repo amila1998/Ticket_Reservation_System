@@ -3,6 +3,7 @@ import user_icon from "../assets/icons/user-solid.svg";
 import plus_icon from "../assets/icons/plus-solid.svg";
 import edit_icon from "../assets/icons/pen-to-square-solid.svg";
 import delete_icon from "../assets/icons/trash-solid.svg";
+import correct_icon from "../assets/icons/correct-svgrepo-com.svg";
 import Nodata from "../utils/Nodata";
 import { getAxiosInstance } from "../utils/axios";
 import { UserManagementAPI } from "../utils/api";
@@ -13,28 +14,28 @@ import "react-toastify/dist/ReactToastify.css";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [fusers, setFUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [callback, setCallback] = useState(true);
-   const token = useSelector((state) => state.auth.token);
-   const auth = useSelector((state) => state.auth.user);
-   const [filterName,setFilterName]=useState("")
-   const [filterRole,setFilterRole]=useState("")
-   console.log("🚀 ~ file: UserManagement.js:23 ~ UserManagement ~ filterRole:", filterRole)
-   const [filterIsActive,setFilterIsActive]=useState("")
+  const token = useSelector((state) => state.auth.token);
+  const auth = useSelector((state) => state.auth.user);
+  const [filterName, setFilterName] = useState("");
+  const [filterRole, setFilterRole] = useState("");
+  const [filterNIC, setFilterNIC] = useState("");
+  const [filterIsActive, setFilterIsActive] = useState("");
 
-   const [user, setUser] = useState({
-     name: "",
-     password: "000000",
-     role: "traveler",
-     nic: "",
-     imagePath: "",
-     contactNo: "",
-     email: "",
-   });
-   
+  const [user, setUser] = useState({
+    name: "",
+    password: "000000",
+    role: "traveler",
+    nic: "",
+    imagePath: "",
+    contactNo: "",
+    email: "",
+  });
 
-   const handleCreateModalClose =()=>{
+  const handleCreateModalClose = () => {
     setUser({
       ...user,
       name: "",
@@ -45,7 +46,7 @@ const UserManagement = () => {
       contactNo: "",
       email: "",
     });
-   }
+  };
 
   const getAllUsers = async () => {
     try {
@@ -53,7 +54,8 @@ const UserManagement = () => {
       const res = await getAxiosInstance().get(UserManagementAPI.getAllUsers, {
         headers: { Authorization: `bearer ${token}` },
       });
-      setUsers(res.data)     
+      setFUsers(res.data);
+      setUsers(res.data);
       setIsLoading(false);
       setCallback(false);
     } catch (error) {
@@ -62,19 +64,16 @@ const UserManagement = () => {
         "🚀 ~ file: UserManagement.js:13 ~ getAllUsers ~ error:",
         error
       );
-            toast.error(
-              error.response.data ? error.response.data : error.message,
-              {
-                position: "top-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -82,7 +81,33 @@ const UserManagement = () => {
     callback && getAllUsers();
   }, [callback]);
 
-  const createUser =async(e)=>{
+  useEffect(() => {
+    let userList = fusers;
+    if (userList.length > 0 && (filterName != null || filterName != "")) {
+      userList = userList.filter((user) => {
+        return user.name.toLowerCase().includes(filterName.toLowerCase());
+      });
+    }
+    if (userList.length > 0 && filterIsActive) {
+      userList = userList.filter((user) => {
+        return filterIsActive === "true" ? user.isActive : !user.isActive;
+      });
+    }
+    if (userList.length > 0 && filterRole) {
+      userList = userList.filter((user) => {
+        return user.role == filterRole;
+      });
+    }
+    if (userList.length > 0 && filterNIC) {
+      userList = userList.filter((user) => {
+        return user.nic.toLowerCase().includes(filterNIC.toLowerCase());
+      });
+    }
+
+    setUsers(userList);
+  }, [filterIsActive, filterName, filterRole, filterNIC]);
+
+  const createUser = async (e) => {
     e.preventDefault();
     try {
       const res = await getAxiosInstance().post(
@@ -92,20 +117,57 @@ const UserManagement = () => {
           headers: { Authorization: `bearer ${token}` },
         }
       );
-       toast.success("User created successfully !", {
-         position: "top-left",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
-      handleCreateModalClose()
-      setCallback(true)
+      toast.success("User created successfully !", {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleCreateModalClose();
+      setCallback(true);
     } catch (error) {
-      console.log("🚀 ~ file: UserManagement.js:70 ~ createUser ~ error:", error)
+      console.log(
+        "🚀 ~ file: UserManagement.js:70 ~ createUser ~ error:",
+        error
+      );
+      toast.error(error.response.data ? error.response.data : error.message, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const activateUser =async(nic)=>{
+    try {
+      const res = await getAxiosInstance().put(
+        UserManagementAPI.activate_user + `/${nic}`,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      toast.success("User actvated successfully !", {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setCallback(true);  
+    } catch (error) {
+      console.log("🚀 ~ file: UserManagement.js:154 ~ activateUser ~ error:", error)
             toast.error(
               error.response.data ? error.response.data : error.message,
               {
@@ -121,7 +183,6 @@ const UserManagement = () => {
             );
     }
   }
-
 
   return (
     <>
@@ -171,6 +232,22 @@ const UserManagement = () => {
                 flexWrap: "wrap",
               }}
             >
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput150"
+                  className="form-label"
+                >
+                  Filter By NIC/Passport Number
+                </label>
+                <input
+                  value={filterNIC}
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput150"
+                  placeholder="Ex: 987788555V"
+                  onChange={(e) => setFilterNIC(e.target.value)}
+                />
+              </div>{" "}
               <div className="mb-3">
                 <label
                   htmlFor="exampleFormControlInput10"
@@ -510,13 +587,39 @@ const UserManagement = () => {
                             user.nic != auth.nic &&
                             auth.role == "backoffice" && (
                               <div style={{ display: "flex" }}>
+                                {!user.isActive && !user.isSendActiveStatus && (
+                                  <div
+                                    onClick={() => {
+                                      activateUser(user.nic);
+                                    }}
+                                    style={{
+                                      cursor: "pointer",
+                                      margin: "5px",
+                                      borderRadius: "50px",
+                                      justifyContent: "center",
+                                      backgroundColor: "rgb(4, 4, 214)",
+                                      alignItems: "center",
+                                    }}
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Activate user"
+                                  >
+                                    <center>
+                                      <img
+                                        style={{ margin: "10px" }}
+                                        width={10}
+                                        src={correct_icon}
+                                      />
+                                    </center>
+                                  </div>
+                                )}
                                 <div
                                   style={{
                                     cursor: "pointer",
                                     margin: "5px",
                                     borderRadius: "50px",
                                     justifyContent: "center",
-                                    backgroundColor: "rgb(255, 221, 10)",
+                                    backgroundColor: "rgb(212, 194, 2)",
                                     alignItems: "center",
                                   }}
                                   data-toggle="tooltip"
@@ -537,7 +640,7 @@ const UserManagement = () => {
                                     margin: "5px",
                                     borderRadius: "50px",
                                     justifyContent: "center",
-                                    backgroundColor: "rgb(255, 0, 1)",
+                                    backgroundColor: "rgb(181, 2, 2)",
                                     alignItems: "center",
                                   }}
                                   data-toggle="tooltip"

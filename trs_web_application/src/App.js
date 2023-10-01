@@ -13,6 +13,7 @@ import { AutherizationAPI } from "./utils/api";
 import Footer from "./components/Footer";
 import Unauthorized from "./utils/Unauthorized";
 import DeactivateAccounts from "./utils/DeactivateAccounts";
+import Profile from "./components/Profile";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -76,12 +77,40 @@ function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={isLoggedIn ? user.role == "traveler" ? <Unauthorized/> : user.isActive? <Dashboard /> :<DeactivateAccounts/>: <AuthScreen />}
+                  element={
+                    isLoggedIn ? (
+                      user.role == "traveler" ? (
+                        <Unauthorized />
+                      ) : user.isActive ? (
+                        <Dashboard />
+                      ) : (
+                        <DeactivateAccounts />
+                      )
+                    ) : (
+                      <AuthScreen />
+                    )
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    isLoggedIn ? (
+                      user.role == "traveler" ? (
+                        <Unauthorized />
+                      ) : user.isActive ? (
+                        <Profile />
+                      ) : (
+                        <DeactivateAccounts />
+                      )
+                    ) : (
+                      <AuthScreen />
+                    )
+                  }
                 />
               </Routes>
             </Router>
           </main>
-          <Footer/>
+          <Footer />
         </>
       )}
     </>

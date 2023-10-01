@@ -69,16 +69,6 @@ const Header = () => {
                         </a>
                       </li>
                       <li>
-                        <a class="dropdown-item" href="/">
-                          Dashboard
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="/">
-                          Dashboard
-                        </a>
-                      </li>
-                      <li>
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
