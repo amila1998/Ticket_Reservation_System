@@ -1,346 +1,399 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
+import user_icon from "../assets/icons/user-solid.svg";
 import plus_icon from "../assets/icons/plus-solid.svg";
-import logo from "../assets/train.png";
-import train_icon from "../assets/icons/train-solid.svg";
 import edit_icon from "../assets/icons/pen-to-square-solid.svg";
+import wrong_icon from "../assets/icons/wrong-svgrepo-com.svg";
 import delete_icon from "../assets/icons/trash-solid.svg";
-import AddTrain from "./trainManagement/AddTrain";
-import UpdateTrain from "./trainManagement/UpdateTrain";
-const trainData = [
-  {
-    id: 1,
-    image: "../assets/train.png",
-    trainName: "train 1",
-    Availability: "unavailable",
-    regNo: "TR001",
-  },
-  {
-    id: 2,
-    image: "../assets/train.png",
-    trainName: "train 2",
-    Availability: "available",
-    regNo: "TR001",
-  },
-  {
-    id: 3,
-    image: "../assets/train.png",
-    trainName: "train 3",
-    Availability: "available",
-    regNo: "TR001",
-  },
-  {
-    id: 4,
-    image: "../assets/train.png",
-    trainName: "train 4",
-    Availability: "available",
-    regNo: "TR001",
-  },
-  {
-    id: 5,
-    image: "../assets/train.png",
-    trainName: "train 5",
-    Availability: "available",
-    regNo: "TR001",
-  },
-  {
-    id: 6,
-    image: "../assets/train.png",
-    trainName: "train 6",
-    Availability: "available",
-    regNo: "TR001",
-  },
-];
+import correct_icon from "../assets/icons/correct-svgrepo-com.svg";
+import Nodata from "../utils/Nodata";
+import { getAxiosInstance } from "../utils/axios";
+import { useSelector } from "react-redux";
+import Loading from "../utils/loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const TrainManagement = () => {
-  const[trainStatus,setTrainStatus]=useState(true);
-  console.log("🚀 ~ file: TrainManagement.js:54 ~ TrainManagement ~ trainStatus:", trainStatus)
-  const handleEdit = (eid) => {};
-  const changeStatus = (sid) => {
-if (sid===1) {
-  setTrainStatus(true)
-}else if(sid===0){
-  setTrainStatus(false)
-} else {
-  
-}
+  const token = useSelector((state) => state.auth.token);
+  const auth = useSelector((state) => state.auth.user);
+  const [trains, setTrains] = useState([]);
+  const [ftrains, setFtrains] = useState("");
+  const [isLoading, setIsLoading] = useState("");
+  const [train, setTrain] = useState({
+    name: "",
+    imagePath:
+      "https://res.cloudinary.com/amiladevin1998/image/upload/v1696069476/download_cmzzo6.png",
+    registraionNo: "",
+  });
+  const [callback, setCallback] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
+  const [filterRegNo, setFilterRegNo] = useState("");
+  const [filterActive, setFilterActive] = useState("");
+
+  const getAllTrains = async () => {};
+  const createTrain = async () => {};
+  const updateTrain = async () => {};
+  const changeActiveStatus = async (regNo) => {};
+
+  const handleCreateModalClose = () => {
+    setTrain({
+      ...train,
+      name: "",
+      imagePath:
+        "https://res.cloudinary.com/amiladevin1998/image/upload/v1696069476/download_cmzzo6.png",
+      registraionNo: "",
+    });
+    setIsEdit(false);
   };
+
   return (
-    <div style={{ width: "100%" }}>
-      <div class="container text-center m-2">
-        <div class="row">
-          <div class="col-6 col-sm-6 ">
-            <div style={{ display: "flex", alignItems: "baseline" }}>
-              <img width={15} src={train_icon} />
-              <h5 style={{ marginLeft: "10px" }}>Train Management</h5>
-            </div>
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <Loading />
+        </div>
+      ) : (
+        <div style={{ overflow: "auto" }}>
+          <div style={{ display: "flex", alignItems: "baseline" }}>
+            <img width={15} src={user_icon} />
+            <h5 style={{ marginLeft: "5px" }}>Train Management</h5>
           </div>
-          <div class="col-6 col-sm-4 offset-sm-2">
+          <div
+            style={{
+              borderRadius: "20px",
+              backgroundColor: "rgb(0, 0, 0,0.5)",
+              overflow: "auto",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                marginTop: "10px",
+                marginBottom: "10px",
+                padding: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1500"
+                  className="form-label"
+                >
+                  Filter By Train Registraion Number
+                </label>
+                <input
+                  value={filterRegNo}
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput1500"
+                  placeholder="Ex: T0002"
+                  onChange={(e) => setFilterRegNo(e.target.value)}
+                />
+              </div>{" "}
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1200"
+                  className="form-label"
+                >
+                  Filter By Active Status
+                </label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  onChange={(e) => setFilterActive(e.target.value)}
+                >
+                  <option value="" selected>
+                    All
+                  </option>
+                  <option value={true}>Active</option>
+                  <option value={false}>Deactive</option>
+                </select>
+              </div>
+            </div>
+
             <div
               style={{
                 cursor: "pointer",
                 float: "right",
                 borderRadius: "50px",
                 justifyContent: "center",
-                backgroundColor: "#367E18",
+                backgroundColor: "rgb(0, 163, 44)",
                 alignItems: "center",
               }}
               data-toggle="modal"
-              data-target="#exampleModal"
+              data-target="#exampleModalCenter"
             >
-              <div>
+              <div
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="Create trainr"
+              >
                 <center>
                   <img style={{ margin: "10px" }} width={25} src={plus_icon} />
                 </center>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      {/* Add modal */}
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              {/* <h1
-                class="modal-title fs-5"
-                id="exampleModalLabel"
-                style={{ color: "black" }}
+            <div
+              className="modal fade"
+              id="exampleModalCenter"
+              tabIndex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div
+                className="modal-dialog modal-dialog-centered"
+                role="document"
               >
-                Add Train
-              </h1> */}
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <AddTrain/>
-            </div>
-            {/* <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
-            </div> */} 
-          </div>
-        </div>
-      </div>
-      {/* train table */}
-      <div style={{ width: "100%" }}>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Image</th>
-                <th scope="col">Train Name</th>
-                <th scope="col">Registration Number</th>
-                <th scope="col">Status</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {trainData?.map((train) => (
-                <tr key={train.id}>
-                  <th scope="row">{train.id}</th>
-                  <td>
-                    <img width={15} src={logo} />
-                  </td>
-                  <td>{train.trainName}</td>
-                  <td>{train.regNo}</td>
-                  <td>{train.Availability}</td>
-                  <td>
-                    <div style={{ display: "flex" }}>
-                      <div
-                        style={{
-                          cursor: "pointer",
-                          margin: "5px",
-                          borderRadius: "50px",
-                          justifyContent: "center",
-                          backgroundColor: "#F9D923",
-                          alignItems: "center",
-                        }}
-                        onClick={(e) => handleEdit(train.id)}
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Edit user"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal2"
-                      >
-                        <center>
-                          <img
-                            style={{ margin: "10px" }}
-                            width={10}
-                            src={edit_icon}
-                          />
-                        </center>
+                <div
+                  style={{
+                    borderRadius: "10px",
+                    backgroundColor: "#ffff",
+                    border: "none",
+                    color: "#0000 !important",
+                  }}
+                  className="modal-content"
+                >
+                  <div className="modal-header">
+                    <h5
+                      style={{ color: "black" }}
+                      className="modal-title"
+                      id="exampleModalLongTitle"
+                    >
+                      {isEdit ? "Edit User" : "Create New User"}
+                    </h5>
+                    <button
+                      style={{
+                        borderRadius: "50px",
+                        backgroundColor: "red",
+                        border: "none",
+                        color: "#ffff",
+                      }}
+                      type="button"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                      onClick={handleCreateModalClose}
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div style={{ color: "black" }} className="modal-body">
+                    <form>
+                      <div className="mb-3">
+                        <label
+                          htmlFor="exampleFormControlInput111"
+                          className="form-label"
+                        >
+                          Train Name
+                        </label>
+                        <input
+                          value={train.name}
+                          type="text"
+                          className="form-control"
+                          id="exampleFormControlInput111"
+                          placeholder="Udarata Manike"
+                          onChange={(e) =>
+                            setTrain({ ...train, name: e.target.value })
+                          }
+                        />
                       </div>
-                      {train.Availability === "available" ? (
-                        <div
-                          style={{
-                            cursor: "pointer",
-                            margin: "5px",
-                            borderRadius: "50px",
-                            justifyContent: "center",
-                            backgroundColor: "#36AE7C",
-                            alignItems: "center",
-                          }}
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Change status"
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal3"
-                          onClick={(e) => changeStatus(0)}
+                      <div className="mb-3">
+                        <label
+                          htmlFor="exampleFormControlInput222"
+                          className="form-label"
                         >
-                          <center>
-                            <img
-                              style={{ margin: "10px" }}
-                              width={10}
-                              src={delete_icon}
-                            />
-                          </center>
-                        </div>
-                      ) : train.Availability === "unavailable" ? (
-                        <div
-                          style={{
-                            cursor: "pointer",
-                            margin: "5px",
-                            borderRadius: "50px",
-                            justifyContent: "center",
-                            backgroundColor: "#EB5353",
-                            alignItems: "center",
-                          }}
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Change status"
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal3"
-                          onClick={(e) => changeStatus(1)}
-                        >
-                          <center>
-                            <img
-                              style={{ margin: "10px" }}
-                              width={10}
-                              src={delete_icon}
-                            />
-                          </center>
-                        </div>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      
-      {/* edit modal */}
-      <div
-        class="modal fade"
-        id="exampleModal2"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
+                          Trainn Registraion Number
+                        </label>
+                        <input
+                          value={train.registraionNo}
+                          type="text"
+                          className="form-control"
+                          id="exampleFormControlInput222"
+                          placeholder="T0001"
+                          onChange={(e) =>
+                            setTrain({
+                              ...train,
+                              registraionNo: e.target.value,
+                            })
+                          }
+                          disabled={isEdit}
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-dismiss="modal"
+                      onClick={handleCreateModalClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      data-dismiss="modal"
+                      onClick={isEdit ? updateTrain : createTrain}
+                    >
+                      {isEdit ? "Update" : "Create"}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="modal-body">
-              <UpdateTrain/>
-            </div>
-            {/* <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
-            </div> */}
+            <br />
+            <br />
+            {trains.length > 0 ? (
+              <div style={{ padding: "10px", overflow: "auto" }}>
+                <table className="table table-striped table-hover">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">Registration No</th>
+                      <th scope="col">Image</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Status</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {trains.map((u) => (
+                      <tr key={u.id} className="pointer">
+                        <th scope="row">{u.nic}</th>
+                        <td>{u.registraionNo}</td>
+                        <td>
+                          <img src={u.imagePath} width={15} />
+                        </td>
+                        <td>{u.name}</td>
+                        <td>{u.isActive ? "Active" : "Deactive"}</td>
+                        <td>
+                          {auth.role == "backoffice" && (
+                            <div style={{ display: "flex", float: "right" }}>
+                              <div
+                                onClick={() => {
+                                  changeActiveStatus(u.registraionNo);
+                                }}
+                                style={{
+                                  cursor: "pointer",
+                                  margin: "5px",
+                                  borderRadius: "50px",
+                                  justifyContent: "center",
+                                  backgroundColor: u.isActive
+                                    ? "rgb(209, 99, 8)"
+                                    : "rgb(0, 168, 8)",
+                                  alignItems: "center",
+                                }}
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title={
+                                  u.isActive
+                                    ? "Deactivate train"
+                                    : "Activate train"
+                                }
+                              >
+                                <center>
+                                  <img
+                                    style={{ margin: "10px" }}
+                                    width={10}
+                                    src={u.isActive ? wrong_icon : correct_icon}
+                                  />
+                                </center>
+                              </div>
+                              <div
+                                onClick={() => {
+                                  setIsEdit(true);
+                                  setTrain({
+                                    ...train,
+                                    name: u.name,
+                                    registraionNo: u.registraionNo,
+                                    imagePath: u.imagePath,
+                                  });
+                                }}
+                                style={{
+                                  cursor: "pointer",
+                                  margin: "5px",
+                                  borderRadius: "50px",
+                                  justifyContent: "center",
+                                  backgroundColor: "rgb(212, 194, 2)",
+                                  alignItems: "center",
+                                }}
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="Edit user"
+                              >
+                                <div
+                                  data-toggle="modal"
+                                  data-target="#exampleModalCenter"
+                                >
+                                  <center>
+                                    <img
+                                      style={{ margin: "10px" }}
+                                      width={10}
+                                      src={edit_icon}
+                                    />
+                                  </center>
+                                </div>
+                              </div>
+                              {/* <div
+                                  style={{
+                                    cursor: "pointer",
+                                    margin: "5px",
+                                    borderRadius: "50px",
+                                    justifyContent: "center",
+                                    backgroundColor: "rgb(181, 2, 2)",
+                                    alignItems: "center",
+                                  }}
+                                  data-toggle="tooltip"
+                                  data-placement="bottom"
+                                  title="Delete user"
+                                >
+                                  <center>
+                                    <img
+                                      style={{ margin: "10px" }}
+                                      width={10}
+                                      src={delete_icon}
+                                    />
+                                  </center>
+                                </div> */}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div>
+                <center>
+                  <Nodata />
+                </center>
+              </div>
+            )}
           </div>
         </div>
-      </div>
-      {/* status modal */}
-      <div
-        class="modal fade"
-        id="exampleModal3"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1
-                class="modal-title fs-5"
-                id="exampleModalLabel"
-                style={{ color: "black" }}
-              >
-                Change status
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              { !trainStatus && 
-              <p style={{color:"#EB5353"}}>
-                you want change status on train unavailable
-              </p>
-              }
-
-              {trainStatus &&
-              <p style={{color:"#36AE7C"}}>
-                you want change status on train available
-              </p>
-              }
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                No
-              </button>
-              <button type="button" class="btn btn-primary">
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

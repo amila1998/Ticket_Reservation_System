@@ -14,3 +14,12 @@ export const UserManagementAPI = {
   user_update: "/api/User/update_user",
   user_activate_request: "/api/User/request_active_account",
 };
+
+export const TrainRoutesManagementAPI = {
+  getAll: "/api/TrainRoutes",
+  create: "/api/TrainRoutes",
+  delete: "/api/TrainRoutes/deleteRoute",
+  disable: "/api/TrainRoutes/disableRoute",
+  enable: "/api/TrainRoutes/enableRoute",
+  update: "/api/TrainRoutes/updateRoute",
+};

@@ -88,6 +88,7 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
     return client.GetDatabase(settings.DatabaseName);
 });
 
+
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthenticationService>();
@@ -95,6 +96,8 @@ builder.Services.AddScoped<TokenGenerator>();
 builder.Services.AddScoped<CloudinaryImageUploadService>();
 builder.Services.AddScoped<TrainRepository>();
 builder.Services.AddScoped<TrainService>();
+builder.Services.AddScoped<TrainRoutesRepository>();
+builder.Services.AddScoped<TrainRoutesService>();
 
 var app = builder.Build();
 

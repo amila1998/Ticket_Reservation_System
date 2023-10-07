@@ -116,5 +116,15 @@ namespace trs_web_service.Infrastructure
             await _collection.InsertOneAsync(user);
         }
 
+        public async void DeleteRoute(ObjectId id)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            var update = Builders<User>.Update
+                .Set(u => u.IsDelete, true);
+
+            // Find and update the user document
+            await _collection.FindOneAndUpdateAsync(filter, update);
+        }
+
     }
 }

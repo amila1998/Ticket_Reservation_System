@@ -77,5 +77,15 @@ namespace trs_web_service.Infrastructure
             return updated;
         }
 
+        public async void DeleteTrain(ObjectId id)
+        {
+            var filter = Builders<Train>.Filter.Eq(u => u.Id, id);
+            var update = Builders<Train>.Update
+                .Set(u => u.IsDelete, true);
+
+            // Find and update the user document
+            await _collection.FindOneAndUpdateAsync(filter, update);
+        }
+
     }
 }

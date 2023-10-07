@@ -15,6 +15,7 @@ namespace trs_web_service.Models.Domains
         public required string StartTime { get; set; }
         public required string EndTime { get; set; }
         public required List<TrainClasses> TrainClasses { get; set; }
+        public bool IsDelete { get; set; }
     }
 
     public enum DayType
