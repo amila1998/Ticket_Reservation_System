@@ -98,6 +98,8 @@ builder.Services.AddScoped<TrainRepository>();
 builder.Services.AddScoped<TrainService>();
 builder.Services.AddScoped<TrainRoutesRepository>();
 builder.Services.AddScoped<TrainRoutesService>();
+builder.Services.AddScoped<TrainScheduleRepository>();
+builder.Services.AddScoped<TrainScheduleService>();
 
 var app = builder.Build();
 

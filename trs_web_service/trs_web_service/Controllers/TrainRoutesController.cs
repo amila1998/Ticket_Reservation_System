@@ -17,7 +17,7 @@ namespace trs_web_service.Controllers
             _service = service;
         }
 
-        [Authorize]
+        [Authorize (Policy ="nottraveler")]
         [HttpGet]
         public async Task<IActionResult> GetAllRoutes()
         {
@@ -28,7 +28,22 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
+            }
+        }
+
+        [Authorize]
+        [HttpGet ("getActiveRoutes")]
+        public async Task<IActionResult> GetAllRoutesByNotInActive()
+        {
+            try
+            {
+                var route = await _service.GetAllRoutesByNotInActive();
+                return Ok(route);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
 
@@ -43,7 +58,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
@@ -58,7 +73,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
@@ -73,7 +88,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
@@ -89,7 +104,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
@@ -105,7 +120,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 

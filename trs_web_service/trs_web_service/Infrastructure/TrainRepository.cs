@@ -21,12 +21,14 @@ namespace trs_web_service.Infrastructure
 
         public async Task<Train> GetByRegistraionNoAsync(string regNo)
         {
-            return await _collection.Find(t => t.RegistraionNo == regNo).FirstOrDefaultAsync();
-        }
+            // Create a filter to find the route with the given start and end stations
+            var filter = Builders<Train>.Filter.Eq(x => x.RegistraionNo, regNo) &
+                          Builders<Train>.Filter.Eq(x => x.IsDelete, false);
 
-        public async Task<Train> GetByRegistrationNoAsync(string regNo)
-        {
-            return await _collection.Find(t => t.RegistraionNo == regNo).FirstOrDefaultAsync();
+            // Use Find method to search for the route
+            Train train = await _collection.Find(filter).FirstOrDefaultAsync();
+
+            return train;
         }
 
         public async Task<Train> ChangeActiveStatus(string regNo, bool isActive)
@@ -43,25 +45,20 @@ namespace trs_web_service.Infrastructure
 
         public async Task<List<Train>> GetAllTrainsAsync()
         {
-            //string name, string regNo, int page, int pageSize
-            //var filterBuilder = Builders<Train>.Filter;
-            //var filter = filterBuilder.Empty; // Start with an empty filter
+            // Create a filter to match documents where IsDelete is not true
+            var filter = Builders<Train>.Filter.Eq(u => u.IsDelete, false);
 
-            //if (!string.IsNullOrWhiteSpace(name))
-            //{
-            //    // Add filter criteria for name if provided
-            //    filter &= filterBuilder.Eq(t => t.Name, name);
-            //}
+            // Use the filter when querying the collection
+            return await _collection.Find(filter).ToListAsync();
+        }
 
-            //if (!string.IsNullOrWhiteSpace(regNo))
-            //{
-            //    // Add filter criteria for registration number if provided
-            //    filter &= filterBuilder.Eq(t => t.RegistraionNo, regNo);
-            //}
+        public async Task<List<Train>> GetAllTrainsNotCancelAsync()
+        {
+            // Create a filter to match documents where IsDelete is not true
+            var filter = Builders<Train>.Filter.Eq(u => u.IsDelete, false) & Builders<Train>.Filter.Eq(u => u.IsActive, true);
 
-            //var skip = (page - 1) * pageSize;
-            //var result = await _collection.Find(filter).Skip(skip).Limit(pageSize).ToListAsync();
-            return await _collection.Find(_ => true).ToListAsync();
+            // Use the filter when querying the collection
+            return await _collection.Find(filter).ToListAsync();
         }
 
         public async Task<Train> UpdateTrain(TrainReqBodyDto train)
@@ -77,7 +74,7 @@ namespace trs_web_service.Infrastructure
             return updated;
         }
 
-        public async void DeleteTrain(ObjectId id)
+        public async Task DeleteTrain(ObjectId id)
         {
             var filter = Builders<Train>.Filter.Eq(u => u.Id, id);
             var update = Builders<Train>.Update

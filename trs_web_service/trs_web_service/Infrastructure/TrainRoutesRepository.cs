@@ -28,6 +28,15 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
+        public async Task<List<TrainRoutes>> GetAllTrainRoutesByNotInActiveAsync()
+        {
+            // Create a filter to match documents where IsDelete is not true
+            var filter = Builders<TrainRoutes>.Filter.Eq(u => u.IsDelete, false) & Builders<TrainRoutes>.Filter.Eq(u => u.IsDisable, false);
+
+            // Use the filter when querying the collection
+            return await _collection.Find(filter).ToListAsync();
+        }
+
 
         public async Task DisableRoute(ObjectId id)
         {

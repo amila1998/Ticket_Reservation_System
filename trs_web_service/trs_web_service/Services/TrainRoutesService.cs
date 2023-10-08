@@ -22,12 +22,25 @@ namespace trs_web_service.Services
             {
                 throw new Exception("This route all ready exsit"); 
             }
+            List<TrainStopStations> trainStopStations = new();
+            if (req.Stations.Count > 0)
+            {
+                foreach (var st in req.Stations)
+                {
+                    TrainStopStations trainStopStations1 = new()
+                    {
+                        Name = st.Name,
+                        Order = st.Order,
+                    };
+                    trainStopStations.Add(trainStopStations1);
+                }
+            }
             TrainRoutes trainRoutes = new()
             {
                 RouteName=req.RouteName,
                 StartStation=req.StartStation,
                 EndStation=req.EndStation,
-                Stations=req.Stations,
+                Stations= trainStopStations,
                 IsDisable = false,
                 IsDelete = false
             };
@@ -87,10 +100,60 @@ namespace trs_web_service.Services
             {
                 foreach (var item in routes)
                 {
+                    List< TrainStopStations >  trainStopStations = new();
+                    if(item.Stations.Count > 0)
+                    {
+                        foreach (var st in item.Stations)
+                        {
+                            TrainStopStations trainStopStations1 = new()
+                            {
+                                Name = st.Name,
+                                Order = st.Order,
+                            };
+                            trainStopStations.Add(trainStopStations1);
+                        }
+                    }
                     TrainRouteResDto trainRouteResDto = new()
                     {
                         Id = item.Id.ToString().Substring(0, 24),
-                        Stations = item.Stations,
+                        Stations = trainStopStations,
+                        EndStation = item.EndStation,
+                        StartStation = item.StartStation,
+                        RouteName = item.RouteName,
+                        IsDisable = item.IsDisable
+                    };
+                    trainRouteResDtos.Add(trainRouteResDto);
+                }
+            }
+
+            return trainRouteResDtos;
+        }
+
+        public async Task<List<TrainRouteResDto>> GetAllRoutesByNotInActive()
+        {
+            List<TrainRoutes> routes = await _repository.GetAllTrainRoutesByNotInActiveAsync();
+            List<TrainRouteResDto> trainRouteResDtos = new();
+            if (routes != null && routes.Count > 0)
+            {
+                foreach (var item in routes)
+                {
+                    List<TrainStopStations> trainStopStations = new();
+                    if (item.Stations.Count > 0)
+                    {
+                        foreach (var st in item.Stations)
+                        {
+                            TrainStopStations trainStopStations1 = new()
+                            {
+                                Name = st.Name,
+                                Order = st.Order,
+                            };
+                            trainStopStations.Add(trainStopStations1);
+                        }
+                    }
+                    TrainRouteResDto trainRouteResDto = new()
+                    {
+                        Id = item.Id.ToString().Substring(0, 24),
+                        Stations = trainStopStations,
                         EndStation = item.EndStation,
                         StartStation = item.StartStation,
                         RouteName = item.RouteName,

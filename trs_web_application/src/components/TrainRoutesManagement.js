@@ -27,6 +27,7 @@ const TrainRouteRoutesManagement = () => {
   const [sStartStation, setSStartStation] = useState("");
   const [sEndStation, setSEndStation] = useState("");
   const [fStations, setfStations] = useState([]);
+  const [stopStationOrder,setStopStationOrder]=useState(0)
 
   const [trainRoute, setTrainRoute] = useState({
     id: "",
@@ -35,6 +36,7 @@ const TrainRouteRoutesManagement = () => {
     endStation: "",
     stations: [],
   });
+  console.log("🚀 ~ file: TrainRoutesManagement.js:39 ~ TrainRouteRoutesManagement ~ trainRoute:", trainRoute)
 
 
   useEffect(() => {
@@ -49,9 +51,10 @@ const TrainRouteRoutesManagement = () => {
   useEffect(() => {
     if (fStations && fStations.length > 0) {
       let st = [];
-      for (const ft of fStations) {
-        st.push(ft.value)
-      }
+        for (let index = 0; index < fStations.length; index++) {
+            const order = index + 1;    
+            st.push({ name: fStations[index].value, order: order });
+        }
        setTrainRoute({ ...trainRoute, stations: st });
     }
   }, [fStations]);
@@ -263,6 +266,7 @@ const TrainRouteRoutesManagement = () => {
     setSEndStation("")
     setSStartStation("")
     setIsEdit(false);
+    setStopStationOrder(0)
   };
 
   const createTrainRoute = async(e)=>{
@@ -426,30 +430,35 @@ const TrainRouteRoutesManagement = () => {
                 </select>
               </div> */}
             </div>
-
-            <div
-              style={{
-                cursor: "pointer",
-                float: "right",
-                borderRadius: "50px",
-                justifyContent: "center",
-                backgroundColor: "rgb(0, 163, 44)",
-                alignItems: "center",
-                marginRight: "20px",
-              }}
-              data-toggle="modal"
-              data-target="#exampleModalCenter"
-            >
+            {auth.role == "backoffice" && (
               <div
-                data-toggle="tooltip"
-                data-placement="bottom"
-                title="Create trainRouter"
+                style={{
+                  cursor: "pointer",
+                  float: "right",
+                  borderRadius: "50px",
+                  justifyContent: "center",
+                  backgroundColor: "rgb(0, 163, 44)",
+                  alignItems: "center",
+                  marginRight: "20px",
+                }}
+                data-toggle="modal"
+                data-target="#exampleModalCenter"
               >
-                <center>
-                  <img style={{ margin: "10px" }} width={25} src={plus_icon} />
-                </center>
+                <div
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Create train route"
+                >
+                  <center>
+                    <img
+                      style={{ margin: "10px" }}
+                      width={25}
+                      src={plus_icon}
+                    />
+                  </center>
+                </div>
               </div>
-            </div>
+            )}
             <div
               className="modal fade"
               id="exampleModalCenter"
@@ -571,6 +580,9 @@ const TrainRouteRoutesManagement = () => {
                           placeholder="Search for a station..."
                           isSearchable={true}
                         />
+                        <small id="emailHelp" class="form-text text-muted">
+                          The list must be in correct order ***
+                        </small>
                       </div>
                     </form>
                   </div>
@@ -609,7 +621,7 @@ const TrainRouteRoutesManagement = () => {
                       <th scope="col">Start Station</th>
                       <th scope="col">End Station</th>
                       <th scope="col">Stops</th>
-                      <th scope="col">Active Status</th>
+                      {/* <th scope="col">Active Status</th> */}
                       <th scope="col"></th>
                     </tr>
                   </thead>
@@ -627,21 +639,23 @@ const TrainRouteRoutesManagement = () => {
                                 backgroundColor: "rgb(252, 184, 184)",
                                 margin: "2px",
                               }}
-                              key={s}
+                              key={s.order}
                             >
-                              {s}
+                              {s.order+". "+s.name}
                             </div>
                           ))}
                         </td>
-                        <td>
+                        {/* <td>
                           {" "}
                           <div
                             onClick={() => {
-                              changeActiveStatus(u);
+                              auth.role == "backoffice" &&
+                                changeActiveStatus(u);
                             }}
                             style={{
                               cursor: "pointer",
                               margin: "5px",
+                              width: "25%",
                               borderRadius: "50px",
                               justifyContent: "center",
                               backgroundColor: u.isDisable
@@ -665,7 +679,7 @@ const TrainRouteRoutesManagement = () => {
                               />
                             </center>
                           </div>
-                        </td>
+                        </td> */}
                         <td>
                           {auth.role == "backoffice" && (
                             <div style={{ display: "flex", float: "right" }}>
@@ -723,29 +737,29 @@ const TrainRouteRoutesManagement = () => {
                                 </div>
                               </div> */}
                               <div
-                                  style={{
-                                    cursor: "pointer",
-                                    margin: "5px",
-                                    borderRadius: "50px",
-                                    justifyContent: "center",
-                                    backgroundColor: "rgb(181, 2, 2)",
-                                    alignItems: "center",
-                                  }}
-                                  data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="Delete user"
-                                  onClick={()=>{
-                                    deleteRoute(u.id)
-                                  }}
-                                >
-                                  <center>
-                                    <img
-                                      style={{ margin: "10px" }}
-                                      width={10}
-                                      src={delete_icon}
-                                    />
-                                  </center>
-                                </div>
+                                style={{
+                                  cursor: "pointer",
+                                  margin: "5px",
+                                  borderRadius: "50px",
+                                  justifyContent: "center",
+                                  backgroundColor: "rgb(181, 2, 2)",
+                                  alignItems: "center",
+                                }}
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="Delete user"
+                                onClick={() => {
+                                  deleteRoute(u.id);
+                                }}
+                              >
+                                <center>
+                                  <img
+                                    style={{ margin: "10px" }}
+                                    width={10}
+                                    src={delete_icon}
+                                  />
+                                </center>
+                              </div>
                             </div>
                           )}
                         </td>
