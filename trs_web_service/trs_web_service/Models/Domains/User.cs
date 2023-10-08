@@ -19,6 +19,7 @@ namespace trs_web_service.Models.Domains
         public string NIC { get; set; }
 
         public string Email { get; set; }
+        public bool IsDelete { get; set; }
 
         public User()
         {

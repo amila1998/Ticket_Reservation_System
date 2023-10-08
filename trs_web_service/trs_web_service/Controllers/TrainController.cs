@@ -18,7 +18,7 @@ namespace trs_web_service.Controllers
             _trainService = service;
         }
 
-        [Authorize (Policy = "backoffice")]
+        [Authorize(Policy = "backoffice")]
         [HttpPost]
         public async Task<IActionResult> Create(TrainReqBodyDto train)
         {
@@ -29,12 +29,12 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
 
         }
 
-        [Authorize(Policy = "nottraveler")]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllTrains()
         {
@@ -45,7 +45,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
@@ -60,7 +60,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
@@ -75,7 +75,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 

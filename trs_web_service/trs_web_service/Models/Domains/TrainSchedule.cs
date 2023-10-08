@@ -8,13 +8,25 @@ namespace trs_web_service.Models.Domains
         public DayType DayType { get; set; }
         public required string TraingRegistraionNo { get; set; }
         public bool IsCancel { get; set; }
-        public List<DateTime>? CancelDates { get; set; }
-        public required string StartStation { get; set; }
-        public required string EndStation { get; set; }
-        public required List<TrainStops> TrainStops { get; set; }
+        public List<DateTime> CancelDates { get; set; }
+        public required string TrainRouteId { get; set; }
+        public  List<TrainScheduleStopStations> TrainStops { get; set; }
         public required string StartTime { get; set; }
         public required string EndTime { get; set; }
-        public required List<TrainClasses> TrainClasses { get; set; }
+        public List<ClassTypes> TrainClasses { get; set; }
+        public bool IsDelete { get; set; }
+
+        public TrainSpeed Speed { get; set; }
+
+        public TrainSchedule()
+        {
+        }
+    }
+
+    public class TrainScheduleStopStations
+    {
+        public TrainStopStations TrainStop { get; set; }
+        public string NavTime { get; set; }
     }
 
     public enum DayType
@@ -26,10 +38,10 @@ namespace trs_web_service.Models.Domains
         Saturday,
     }
 
-    public class TrainStops
+    public enum TrainSpeed
     {
-        public required string StationName { get; set; }
-        public required string NavTime { get; set; }
+        Express,//0
+        Slow,
     }
 
     public enum ClassTypes
@@ -37,10 +49,5 @@ namespace trs_web_service.Models.Domains
         First, //0
         Second,
         Third,
-    }
-
-    public class TrainClasses
-    {
-        public required ClassTypes ClassType { get; set; }
     }
 }

@@ -55,7 +55,16 @@
   }
 }
 
+.dropdownItems{
+  overflow: hidden;
+  text-wrap: wrap;
+  padding: 10px;
+  background-color: #e6e6e6;
+}
 
+.dropdownItems:hover{
+  background-color: #9bd4ff;
+}
 
 
 .App-link {
@@ -161,4 +170,66 @@
 
 .t_head{
   background-color: black !important;
+}
+
+.avatar img {
+  width: 200px;
+  height:200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+}
+.avatar2 img {
+  width: 100px;
+  height:100px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile_avatar-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.profile_avatar-wrapper:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  cursor: pointer;
+}
+
+.profile_avatar-wrapper_img {
+  width: 200px;
+  height: 200px;
+  -webkit-box-shadow: 1px 1px 15px -15px #000;
+          box-shadow: 1px 1px 15px -15px #000;
+}
+
+.profile_avatar-wrapper_svg{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+  height: 100%;
+  width: 50%;
+  opacity: 0;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.profile_avatar-wrapper_svg:hover {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+}
+
+.profile_avatar-input {
+  display: none;
 }
