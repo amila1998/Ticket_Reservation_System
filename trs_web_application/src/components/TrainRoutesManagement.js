@@ -40,8 +40,10 @@ const TrainRouteRoutesManagement = () => {
 
 
   useEffect(() => {
-    sStartStation && sStartStation.value &&
+    if(sStartStation && sStartStation.value){
+      
       setTrainRoute({ ...trainRoute, startStation: sStartStation.value });
+    }
   }, [sStartStation]);
   useEffect(() => {
     sEndStation &&

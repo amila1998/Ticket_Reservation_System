@@ -43,6 +43,7 @@ const TrainManagement = () => {
       "https://res.cloudinary.com/amiladevin1998/image/upload/v1696069476/download_cmzzo6.png",
     registraionNo: "",
   });
+  console.log("🚀 ~ file: TrainManagement.js:46 ~ TrainManagement ~ train:", train)
   const [callback, setCallback] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isSEdit, setIsSEdit] = useState(false);
@@ -151,7 +152,9 @@ const TrainManagement = () => {
     }
   };
 
-  const updateTrain = async () => {};
+  const updateTrain = async () => {
+    
+  };
 
   const changeActiveStatus = async (data) => {
     try {
@@ -276,6 +279,7 @@ const TrainManagement = () => {
   );
 
   const getShedules = async () => {
+    setIsLoading(true)
     try {
       const res = await getAxiosInstance().get(
         TrainScheduleManagementAPI.getSchedules + "/" + train.registraionNo,
@@ -299,6 +303,8 @@ const TrainManagement = () => {
         progress: undefined,
         theme: "light",
       });
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -1521,6 +1527,19 @@ const TrainManagement = () => {
                   </div>
                 </div>
               </div>
+              {schedules.length > 0 ? (
+                <>
+                  {
+                    //TODO: BODY
+                  }
+                </>
+              ) : (
+                <div>
+                  <center>
+                    <Nodata />
+                  </center>
+                </div>
+              )}
             </div>
           </div>
         )}
