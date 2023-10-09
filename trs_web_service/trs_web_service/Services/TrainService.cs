@@ -7,10 +7,12 @@ namespace trs_web_service.Services
     public class TrainService
     {
         private readonly TrainRepository _repository;
+        private readonly TrainScheduleRepository _trainScheduleRepository;
 
-        public TrainService(TrainRepository repository)
+        public TrainService(TrainRepository repository, TrainScheduleRepository trainScheduleRepository)
         {
             _repository = repository;
+            _trainScheduleRepository = trainScheduleRepository;
         }
 
         public async Task CreateTrainAsync(TrainReqBodyDto train)
@@ -52,17 +54,42 @@ namespace trs_web_service.Services
 
         public async Task ChangeActiveStatus(string regNo)
         {
-            var train = await _repository.GetByRegistrationNoAsync(regNo) ?? throw new Exception("No train under this registration number");
-            //TODO: should check there is any resevation or shedules
+            var train = await _repository.GetByRegistraionNoAsync(regNo) ?? throw new Exception("No train under this registration number");
+            bool changeActiveStatus = !train.IsActive;
+            var schedule = await _trainScheduleRepository.GetBySheduleByTrainRegistraionNoAndNoCancelAsync(train.RegistraionNo);
+            if (changeActiveStatus)
+            {
+                if (schedule.Count > 0)
+                {
+                    await _repository.ChangeActiveStatus(regNo, !train.IsActive);
+                }
+                else
+                {
+                    throw new Exception("Can not change status, Beacuse there is no active schedules ");
+                }
+            }
+            else
+            {
+                if (schedule.Count > 0)
+                {
+                    await _repository.ChangeActiveStatus(regNo, !train.IsActive);
+                }
+                else
+                {
+                    //TODO: should check there is any resevation
+                    await _trainScheduleRepository.CancelSheduleByTrainRegNo(train.RegistraionNo);
+                    await _repository.ChangeActiveStatus(regNo, !train.IsActive);
+                }
+            }
 
-            await _repository.ChangeActiveStatus(regNo, !train.IsActive);
+
 
 
         }
 
         public async Task UpdateTrain(TrainReqBodyDto train)
         {
-            var extrain = await _repository.GetByRegistrationNoAsync(train.RegistraionNo) ?? throw new Exception("No train under this registration number");
+            var extrain = await _repository.GetByRegistraionNoAsync(train.RegistraionNo) ?? throw new Exception("No train under this registration number");
             //TODO: should check there is any resevation or shedules
 
             await _repository.UpdateTrain(train);

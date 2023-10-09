@@ -11,5 +11,7 @@ namespace trs_web_service.Models.Domains
         public string ImagePath { get; set; }
 
         public bool IsActive { get; set; }
+
+        public bool IsDelete { get; set; }
     }
 }

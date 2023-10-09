@@ -69,6 +69,28 @@ namespace trs_web_service.Services
             return exUser == null ? throw new Exception("Have not an account") : await _repository.DeactivateUserAsync(nic);
         }
 
+        public async Task<User> SendActiveStatusAsync(string nic)
+        {
+            if (nic == "00000000V")
+            {
+                throw new Exception("Have not an account");
+            }
+            var exUser = await _repository.GetByNICAsync(nic);
+            if(exUser == null)
+            {
+                throw new Exception("Have not an account");
+            }
+            if (exUser.IsActive)
+            {
+                throw new Exception("Account is already activated");
+            }
+            if (exUser.IsSendActiveStatus)
+            {
+                throw new Exception("Account activation is already send");
+            }
+            return await _repository.SendActiveStatusAsync(nic);
+        }
+
         public async Task<User> UserUpdateProfile(UserUpdateDto user, string id)
         {
 
@@ -85,6 +107,40 @@ namespace trs_web_service.Services
             }
   
             return await _repository.UserUpdateProfile(user, objectId);
+        }
+
+        public async Task<User> ResetPassword(string password, string id)
+        {
+
+            if (!ObjectId.TryParse(id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+
+            var info = await _repository.GetByIdAsync(objectId) ?? throw new Exception("Have not an account");
+
+            if (info.NIC == "00000000V")
+            {
+                throw new Exception("Can not update Super backoffice account");
+            }
+
+            return await _repository.ResetPassword(EncryptPassword(password), objectId);
+        }
+
+        public async Task<User> UpdateUser(UpdateUserDto user)
+        {
+            var info = await _repository.GetByNICAsync(user.NIC) ?? throw new Exception("Have not an account");
+
+            if (info.NIC == "00000000V")
+            {
+                throw new Exception("Can not update Super backoffice account");
+            }
+
+            user.Password = EncryptPassword(user.Password);
+
+
+
+            return await _repository.UpdateUser(user);
         }
 
         public async Task<User> ActivateUserAsync(string nic)

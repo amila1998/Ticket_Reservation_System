@@ -3,6 +3,7 @@ import user_icon from "../assets/icons/user-solid.svg";
 import plus_icon from "../assets/icons/plus-solid.svg";
 import edit_icon from "../assets/icons/pen-to-square-solid.svg";
 import delete_icon from "../assets/icons/trash-solid.svg";
+import correct_icon from "../assets/icons/correct-svgrepo-com.svg";
 import Nodata from "../utils/Nodata";
 import { getAxiosInstance } from "../utils/axios";
 import { UserManagementAPI } from "../utils/api";
@@ -13,28 +14,29 @@ import "react-toastify/dist/ReactToastify.css";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [fusers, setFUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [callback, setCallback] = useState(true);
-   const token = useSelector((state) => state.auth.token);
-   const auth = useSelector((state) => state.auth.user);
-   const [filterName,setFilterName]=useState("")
-   const [filterRole,setFilterRole]=useState("")
-   console.log("🚀 ~ file: UserManagement.js:23 ~ UserManagement ~ filterRole:", filterRole)
-   const [filterIsActive,setFilterIsActive]=useState("")
+  const token = useSelector((state) => state.auth.token);
+  const auth = useSelector((state) => state.auth.user);
+  const [filterName, setFilterName] = useState("");
+  const [filterRole, setFilterRole] = useState("");
+  const [filterNIC, setFilterNIC] = useState("");
+  const [filterIsActive, setFilterIsActive] = useState("");
+  const [isPasswordReset,setIsPasswordReset]=useState(false)
 
-   const [user, setUser] = useState({
-     name: "",
-     password: "000000",
-     role: "traveler",
-     nic: "",
-     imagePath: "",
-     contactNo: "",
-     email: "",
-   });
-   
+  const [user, setUser] = useState({
+    name: "",
+    password: "000000",
+    role: "traveler",
+    nic: "",
+    imagePath: "",
+    contactNo: "",
+    email: "",
+  });
 
-   const handleCreateModalClose =()=>{
+  const handleCreateModalClose = () => {
     setUser({
       ...user,
       name: "",
@@ -45,7 +47,8 @@ const UserManagement = () => {
       contactNo: "",
       email: "",
     });
-   }
+    setIsEdit(false)
+  };
 
   const getAllUsers = async () => {
     try {
@@ -53,7 +56,8 @@ const UserManagement = () => {
       const res = await getAxiosInstance().get(UserManagementAPI.getAllUsers, {
         headers: { Authorization: `bearer ${token}` },
       });
-      setUsers(res.data)     
+      setFUsers(res.data);
+      setUsers(res.data);
       setIsLoading(false);
       setCallback(false);
     } catch (error) {
@@ -62,19 +66,16 @@ const UserManagement = () => {
         "🚀 ~ file: UserManagement.js:13 ~ getAllUsers ~ error:",
         error
       );
-            toast.error(
-              error.response.data ? error.response.data : error.message,
-              {
-                position: "top-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -82,7 +83,33 @@ const UserManagement = () => {
     callback && getAllUsers();
   }, [callback]);
 
-  const createUser =async(e)=>{
+  useEffect(() => {
+    let userList = fusers;
+    if (userList.length > 0 && (filterName != null || filterName != "")) {
+      userList = userList.filter((user) => {
+        return user.name.toLowerCase().includes(filterName.toLowerCase());
+      });
+    }
+    if (userList.length > 0 && filterIsActive) {
+      userList = userList.filter((user) => {
+        return filterIsActive === "true" ? user.isActive : !user.isActive;
+      });
+    }
+    if (userList.length > 0 && filterRole) {
+      userList = userList.filter((user) => {
+        return user.role == filterRole;
+      });
+    }
+    if (userList.length > 0 && filterNIC) {
+      userList = userList.filter((user) => {
+        return user.nic.toLowerCase().includes(filterNIC.toLowerCase());
+      });
+    }
+
+    setUsers(userList);
+  }, [filterIsActive, filterName, filterRole, filterNIC]);
+
+  const createUser = async (e) => {
     e.preventDefault();
     try {
       const res = await getAxiosInstance().post(
@@ -92,36 +119,114 @@ const UserManagement = () => {
           headers: { Authorization: `bearer ${token}` },
         }
       );
-       toast.success("User created successfully !", {
-         position: "top-left",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
-      handleCreateModalClose()
-      setCallback(true)
+      toast.success("User created successfully !", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleCreateModalClose();
+      setCallback(true);
     } catch (error) {
-      console.log("🚀 ~ file: UserManagement.js:70 ~ createUser ~ error:", error)
-            toast.error(
-              error.response.data ? error.response.data : error.message,
-              {
-                position: "top-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
+      console.log(
+        "🚀 ~ file: UserManagement.js:70 ~ createUser ~ error:",
+        error
+      );
+      toast.error(error.response.data ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const activateUser =async(nic)=>{
+    try {
+      const res = await getAxiosInstance().put(
+        UserManagementAPI.activate_user + `/${nic}`,null,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      toast.success("User actvated successfully !", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setCallback(true);  
+    } catch (error) {
+      console.log("🚀 ~ file: UserManagement.js:154 ~ activateUser ~ error:", error)
+            toast.error(error.response ? error.response.data : error.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
     }
   }
 
+  const updateUser = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await getAxiosInstance().put(
+        UserManagementAPI.user_update,
+        {
+          nic: user.nic,
+          role: user.role,
+          isPasswordReset:isPasswordReset,
+          password: user.password,
+        },
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      toast.success("User update successfully !", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleCreateModalClose();
+      setCallback(true);
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: UserManagement.js:194 ~ updateUser ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <>
@@ -171,6 +276,22 @@ const UserManagement = () => {
                 flexWrap: "wrap",
               }}
             >
+              <div className="mb-3">
+                <label
+                  htmlFor="exampleFormControlInput150"
+                  className="form-label"
+                >
+                  Filter By NIC/Passport Number
+                </label>
+                <input
+                  value={filterNIC}
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput150"
+                  placeholder="Ex: 987788555V"
+                  onChange={(e) => setFilterNIC(e.target.value)}
+                />
+              </div>{" "}
               <div className="mb-3">
                 <label
                   htmlFor="exampleFormControlInput10"
@@ -279,7 +400,7 @@ const UserManagement = () => {
                       className="modal-title"
                       id="exampleModalLongTitle"
                     >
-                      {"Create New User"}
+                      {isEdit ? "Edit User" : "Create New User"}
                     </h5>
                     <button
                       style={{
@@ -314,6 +435,7 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, name: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
                       <div className="mb-3">
@@ -332,8 +454,31 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, nic: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
+                      {isEdit && (
+                        <div className="mb-3">
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id="flexCheckDefalt83"
+                              checked={isPasswordReset}
+                              onChange={() => {
+                                setIsPasswordReset(!isPasswordReset);
+                              }}
+                            />
+                            <label
+                              class="form-check-label"
+                              for="flexCheckDefault"
+                            >
+                              Need password change
+                            </label>
+                          </div>
+                        </div>
+                      )}
                       <div className="mb-3">
                         <label
                           htmlFor="exampleFormControlInput3"
@@ -347,7 +492,7 @@ const UserManagement = () => {
                           className="form-control"
                           id="exampleFormControlInput3"
                           placeholder="787141785V"
-                          disabled
+                          disabled={!isPasswordReset}
                           onChange={(e) =>
                             setUser({ ...user, password: e.target.value })
                           }
@@ -369,6 +514,7 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, email: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
                       <div className="mb-3">
@@ -387,6 +533,7 @@ const UserManagement = () => {
                           onChange={(e) =>
                             setUser({ ...user, contactNo: e.target.value })
                           }
+                          disabled={isEdit}
                         />
                       </div>
                       <div className="mb-3">
@@ -474,9 +621,9 @@ const UserManagement = () => {
                       type="button"
                       className="btn btn-primary"
                       data-dismiss="modal"
-                      onClick={createUser}
+                      onClick={isEdit?updateUser:createUser}
                     >
-                      {"Create"}
+                      {isEdit?"Update":"Create"}
                     </button>
                   </div>
                 </div>
@@ -498,46 +645,89 @@ const UserManagement = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user) => (
-                      <tr key={user.id} className="pointer">
-                        <th scope="row">{user.nic}</th>
-                        <td>{user.name}</td>
-                        <td>{user.role}</td>
-                        <td>{user.contactNo}</td>
-                        <td>{user.isActive ? "Active" : "Deactive"}</td>
+                    {users.map((u) => (
+                      <tr key={u.id} className="pointer">
+                        <th scope="row">{u.nic}</th>
+                        <td>{u.name}</td>
+                        <td>{u.role}</td>
+                        <td>{u.contactNo}</td>
+                        <td>{u.isActive ? "Active" : "Deactive"}</td>
                         <td>
-                          {user.nic != "000000000V" &&
-                            user.nic != auth.nic &&
+                          {u.nic != "000000000V" &&
+                            u.nic != auth.nic &&
                             auth.role == "backoffice" && (
-                              <div style={{ display: "flex" }}>
+                              <div style={{ display: "flex", float: "right" }}>
+                                {!u.isActive && u.isSendActiveStatus && (
+                                  <div
+                                    onClick={() => {
+                                      activateUser(u.nic);
+                                    }}
+                                    style={{
+                                      cursor: "pointer",
+                                      margin: "5px",
+                                      borderRadius: "50px",
+                                      justifyContent: "center",
+                                      backgroundColor: "rgb(4, 4, 214)",
+                                      alignItems: "center",
+                                    }}
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Activate user"
+                                  >
+                                    <center>
+                                      <img
+                                        style={{ margin: "10px" }}
+                                        width={10}
+                                        src={correct_icon}
+                                      />
+                                    </center>
+                                  </div>
+                                )}
                                 <div
+                                  onClick={() => {
+                                    setIsEdit(true);
+                                    setUser({
+                                      ...user,
+                                      name: u.name,
+                                      role: u.role,
+                                      nic: u.nic,
+                                      imagePath: u.imagePath,
+                                      contactNo: u.contactNo,
+                                      email: u.email,
+                                    });
+                                  }}
                                   style={{
                                     cursor: "pointer",
                                     margin: "5px",
                                     borderRadius: "50px",
                                     justifyContent: "center",
-                                    backgroundColor: "rgb(255, 221, 10)",
+                                    backgroundColor: "rgb(212, 194, 2)",
                                     alignItems: "center",
                                   }}
                                   data-toggle="tooltip"
                                   data-placement="bottom"
                                   title="Edit user"
                                 >
-                                  <center>
-                                    <img
-                                      style={{ margin: "10px" }}
-                                      width={10}
-                                      src={edit_icon}
-                                    />
-                                  </center>
+                                  <div
+                                    data-toggle="modal"
+                                    data-target="#exampleModalCenter"
+                                  >
+                                    <center>
+                                      <img
+                                        style={{ margin: "10px" }}
+                                        width={10}
+                                        src={edit_icon}
+                                      />
+                                    </center>
+                                  </div>
                                 </div>
-                                <div
+                                {/* <div
                                   style={{
                                     cursor: "pointer",
                                     margin: "5px",
                                     borderRadius: "50px",
                                     justifyContent: "center",
-                                    backgroundColor: "rgb(255, 0, 1)",
+                                    backgroundColor: "rgb(181, 2, 2)",
                                     alignItems: "center",
                                   }}
                                   data-toggle="tooltip"
@@ -551,7 +741,7 @@ const UserManagement = () => {
                                       src={delete_icon}
                                     />
                                   </center>
-                                </div>
+                                </div> */}
                               </div>
                             )}
                         </td>

@@ -27,7 +27,21 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("forgot_password")]
+        public ActionResult ForgotPasswordUser([FromBody] ForgotDto forgotDto)
+        {
+            try
+            {
+                var token = _service.ForgotPassword(forgotDto.NIC, forgotDto.Email);
+                return Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
 

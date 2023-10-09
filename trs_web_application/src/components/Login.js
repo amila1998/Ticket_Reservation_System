@@ -21,7 +21,7 @@ const Login = () => {
       localStorage.setItem("token", res.data.token);
       dispatch(authActions.login(res.data.token));
       toast.info("Login Successfull !", {
-        position: "top-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -32,8 +32,8 @@ const Login = () => {
       });
     } catch (error) {
       console.log("🚀 ~ file: Login.js:14 ~ handleLogin ~ error:", error);
-      toast.error(error.response.data ? error.response.data : error.message, {
-        position: "top-left",
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,

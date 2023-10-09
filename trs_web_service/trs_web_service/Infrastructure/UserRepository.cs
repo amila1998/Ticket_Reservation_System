@@ -33,7 +33,18 @@ namespace trs_web_service.Infrastructure
         public async Task<User> DeactivateUserAsync(string nic)
         {
             var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
-            var update = Builders<User>.Update.Set(u => u.IsActive, false);
+            var update = Builders<User>.Update.Set(u => u.IsActive, false).Set(u => u.IsSendActiveStatus, false);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
+        }
+
+        public async Task<User> SendActiveStatusAsync(string nic)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
+            var update = Builders<User>.Update.Set(u => u.IsActive, false).Set(u => u.IsSendActiveStatus, true);
 
             // Find and update the user document
             var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
@@ -44,7 +55,7 @@ namespace trs_web_service.Infrastructure
         public async Task<User> ActivateUserAsync(string nic)
         {
             var filter = Builders<User>.Filter.Eq(u => u.NIC, nic);
-            var update = Builders<User>.Update.Set(u => u.IsActive, true);
+            var update = Builders<User>.Update.Set(u => u.IsActive, true).Set(u => u.IsSendActiveStatus, true);
 
             // Find and update the user document
             var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
@@ -66,9 +77,53 @@ namespace trs_web_service.Infrastructure
             return updatedUser;
         }
 
+        public async Task<User> ResetPassword(string password, ObjectId id)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            var update = Builders<User>.Update
+                .Set(u => u.Password, password);
+
+            // Find and update the user document
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update);
+
+            return updatedUser;
+        }
+
+        public async Task<User> UpdateUser(UpdateUserDto user)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NIC, user.NIC);
+            var update = Builders<User>.Update.Set(u => u.Role, user.Role);
+
+            if (user.IsPasswordReset)
+            {
+                // If the password needs to be reset, add the password update to the update definition
+                update = Builders<User>.Update.Combine(update, Builders<User>.Update.Set(u => u.Password, user.Password));
+            }
+
+            // Find and update the user document
+            var options = new FindOneAndUpdateOptions<User>
+            {
+                ReturnDocument = ReturnDocument.After // This option returns the updated document
+            };
+
+            var updatedUser = await _collection.FindOneAndUpdateAsync(filter, update, options);
+
+            return updatedUser;
+        }
+
         public async Task CreateAsync(User user)
         {
             await _collection.InsertOneAsync(user);
+        }
+
+        public async void DeleteRoute(ObjectId id)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            var update = Builders<User>.Update
+                .Set(u => u.IsDelete, true);
+
+            // Find and update the user document
+            await _collection.FindOneAndUpdateAsync(filter, update);
         }
 
     }
