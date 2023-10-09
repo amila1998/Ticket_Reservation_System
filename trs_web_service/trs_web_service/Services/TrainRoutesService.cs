@@ -54,7 +54,8 @@ namespace trs_web_service.Services
                 throw new Exception("Invalid ID format");
             }
 
-            TrainRoutes exRoute = await _repository.GetById(objectId) ?? throw new Exception("This route all ready exsit");
+            TrainRoutes exRoute = await _repository.GetById(objectId) ?? throw new Exception("This route not exsit");
+            //TODO: check have any assigned shedules
             await _repository.DeleteRoute(exRoute.Id);
         }
 
@@ -65,7 +66,8 @@ namespace trs_web_service.Services
                 throw new Exception("Invalid ID format");
             }
 
-            TrainRoutes exRoute = await _repository.GetById(objectId) ?? throw new Exception("This route all ready exsit");
+            TrainRoutes exRoute = await _repository.GetById(objectId) ?? throw new Exception("This route not exsit");
+            //TODO: check have any assigned shedules
             await _repository.DisableRoute(exRoute.Id);
         }
 

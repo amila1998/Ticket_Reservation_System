@@ -102,6 +102,28 @@ const TrainManagement = () => {
     setCallback(false);
   }, [callback]);
 
+  useEffect(() => {
+    let trainList = ftrains;
+    if (trainList.length > 0 && (filterRegNo != null || filterRegNo != "")) {
+      trainList = trainList.filter((train) => {
+        return train.registraionNo.toLowerCase().includes(filterRegNo.toLowerCase());
+      });
+    }
+    if (trainList.length > 0 && filterActive) {
+      trainList = trainList.filter((train) => {
+        return filterActive === "true" ? train.isActive : !train.isActive;
+      });
+    }
+
+    // if (trainList.length > 0 && filterNIC) {
+    //   trainList = trainList.filter((train) => {
+    //     return train.nic.toLowerCase().includes(filterNIC.toLowerCase());
+    //   });
+    // }
+    setTrains(trainList);
+  }, [filterActive , filterRegNo]);
+
+
   const createTrain = async () => {
     try {
       setLoadingBtn(true);
@@ -170,7 +192,71 @@ const TrainManagement = () => {
     }
   };
 
-  const updateTrain = async () => {};
+  const updateTrain = async () => {
+       try {
+         setLoadingBtn(true);
+         if (!train.registraionNo) {
+           toast.error("Train registration number requried", {
+             position: "top-right",
+             autoClose: 5000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: "light",
+           });
+           return;
+         } else if (!train.name) {
+           toast.error("Train name requried", {
+             position: "top-right",
+             autoClose: 5000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: "light",
+           });
+           return;
+         } else {
+           const res = await getAxiosInstance().put(
+             TrainsManagementAPI.update,
+             train,
+             {
+               headers: { Authorization: `bearer ${token}` },
+             }
+           );
+           toast.success("Train updated successfully", {
+             position: "top-right",
+             autoClose: 5000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: "light",
+           });
+           handleCreateModalClose();
+           setCallback(true);
+         }
+       } catch (error) {
+       console.log("🚀 ~ file: TrainManagement.js:204 ~ updateTrain ~ error:", error)
+     
+         toast.error(error.response ? error.response.data : error.message, {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+         });
+       } finally {
+         setLoadingBtn(false);
+       }
+  };
 
   const changeActiveStatus = async (data) => {
     try {
