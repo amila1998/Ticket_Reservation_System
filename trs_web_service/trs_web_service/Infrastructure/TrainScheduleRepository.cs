@@ -54,13 +54,13 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
-        public async Task<List<TrainSchedule>> GetAllByIdAsync(ObjectId id)
+        public async Task<TrainSchedule> GetAllByIdAsync(ObjectId id)
         {
-            // Create a filter to match documents where IsDelete is not true and IsCancel not true
+            // Create a filter to match documents where _id is equal to the provided id and IsDelete is not true
             var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id) & Builders<TrainSchedule>.Filter.Eq(x => x.IsDelete, false);
 
             // Use the filter when querying the collection
-            return await _collection.Find(filter).ToListAsync();
+            return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<TrainSchedule> UpdateTrainSchedule(ObjectId id, TrainScheduleReqDto schedule)

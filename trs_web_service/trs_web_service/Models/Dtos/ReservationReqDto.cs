@@ -11,8 +11,6 @@ namespace trs_web_service.Models.Dtos
 
         public string OwnerId { get; set; }
 
-        public DateTime ValidDate { get; set; }
-
         public float TotalPrice { get; set; }
     }
 }

@@ -8,12 +8,13 @@ namespace trs_web_service.Models.Dtos
         public string Id { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public List<BookingDto> Bookings { get; set; }
+        public List<BookingResDto> Bookings { get; set; }
 
         public string OwnerId { get; set; }
 
         public DateTime ValidDate { get; set; }
 
         public float TotalPrice { get; set; }
+
     }
 }

@@ -63,7 +63,7 @@ namespace trs_web_service.Services
         {
             if (nic == "00000000V") 
             {
-                throw new Exception("Have not an account");
+                throw new Exception("can not do any operation for super user");
             }
             var exUser = await _repository.GetByNICAsync(nic);
             return exUser == null ? throw new Exception("Have not an account") : await _repository.DeactivateUserAsync(nic);
@@ -73,7 +73,7 @@ namespace trs_web_service.Services
         {
             if (nic == "00000000V")
             {
-                throw new Exception("Have not an account");
+                throw new Exception("can not do any operation for super user");
             }
             var exUser = await _repository.GetByNICAsync(nic);
             if(exUser == null)
@@ -103,7 +103,7 @@ namespace trs_web_service.Services
 
             if (info.NIC == "00000000V")
             {
-                throw new Exception("Can not update Super backoffice account");
+                throw new Exception("can not do any operation for super user");
             }
   
             return await _repository.UserUpdateProfile(user, objectId);
@@ -121,7 +121,7 @@ namespace trs_web_service.Services
 
             if (info.NIC == "00000000V")
             {
-                throw new Exception("Can not update Super backoffice account");
+                throw new Exception("can not do any operation for super user");
             }
 
             return await _repository.ResetPassword(EncryptPassword(password), objectId);
@@ -133,7 +133,7 @@ namespace trs_web_service.Services
 
             if (info.NIC == "00000000V")
             {
-                throw new Exception("Can not update Super backoffice account");
+                throw new Exception("can not do any operation for super user");
             }
 
             user.Password = EncryptPassword(user.Password);

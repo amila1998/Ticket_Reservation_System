@@ -6,8 +6,9 @@ namespace trs_web_service.Models.Domains
     {
         public ObjectId Id { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
-        public List<Booking> Bookings { get; set; }
+        public List<Booking>? Bookings { get; set; }
 
         public string OwnerId { get; set; }
 
@@ -20,14 +21,16 @@ namespace trs_web_service.Models.Domains
 
     public class Booking
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public string ScheduleId { get; set; }
         public string PickStation { get; set; }
         public string DropStation { get; set; }
-        public int TickectCount { get; set; }
+        public double TickectCount { get; set; }
         public float TickectPrice { get; set; }
+        public DateTime BookingDate { get; set; }
+        
 
     }
 }
