@@ -84,6 +84,28 @@ const TrainManagement = () => {
     setCallback(false);
   }, [callback]);
 
+  useEffect(() => {
+    let trainList = ftrains;
+    if (trainList.length > 0 && (filterRegNo != null || filterRegNo != "")) {
+      trainList = trainList.filter((train) => {
+        return train.registraionNo.toLowerCase().includes(filterRegNo.toLowerCase());
+      });
+    }
+    if (trainList.length > 0 && filterActive) {
+      trainList = trainList.filter((train) => {
+        return filterActive === "true" ? train.isActive : !train.isActive;
+      });
+    }
+
+    // if (trainList.length > 0 && filterNIC) {
+    //   trainList = trainList.filter((train) => {
+    //     return train.nic.toLowerCase().includes(filterNIC.toLowerCase());
+    //   });
+    // }
+    setTrains(trainList);
+  }, [filterActive , filterRegNo]);
+
+
   const createTrain = async () => {
     try {
       setLoadingBtn(true);
