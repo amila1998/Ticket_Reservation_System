@@ -16,5 +16,6 @@ namespace trs_web_service.Models.Dtos
         public List<ClassTypes> TrainClasses { get; set; }
         public List<DateTime> CancelDates { get; set; }
         public TrainSpeed Speed { get; set; }
+        public bool IsCancelledToday { get; internal set; }
     }
 }

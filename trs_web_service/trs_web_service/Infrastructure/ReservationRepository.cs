@@ -68,5 +68,41 @@ namespace trs_web_service.Infrastructure
         {
             return await _collection.Find(_ => true).ToListAsync();
         }
+
+        // Get all Reservations created at least 5 days before the specified date
+        public async Task<List<Reservation>> GetAllReservationsCreatedBeforByOwnerIdAsync(string ownerId)
+        {
+            DateTime referenceDate = DateTime.UtcNow;
+
+            // Calculate the date 5 days before the reference date
+            DateTime fiveDaysBeforeReference = referenceDate.AddDays(+5);
+
+            var filter = Builders<Reservation>.Filter.Lte(r => r.CreatedAt, fiveDaysBeforeReference)&
+                Builders<Reservation>.Filter.Eq(r => r.OwnerId, ownerId);
+
+            return await _collection.Find(filter).ToListAsync();
+        }
+
+        // Validate a Reservation by ObjectId
+        public async Task<bool> GetValidationForDeleteOrUpateReservationAsync(ObjectId reservationId)
+        {
+            // Retrieve the reservation by ObjectId
+            var filter = Builders<Reservation>.Filter.Eq(r => r.Id, reservationId);
+            var reservation = await _collection.Find(filter).FirstOrDefaultAsync();
+
+            if (reservation == null)
+            {
+                // Reservation with the given ObjectId not found
+                return false;
+            }
+
+            // Calculate the date 5 days before the current date
+            DateTime fiveDaysBeforeCurrentDate = DateTime.UtcNow.AddDays(-5);
+
+            // Check if the reservation was created at least 5 days before the current date
+            return reservation.CreatedAt <= fiveDaysBeforeCurrentDate;
+        }
+
+
     }
 }

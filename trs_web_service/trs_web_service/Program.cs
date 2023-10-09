@@ -117,7 +117,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseCors(options => options
-    .WithOrigins("http://localhost:3000", "http://localhost:5000") // Add the origins you need
+    .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:5000", "https://elaborate-starburst-d61897.netlify.app", "https://expressbook.netlify.app") // Add the origins you need
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
