@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using System.Text.RegularExpressions;
 using trs_web_service.Infrastructure;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
@@ -10,12 +11,14 @@ namespace trs_web_service.Services
         private readonly TrainRepository _trainRepository;
         private readonly TrainScheduleRepository _repository;
         private readonly TrainRoutesRepository _routesRepository;
+        private readonly ReservationRepository _reservationRepository;
 
-        public TrainScheduleService(TrainRepository repository, TrainScheduleRepository trainScheduleRepository, TrainRoutesRepository routesRepository)
+        public TrainScheduleService(TrainRepository repository, TrainScheduleRepository trainScheduleRepository, TrainRoutesRepository routesRepository, ReservationRepository reservationRepository)
         {
             _trainRepository = repository;
             _repository = trainScheduleRepository;
             _routesRepository = routesRepository;
+            _reservationRepository = reservationRepository;
         }
         public async Task CreateTrainScheduleAsync(TrainScheduleReqDto schedule)
         {
@@ -141,28 +144,88 @@ namespace trs_web_service.Services
             return schedules;
         }
 
-        public async Task CancelShedule(string id)
+        public async Task UpdateSchedule(TrainScheduleReqDto schedule)
         {
-            if (!ObjectId.TryParse(id, out var objectId))
+            var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
+            var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
+            if (reservations.Count > 0)
+            {
+               foreach (var reservation in reservations)
+                {
+                    foreach(var book in reservation.Bookings)
+                    {
+                        foreach(var cancelDate in schedule.CancelDates)
+                        {
+                            DateTime today = DateTime.Today;
+                            DateTime tempDate = Convert.ToDateTime(cancelDate);
+                            if(today > book.BookingDate && tempDate == book.BookingDate)
+                            {
+                                throw new Exception("There is have up coming booking :"+ book.BookingDate);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!ObjectId.TryParse(schedule.Id, out var objectId))
             {
                 throw new Exception("Invalid ID format");
             }
-            var schedule = await _repository.GetAllByIdAsync(objectId) ?? throw new Exception("No shedule");
-            // TODO: any have bookings
-
-            await _repository.CancelShedule(objectId);
-
+            await _repository.UpdateTrainSchedule(objectId,schedule);
         }
 
-        //public async Task UpdateTrain(TrainReqBodyDto train)
-        //{
-        //    var extrain = await _repository.GetByRegistraionNoAsync(train.RegistraionNo) ?? throw new Exception("No train under this registration number");
-        //    //TODO: should check there is any resevation or shedules
+        public async Task ChangeCancelStatusInSchedule(TrainScheduleReqDto schedule)
+        {
+            var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
+            var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
+            if (reservations.Count > 0)
+            {
+                foreach (var reservation in reservations)
+                {
+                    foreach (var book in reservation.Bookings)
+                    {
+                        foreach (var cancelDate in schedule.CancelDates)
+                        {
+                            DateTime today = DateTime.Today;
+                            DateTime tempDate = Convert.ToDateTime(cancelDate);
+                            if (today > book.BookingDate && tempDate == book.BookingDate)
+                            {
+                                throw new Exception("There is have up coming booking :" + book.BookingDate);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!ObjectId.TryParse(schedule.Id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+            await _repository.CancelShedule(objectId, schedule);
+        }
 
-        //    await _repository.UpdateTrain(train);
+        public async Task DeleteSchedule(TrainScheduleReqDto schedule)
+        {
+            var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
 
+            var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
+            if (reservations.Count > 0)
+            {
+                DateTime today = DateTime.Today;
 
-        //}
+                foreach (var reservation in reservations)
+                {
+                    if (today > reservation.ValidDate)
+                    {
+                        throw new Exception("There are Valid reservations");
+                    }
+                }
+            }
+
+            if (!ObjectId.TryParse(schedule.Id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+            await _repository.DeleteTrainSchedule(objectId);
+        }
 
     }
 }
