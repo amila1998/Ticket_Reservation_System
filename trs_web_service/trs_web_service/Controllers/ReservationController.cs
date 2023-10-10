@@ -46,6 +46,30 @@ namespace trs_web_service.Controllers
         }
 
         [Authorize]
+        [HttpPut ("updateReservation/{reservationid}")]
+        public async Task<IActionResult> Update(string reservationid, ReservationReqDto req)
+        {
+            try
+            {
+                var userIdentity = User.Identity as ClaimsIdentity;
+
+                // Retrieve the user's ID and role from the claims
+                var userId = userIdentity.FindFirst(ClaimTypes.Name)?.Value;
+                if (!ObjectId.TryParse(userId, out var objectId))
+                {
+                    throw new Exception("Invalid ID format");
+                }
+                await _service.UpdateReservation(reservationid, objectId,req);
+                return Ok("Reservation created");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+
+        }
+
+        [Authorize]
         [HttpPost("getBookingPrice")]
         public async Task<IActionResult> GetBookingPrice(CalculatePriceReqDto req)
         {
@@ -82,6 +106,21 @@ namespace trs_web_service.Controllers
             try
             {
                 var reservations = await _service.GetAllReservationsByOwnerIdAsync(ownerId);
+                return Ok(reservations);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("getAllReservationsByCreatedBy")]
+        public async Task<IActionResult> GetAllReservationsByCreatedBy(string ownerId)
+        {
+            try
+            {
+                var reservations = await _service.GetAllReservationsByCreatedByAsync(ownerId);
                 return Ok(reservations);
             }
             catch (Exception ex)

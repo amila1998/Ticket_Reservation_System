@@ -19,6 +19,15 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(_ => true).ToListAsync();
         }
 
+        public async Task<List<User>> GetTravelAgents()
+        {
+            // Create a filter to match documents where IsActive is true
+            var filter = Builders<User>.Filter.Eq(u => u.IsActive, true) & Builders<User>.Filter.Eq(u => u.Role , "travel_agent") & Builders<User>.Filter.Eq(u => u.IsDelete, false);
+
+            // Use the filter when querying the collection
+            return await _collection.Find(filter).ToListAsync();
+        }
+
         public async Task<User> GetByNICAsync(string nic)
         {
             return await _collection.Find(t => t.NIC == nic).FirstOrDefaultAsync();

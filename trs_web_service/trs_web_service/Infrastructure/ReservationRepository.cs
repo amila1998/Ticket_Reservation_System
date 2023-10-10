@@ -39,11 +39,12 @@ namespace trs_web_service.Infrastructure
         }
 
         // Update Reservation
-        public async Task UpdateReservationAsync(ObjectId reservationId, Reservation updatedReservation)
+        public async Task UpdateReservationAsync(Reservation updatedReservation)
         {
-            var filter = Builders<Reservation>.Filter.Eq(r => r.Id, reservationId);
+            var filter = Builders<Reservation>.Filter.Eq(r => r.Id, updatedReservation.Id);
             var update = Builders<Reservation>.Update
-                .Set(r => r.ValidDate, updatedReservation.ValidDate)
+                .Set(r => r.UpdatedAt, updatedReservation.UpdatedAt)
+                .Set(r => r.Bookings, updatedReservation.Bookings)
                 .Set(r => r.TotalPrice, updatedReservation.TotalPrice);
 
             await _collection.UpdateOneAsync(filter, update);
@@ -61,6 +62,12 @@ namespace trs_web_service.Infrastructure
         {
             var filter = Builders<Reservation>.Filter.Eq(r => r.Bookings.Any(b => b.ScheduleId == scheduleId), true);
             return await _collection.Find(filter).ToListAsync();
+        }
+
+        // Get all Reservations by Id
+        public async Task<Reservation> GetReservationsByIdAsync(ObjectId id)
+        {
+            return await _collection.Find(t => t.Id == id).FirstOrDefaultAsync();
         }
 
         // Get all Valid Reservations by ScheduleId

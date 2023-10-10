@@ -11,6 +11,7 @@ namespace trs_web_service.Models.Dtos
         public List<BookingResDto> Bookings { get; set; }
 
         public string OwnerId { get; set; }
+        public UserDto OwnerDetails { get; set; }
 
         public DateTime ValidDate { get; set; }
 
