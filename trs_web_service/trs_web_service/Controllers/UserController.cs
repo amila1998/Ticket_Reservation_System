@@ -38,6 +38,21 @@ namespace trs_web_service.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("getTravelAgents")]
+        public async Task<IActionResult> GetTravelAgents()
+        {
+            try
+            {
+                var users = await _userService.GetTravelAgents();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [Authorize(Policy = "nottraveler")]
         [HttpGet("{nic}")]
         public async Task<IActionResult> GetUserByNIC(string nic)
