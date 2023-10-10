@@ -74,5 +74,20 @@ namespace trs_web_service.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [Authorize]
+        [HttpGet("getAllReservationsByOwnerId/{ownerId}")]
+        public async Task<IActionResult> GetAllReservationsByOwnerId(string ownerId)
+        {
+            try
+            {
+                var reservations = await _service.GetAllReservationsByOwnerIdAsync(ownerId);
+                return Ok(reservations);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

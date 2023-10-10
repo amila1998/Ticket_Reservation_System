@@ -68,13 +68,8 @@ namespace trs_web_service.Infrastructure
                 var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id);
 
                 var update = Builders<TrainSchedule>.Update
-                    .Set(u => u.DayType, schedule.DayType)
-                    .Set(u => u.IsCancel, schedule.IsCancel)
                     .Set(u => u.CancelDates, schedule.CancelDates)
-                    .Set(u => u.TrainRouteId, schedule.TrainRouteId)
                     .Set(u => u.TrainStops, schedule.TrainStops)
-                    .Set(u => u.StartTime, schedule.StartTime)
-                    .Set(u => u.EndTime, schedule.EndTime)
                     .Set(u => u.TrainClasses, schedule.TrainClasses);
 
                 // Find and update
@@ -93,11 +88,11 @@ namespace trs_web_service.Infrastructure
             await _collection.FindOneAndUpdateAsync(filter, update);
         }
 
-        public async Task CancelShedule(ObjectId id)
+        public async Task CancelShedule(ObjectId id, TrainScheduleReqDto schedule)
         {
             var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id);
             var update = Builders<TrainSchedule>.Update
-                .Set(u => u.IsCancel, true);
+                .Set(u => u.IsCancel, !schedule.IsCancel);
 
             // Find and update the user document
             await _collection.FindOneAndUpdateAsync(filter, update);

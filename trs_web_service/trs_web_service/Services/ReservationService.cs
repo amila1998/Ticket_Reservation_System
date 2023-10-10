@@ -338,6 +338,91 @@ namespace trs_web_service.Services
 
         }
 
+        public async Task<List<ReservationResDto>> GetAllReservationsByOwnerIdAsync(string ownerId)
+        {
+            List<ReservationResDto> reservationList = new();
+            var reserv = await _repository.GetAllReservationsByOwnerIdAsync(ownerId);
+            if (reserv.Count > 0)
+            {
+                foreach (var r in reserv)
+                {
+                    if (r.Bookings.Count < 4)
+                    {
+                        List<BookingResDto> bookingResDtos = new();
+                        foreach (var booking in r.Bookings)
+                        {
+                            if (!ObjectId.TryParse(booking.ScheduleId, out var objectId))
+                            {
+                                throw new Exception("Invalid ID format");
+                            }
+                            var schedule = await _trainScheduleRepository.GetAllByIdAsync(objectId);
+                            if (!ObjectId.TryParse(schedule.TrainRouteId, out var routeObjectId))
+                            {
+                                throw new Exception("Invalid ID format");
+                            }
+                            var route = await _trainRoutesRepository.GetById(routeObjectId);
+                            DateTime today = DateTime.Today;
+                            bool isCancelledToday = schedule.CancelDates?.Any(date => date.Date == today) ?? false;
+                            TrainScheduleResDto trainScheduleResDto = new()
+                            {
+                                Id = schedule.Id.ToString().Substring(0, 24),
+                                DayType = schedule.DayType,
+                                StartStation = route.StartStation,
+                                EndStation = route.EndStation,
+                                TrainStops = schedule.TrainStops,
+                                StartTime = schedule.StartTime,
+                                EndTime = schedule.EndTime,
+                                TrainClasses = schedule.TrainClasses,
+                                CancelDates = schedule.CancelDates,
+                                IsCancelledToday = isCancelledToday,
+                                Speed = schedule.Speed
+                            };
+
+
+                            var train = await _trainRepository.GetByRegistraionNoAsync(schedule.TraingRegistraionNo);
+                            TrainsForTraverDto trainsForTraverDto = new()
+                            {
+                                Id = train.Id.ToString().Substring(0, 24),
+                                Name = train.Name,
+                                RegistraionNo = train.RegistraionNo,
+                                ImagePath = train.ImagePath
+                            };
+
+                            BookingResDto bookingResDto = new()
+                            {
+                                Id = booking.Id,
+                                CreatedAt = booking.CreatedAt,
+                                CreatedBy = booking.CreatedBy,
+                                ScheduleId = booking.ScheduleId,
+                                ScheduleDetails = trainScheduleResDto,
+                                TrainDetails = trainsForTraverDto,
+                                PickStation = booking.PickStation,
+                                DropStation = booking.DropStation,
+                                BookingDate = booking.BookingDate,
+                                TickectCount = booking.TickectCount,
+                                TickectPrice = booking.TickectPrice,
+                            };
+                            bookingResDtos.Add(bookingResDto);
+                        }
+
+                        ReservationResDto reservationResDto = new()
+                        {
+                            Id = r.Id.ToString().Substring(0, 24),
+                            CreatedAt = r.CreatedAt,
+                            Bookings = bookingResDtos,
+                            OwnerId = r.OwnerId,
+                            ValidDate = r.ValidDate,
+                            TotalPrice = r.TotalPrice,
+                        };
+                        reservationList.Add(reservationResDto);
+                    }
+                }
+            }
+
+            return reservationList;
+
+        }
+
         private static float CalculateBookingPrice(double noOfPersons, int trainStops)
         {
             // Define the minimum price per person

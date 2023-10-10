@@ -27,6 +27,17 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
+        public async Task<List<Reservation>> GetAllReservationsByCreatedByAsync(string createdBy)
+        {
+            // Define a filter to match reservations with at least one booking created by the specified user
+            var filter = Builders<Reservation>.Filter.ElemMatch(
+                r => r.Bookings,
+                b => b.CreatedBy == createdBy
+            );
+
+            return await _collection.Find(filter).ToListAsync();
+        }
+
         // Update Reservation
         public async Task UpdateReservationAsync(ObjectId reservationId, Reservation updatedReservation)
         {
