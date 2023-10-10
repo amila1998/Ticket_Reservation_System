@@ -128,5 +128,20 @@ namespace trs_web_service.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [Authorize]
+        [HttpDelete("{reservationId}")]
+        public async Task<IActionResult> Delete(string reservationId)
+        {
+            try
+            {
+                await _service.Delete(reservationId);
+                return Ok("Delete successfull");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

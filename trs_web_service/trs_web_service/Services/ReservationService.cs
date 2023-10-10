@@ -728,14 +728,24 @@ namespace trs_web_service.Services
                 throw new Exception("Invalid ID format");
             }
             var exReservation = await _repository.GetReservationsByIdAsync(objectId) ?? throw new Exception("Invalid Reservation ID");
+            if(exReservation.ValidDate > DateTime.UtcNow)
+            {
+                throw new Exception("Can not delete that because valid time exceeded");
+            }
             var bookingCount = exReservation.Bookings.Count();
             if (bookingCount > 0)
             {
                 foreach(var book in exReservation.Bookings)
                 {
+                    if(DateTime.UtcNow == book.CreatedAt.AddDays(6))
+                    {
+                        throw new Exception("Can not delete that because one of booking exceeded greater than 5 days");
+                    }
 
                 }
             }
+
+            await _repository.DeleteReservationAsync(objectId);
 
         }
     }
