@@ -30,7 +30,6 @@ namespace trs_web_service.Models.Domains
         public double TickectCount { get; set; }
         public float TickectPrice { get; set; }
         public DateTime BookingDate { get; set; }
-        
 
     }
 }

@@ -33,6 +33,24 @@ namespace trs_web_service.Services
             return users;
         }
 
+        public async Task<IEnumerable<UserDto>> GetTravelAgents()
+        {
+            List<UserDto> users = new();
+            var userList = await _repository.GetTravelAgents();
+            if (userList != null)
+            {
+                foreach (var user in userList)
+                {
+                    // Convert the ObjectId to the desired format
+                    string formattedId = user.Id.ToString().Substring(0, 24);
+                    UserDto newUser = new(formattedId, user.Name, user.Role, user.NIC, user.ImagePath, user.ContactNo, user.IsActive, user.IsSendActiveStatus, user.Email);
+                    users.Add(newUser);
+                }
+
+            }
+            return users;
+        }
+
         public async Task<User> GetUserByNICAsync(string nic)
         {
             return await _repository.GetByNICAsync(nic);

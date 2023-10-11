@@ -23,6 +23,7 @@ namespace trs_web_service.Models.Dtos
         public string ScheduleId { get; set; }
         public TrainScheduleResDto ScheduleDetails { get; set; }
         public TrainsForTraverDto TrainDetails { get; set; }
+        public UserDto CreatedByDetails { get; set; }
         public string PickStation { get; set; }
         public string DropStation { get; set; }
         public DateTime BookingDate { get; set; }

@@ -24,5 +24,9 @@
             this.IsSendActiveStatus = IsSendActiveStatus;
             this.Email = Email;
         }
+
+        public UserDto() { }
+
+   
     }
 }

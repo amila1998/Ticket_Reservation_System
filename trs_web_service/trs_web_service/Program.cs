@@ -102,6 +102,7 @@ builder.Services.AddScoped<TrainScheduleRepository>();
 builder.Services.AddScoped<TrainScheduleService>();
 builder.Services.AddScoped<ReservationRepository>();
 builder.Services.AddScoped<ReservationService>();
+builder.Services.AddScoped<RequestRepository>();
 
 var app = builder.Build();
 
