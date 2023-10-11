@@ -30,7 +30,7 @@ namespace trs_web_service.Infrastructure
         public async Task<List<TrainSchedule>> GetBySheduleByTrainRegistraionNoAndNoCancelAsync(string regNo)
         {
             // Create a filter to find the schedule with the given train reg no
-            var filter = Builders<TrainSchedule>.Filter.Eq(x => x.IsDelete, false) & Builders<TrainSchedule>.Filter.Eq(x => x.IsCancel, false);
+            var filter = Builders<TrainSchedule>.Filter.Eq(x => x.IsDelete, false) & Builders<TrainSchedule>.Filter.Eq(x => x.IsCancel, false) & Builders<TrainSchedule>.Filter.Eq(x => x.TraingRegistraionNo, regNo);
 
             return await _collection.Find(filter).ToListAsync();
         }

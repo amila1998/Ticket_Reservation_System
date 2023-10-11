@@ -31,7 +31,7 @@ namespace Sample.UserManagement.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
 
             }
         }
