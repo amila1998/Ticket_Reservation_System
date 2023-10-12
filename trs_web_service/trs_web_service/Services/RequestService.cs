@@ -327,6 +327,14 @@ namespace trs_web_service.Services
                         ImagePath = train.ImagePath
                     };
 
+                    if (!ObjectId.TryParse(exr.CreatedBy, out var createdByObjectId1))
+                    {
+                        throw new Exception("Invalid ID format");
+                    }
+                    var createdBy1 = await _userRepository.GetByIdAsync(createdByObjectId1) ?? throw new Exception("Invalid User ID");
+                    UserDto createdByDto1 = new(createdBy1.Id.ToString().Substring(0, 24), createdBy1.Name, createdBy1.Role, createdBy1.NIC, createdBy1.ImagePath, createdBy1.ContactNo, createdBy1.IsActive, createdBy1.IsSendActiveStatus, createdBy1.Email);
+
+
                     BookingResDto bookingResDto = new()
                     {
                         Id = exr.Booking.Id,
@@ -338,6 +346,7 @@ namespace trs_web_service.Services
                         PickStation = exr.Booking.PickStation,
                         DropStation = exr.Booking.DropStation,
                         BookingDate = exr.Booking.BookingDate,
+                        CreatedByDetails = createdByDto1,
                         TickectCount = exr.Booking.TickectCount,
                         TickectPrice = exr.Booking.TickectPrice,
                     };
@@ -422,6 +431,14 @@ namespace trs_web_service.Services
                         ImagePath = train.ImagePath
                     };
 
+                    if (!ObjectId.TryParse(exr.CreatedBy, out var createdByObjectId1))
+                    {
+                        throw new Exception("Invalid ID format");
+                    }
+                    var createdBy1 = await _userRepository.GetByIdAsync(createdByObjectId1) ?? throw new Exception("Invalid User ID");
+                    UserDto createdByDto1 = new(createdBy1.Id.ToString().Substring(0, 24), createdBy1.Name, createdBy1.Role, createdBy1.NIC, createdBy1.ImagePath, createdBy1.ContactNo, createdBy1.IsActive, createdBy1.IsSendActiveStatus, createdBy1.Email);
+
+
                     BookingResDto bookingResDto = new()
                     {
                         Id = exr.Booking.Id,
@@ -434,6 +451,7 @@ namespace trs_web_service.Services
                         DropStation = exr.Booking.DropStation,
                         BookingDate = exr.Booking.BookingDate,
                         TickectCount = exr.Booking.TickectCount,
+                        CreatedByDetails= createdByDto1,
                         TickectPrice = exr.Booking.TickectPrice,
                     };
 
