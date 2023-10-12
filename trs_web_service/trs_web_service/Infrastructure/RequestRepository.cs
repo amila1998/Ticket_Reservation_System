@@ -21,22 +21,26 @@ namespace trs_web_service.Infrastructure
 
         public async Task<List<Request>> GetAllRequestsByCreatedByAsync(string createdBy)
         {
-            // Define a filter to match reservations with at least one booking created by the specified user
-            var filter = Builders<Request>.Filter.ElemMatch(
-                r => r.Bookings,
-                b => b.CreatedBy == createdBy
+            // Define a filter to match reservations with at booking created by the specified user
+            var filter = Builders<Request>.Filter.Eq(
+                b => b.Booking.CreatedBy, createdBy
             );
 
             return await _collection.Find(filter).ToListAsync();
         }
 
-        public async Task<List<Request>> GetAllRequestsByAgentIDAsync(string agentId)
+        public async Task<List<Request>> GetAllNotAcceptedRequestsByAgentIDAsync(string agentId)
         {
             // Define a filter to match reservations with at least one booking created by the specified user
-            var filter = Builders<Request>.Filter.Eq(r => r.AgentId, agentId);
+            var filter = Builders<Request>.Filter.Eq(r => r.AgentId, agentId) & Builders<Request>.Filter.Eq(r => r.IsReqAccepted, false);
             
 
             return await _collection.Find(filter).ToListAsync();
+        }
+
+        public async Task<Request> GeByIdAsync(ObjectId id)
+        {
+            return await _collection.Find(t => t.Id == id).FirstOrDefaultAsync();
         }
 
         // Delete Request
@@ -51,7 +55,7 @@ namespace trs_web_service.Infrastructure
         {
             var filter = Builders<Request>.Filter.Eq(r => r.Id, requestId);
             var update = Builders<Request>.Update
-                .Set(r => r.Bookings, updatedRequest.Bookings);
+                .Set(r => r.Booking, updatedRequest.Booking);
 
             await _collection.UpdateOneAsync(filter, update);
         }
