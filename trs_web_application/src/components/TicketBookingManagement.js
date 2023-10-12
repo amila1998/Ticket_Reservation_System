@@ -8,189 +8,16 @@ import edit_icon from "../assets/icons/pen-to-square-solid.svg";
 import delete_icon from "../assets/icons/trash-solid.svg";
 import go_back_icon from "../assets/icons/arrow-left-long.svg";
 import { useSelector } from "react-redux";
-const bookingDetails = [
-  {
-    id: "6523bec12862519cd8439248",
-    createdAt: "2023-10-09T08:50:09.163Z",
-    bookings: [
-      {
-        id: "9YifFpSWtc5uR0UPYV2gLfPWQ",
-        createdAt: "2023-10-09T08:50:09.161Z",
-        createdBy: "6517cb823f5bb25d602e4cd8",
-        scheduleId: "6522ece0284f6e94ce47b4d7",
-        scheduleDetails: {
-          id: "6522ece0284f6e94ce47b4d7",
-          dayType: 0,
-          traingRegistraionNo: null,
-          isCancel: false,
-          startStation: "Colombo Fort, Western Province",
-          endStation: "Badulla, Uva Province",
-          trainStops: [
-            {
-              trainStop: {
-                name: "Maradana, Western Province",
-                order: 1,
-              },
-              navTime: "12:25",
-            },
-            {
-              trainStop: {
-                name: "Dematagoda, Western Province",
-                order: 2,
-              },
-              navTime: "12:28",
-            },
-          ],
-          startTime: "12:22",
-          endTime: "15:26",
-          trainClasses: [0, 1, 2],
-          cancelDates: [
-            "2023-10-23T18:30:00Z",
-            "2023-11-06T18:30:00Z",
-            "2023-11-09T18:30:00Z",
-          ],
-          speed: 0,
-          isCancelledToday: false,
-        },
-        trainDetails: {
-          id: "6521c0842b4b6cb5bdbfb06e",
-          name: "Udarata Manike",
-          registraionNo: "T0002",
-          imagePath:
-            "https://res.cloudinary.com/amiladevin1998/image/upload/v1696829068/trs-images/v1qksw6jrssevc6fy3up.jpg",
-        },
-        pickStation: "Gampaha, Western Province",
-        dropStation: "Dematagoda, Western Province",
-        bookingDate: "2023-10-13T18:30:00Z",
-        tickectCount: 2,
-        tickectPrice: 36,
-      },
-      {
-        id: "9YifFpSWtc5uR0UPYV2gLfPWQ",
-        createdAt: "2023-10-09T08:50:09.161Z",
-        createdBy: "6517cb823f5bb25d602e4cd8",
-        scheduleId: "6522ece0284f6e94ce47b4d7",
-        scheduleDetails: {
-          id: "6522ece0284f6e94ce47b4d7",
-          dayType: 0,
-          traingRegistraionNo: null,
-          isCancel: false,
-          startStation: "Colombo Fort, Western Province",
-          endStation: "Badulla, Uva Province",
-          trainStops: [
-            {
-              trainStop: {
-                name: "Maradana, Western Province",
-                order: 1,
-              },
-              navTime: "12:25",
-            },
-            {
-              trainStop: {
-                name: "Dematagoda, Western Province",
-                order: 2,
-              },
-              navTime: "12:28",
-            },
-          ],
-          startTime: "12:22",
-          endTime: "15:26",
-          trainClasses: [0, 1, 2],
-          cancelDates: [
-            "2023-10-23T18:30:00Z",
-            "2023-11-06T18:30:00Z",
-            "2023-11-09T18:30:00Z",
-          ],
-          speed: 0,
-          isCancelledToday: false,
-        },
-        trainDetails: {
-          id: "6521c0842b4b6cb5bdbfb06e",
-          name: "Udarata Manike",
-          registraionNo: "T0002",
-          imagePath:
-            "https://res.cloudinary.com/amiladevin1998/image/upload/v1696829068/trs-images/v1qksw6jrssevc6fy3up.jpg",
-        },
-        pickStation: "Gampaha, Western Province",
-        dropStation: "Dematagoda, Western Province",
-        bookingDate: "2023-10-13T18:30:00Z",
-        tickectCount: 2,
-        tickectPrice: 36,
-      },
-    ],
-    ownerId: "6517cb823f5bb25d602e4cd8",
-    validDate: "2023-11-12T18:30:00Z",
-    totalPrice: 36,
-  },
-  {
-    id: "6523bec12862520cd8439248",
-    createdAt: "2023-10-09T08:50:09.163Z",
-    bookings: [
-      {
-        id: "9YifFpSWtc5uR0UPYV2gLfPWQ",
-        createdAt: "2023-10-09T08:50:09.161Z",
-        createdBy: "6517cb823f5bb25d602e4cd8",
-        scheduleId: "6522ece0284f6e94ce47b4d7",
-        scheduleDetails: {
-          id: "6522ece0284f6e94ce47b4d7",
-          dayType: 0,
-          traingRegistraionNo: null,
-          isCancel: false,
-          startStation: "Colombo Fort, Western Province",
-          endStation: "Badulla, Uva Province",
-          trainStops: [
-            {
-              trainStop: {
-                name: "Maradana, Western Province",
-                order: 1,
-              },
-              navTime: "12:25",
-            },
-            {
-              trainStop: {
-                name: "Dematagoda, Western Province",
-                order: 2,
-              },
-              navTime: "12:28",
-            },
-          ],
-          startTime: "12:22",
-          endTime: "15:26",
-          trainClasses: [0, 1, 2],
-          cancelDates: [
-            "2023-10-23T18:30:00Z",
-            "2023-11-06T18:30:00Z",
-            "2023-11-09T18:30:00Z",
-          ],
-          speed: 0,
-          isCancelledToday: false,
-        },
-        trainDetails: {
-          id: "6521c0842b4b6cb5bdbfb06e",
-          name: "Udarata Manike",
-          registraionNo: "T0002",
-          imagePath:
-            "https://res.cloudinary.com/amiladevin1998/image/upload/v1696829068/trs-images/v1qksw6jrssevc6fy3up.jpg",
-        },
-        pickStation: "Colombo Fort, Western Province",
-        dropStation: "Dematagoda, Western Province",
-        bookingDate: "2023-10-13T18:30:00Z",
-        tickectCount: 2,
-        tickectPrice: 36,
-      },
-    ],
-    ownerId: "6517cb823f5bb25d602e4cd8",
-    validDate: "2023-11-12T18:30:00Z",
-    totalPrice: 36,
-  },
-];
+import { getAxiosInstance } from "../utils/axios";
+import { ReservationManagementAPI } from "../utils/api";
+
 
 const TicketBookingManagement = () => {
   const token = useSelector((state) => state.auth.token);
   const auth = useSelector((state) => state.auth.user);
-  const [ticketBookings, setTicketBookings] = useState(bookingDetails);
-  const [bookingReqDetails, setBookingReqDetails] = useState(bookingDetails);
-  const [fTicketBookings, setFTicketBookings] = useState("");
+  const [reservations, setReservations] = useState([]);
+  const [bookingReqDetails, setBookingReqDetails] = useState([]);
+  const [fReservations, setFReservations] = useState("");
   const [filterTraveller, setFilterTraveller] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [isLoading, setIsLoading] = useState("");
@@ -199,14 +26,23 @@ const TicketBookingManagement = () => {
   const [isShowAllBookingRequests, setIsShowAllBookingRequests] =
     useState(true);
 
-  const getAllBookingDetails = async () => {
+  const getAllReservationsByCreatedBy = async () => {
     try {
       setIsLoading(true);
-      // const res = await getAxiosInstance().get(TrainsManagementAPI.getAll, {
-      //   headers: { Authorization: `bearer ${token}` },
-      // });
-      //setTicketBookings(bookingDetails);
-      setFTicketBookings(bookingDetails);
+      const path = ReservationManagementAPI.getAllReservationsByCreatedBy;
+      const res = await getAxiosInstance().get(
+        path + "?ownerId=" + "6517cb823f5bb25d602e4cd8",
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      setReservations(res.data);
+      console.log(
+        "🚀 ~ file: TicketBookingManagement.js:39 ~ getAllReservationsByCreatedBy ~ res.data:",
+        res.data
+      );
+      setFReservations(res.data);
+      setBookingReqDetails(res.data);
     } catch (error) {
       console.log(
         "🚀 ~ file: TicketBookingManagement.js:155 ~ getAllBookingDetails ~ error:",
@@ -229,29 +65,24 @@ const TicketBookingManagement = () => {
   };
 
   useEffect(() => {
-    callback && getAllBookingDetails();
+    callback && getAllReservationsByCreatedBy();
     setCallback(false);
   }, [callback]);
 
-  // const handleBookingRequests = (id) => {
-  //   setIsShowAllBookingRequests(true);
-  // };
-
-  // useEffect(() => {
-  //   let bookingDetailsList = fTicketBookings;
-  //   if (bookingDetailsList.length > 0 && (filterPickupStation != null || filterPickupStation != "")) {
-  //     bookingDetailsList = bookingDetailsList.filter((bookingDetails) => {
-  //       return bookingDetails.bookings[0].pickStation.toLowerCase().includes(filterPickupStation.toLowerCase());
-  //     });
-  //   }
-  //   // if (bookingDetailsList.length > 0 && filterActive) {
-  //   //   bookingDetailsList = bookingDetailsList.filter((train) => {
-  //   //     return filterActive === "true" ? train.isActive : !train.isActive;
-  //   //   });
-  //   // }
-
-  //   setTicketBookings(bookingDetailsList);
-  // }, [filterPickupStation]);
+  useEffect(() => {
+    let ReservationList = fReservations;
+    if (
+      ReservationList.length > 0 &&
+      (filterTraveller != null || filterTraveller != "")
+    ) {
+      ReservationList = ReservationList.filter((reservations) => {
+        return reservations.ownerDetails.name
+          .toLowerCase()
+          .includes(filterTraveller.toLowerCase());
+      });
+    }
+    setReservations(ReservationList);
+  }, [filterTraveller]);
 
   return (
     <>
@@ -337,23 +168,26 @@ const TicketBookingManagement = () => {
                         />
                       </div>
                     </div>
-                    {ticketBookings.length > 0 ? (
+                    {reservations.length > 0 ? (
                       <div style={{ padding: "10px", overflow: "auto" }}>
-                        <table className="table table-striped table-hover">
+                        <table className="table table-striped table-hover table align-middle">
                           <thead className="thead-dark">
                             <tr>
-                              <th scope="col">User Name</th>
-                              <th scope="col" style={{ alignItems: "center" }}>
-                                Booking
+                              <th scope="col" >User Name</th>
+                              <th scope="col" style={{
+                                                  verticalAlign: "middle",
+                                                  
+                                                }}>
+                                <center>Bookings</center>
                               </th>
                               <th scope="col">Total Price</th>
                               <th scope="col"></th>
                             </tr>
                           </thead>
                           <tbody>
-                            {ticketBookings.map((u) => (
+                            {reservations.map((u) => (
                               <tr key={u.id} className="pointer">
-                                <td>User Name</td>
+                                <td class="vertical-align-middle;">{u.ownerDetails.name}</td>
                                 <td>
                                   <table>
                                     <thead>
@@ -534,7 +368,7 @@ const TicketBookingManagement = () => {
                         </h5>
                       </div>
                       <div>
-                        {bookingDetails.map((bookingDetails, index) => (
+                        {bookingReqDetails.map((bookingDetails, index) => (
                           <>
                             <div
                               className="container"
@@ -554,17 +388,18 @@ const TicketBookingManagement = () => {
                                   setIsShowAllBookingRequests(false);
                                   setBookingReqDetails({
                                     ...bookingReqDetails,
-                                    id: bookingDetails.id,
-                                    pickStation:
-                                      bookingDetails.bookings[0].pickStation,
-                                    dropStation:
-                                      bookingDetails.bookings[0].dropStation,
-                                    startTime:
-                                      bookingDetails.bookings[0].scheduleDetails
-                                        .startTime,
-                                    endTime:
-                                      bookingDetails.bookings[0].scheduleDetails
-                                        .endTime,
+                                    bookings : bookingDetails.bookings
+                                    // id: bookingDetails.id,
+                                    // pickStation:
+                                    //   bookingDetails.bookings[0].pickStation,
+                                    // dropStation:
+                                    //   bookingDetails.bookings[0].dropStation,
+                                    // startTime:
+                                    //   bookingDetails.bookings[0].scheduleDetails
+                                    //     .startTime,
+                                    // endTime:
+                                    //   bookingDetails.bookings[0].scheduleDetails
+                                    //     .endTime,
                                   });
                                 }}
                                 style={{
@@ -572,24 +407,59 @@ const TicketBookingManagement = () => {
                                   cursor: "pointer",
                                 }}
                               >
-                                <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
-                                <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
-                                <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
-                                <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4">
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "flex-start",
-                                      gap: "18px",
-                                    }}
-                                  >
-                                    <h6>Start station</h6>
-                                    <h6>
-                                      {bookingDetails.bookings[0].pickStation}
-                                    </h6>
+                                <div >
+                                  <div class="row" >
+                                    <div class="col-3" >
+                                      <img
+                                        src={
+                                          bookingDetails.ownerDetails?.imagePath
+                                        }
+                                        width={60}
+                                        className="profile_image"
+                                      ></img>
+                                    </div>
+                                    <div class="col-9">
+                                      <div style={{ textWrap: "wrap" }}>
+                                        <h5>
+                                          {bookingDetails.ownerDetails?.name}
+                                        </h5>
+                                        <h7>
+                                          This User have{" "}
+                                          {bookingDetails.bookings.length}{" "}
+                                          bookings
+                                        </h7>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                                <div class="col-12	col-sm-12	col-md-3	col-lg-3	col-xl-3"></div>
+                                {/* <div
+                                  style={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: "20px",
+                                    alignContent: "center",
+                                    alignItems: "center",
+                                    marginBottom: "10px",
+                                  }}
+                                >
+                                  <div class="avatar2">
+                                    <img
+                                      width={10}
+                                      src={
+                                        bookingDetails.ownerDetails?.imagePath
+                                      }
+                                      alt="User Image"
+                                    />
+                                  </div>
+                                  <div style={{ textWrap: "wrap" }}>
+                                    <h5>{bookingDetails.ownerDetails?.name}</h5>
+                                    <h7>
+                                      This User have{" "}
+                                      {bookingDetails.bookings.length} bookings
+                                    </h7>
+                                  </div>
+                                </div> */}
+                                {/*
                                 <div class="col-12	col-sm-12	col-md-3	col-lg-3	col-xl-3">
                                   <div
                                     style={{
@@ -604,7 +474,7 @@ const TicketBookingManagement = () => {
                                     </h6>
                                   </div>
                                 </div>
-                                <div class="col-12	col-sm-12	col-md-3	col-lg-3	col-xl-3">
+                                 <div class="col-12	col-sm-12	col-md-3	col-lg-3	col-xl-3">
                                   <div
                                     style={{
                                       display: "flex",
@@ -638,7 +508,7 @@ const TicketBookingManagement = () => {
                                       }
                                     </h6>
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           </>
@@ -657,6 +527,11 @@ const TicketBookingManagement = () => {
                           <div
                             onClick={() => {
                               setIsShowAllBookingRequests(true);
+                              setBookingReqDetails({
+                                ...bookingReqDetails,
+                                bookings : bookingReqDetails.bookings
+
+                              })
                             }}
                             style={{
                               cursor: "pointer",
@@ -723,6 +598,11 @@ const TicketBookingManagement = () => {
                               class="row gy-3"
                               onClick={() => {
                                 setIsShowAllBookingRequests(false);
+                                setBookingReqDetails({
+                                  ...bookingReqDetails,
+                                  bookings : bookingReqDetails.bookings
+  
+                                })
                               }}
                               style={{
                                 padding: "5px",

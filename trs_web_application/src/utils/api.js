@@ -39,3 +39,7 @@ export const TrainScheduleManagementAPI = {
   getSchedules: "/api/TrainSchedule",
   create: "/api/TrainSchedule",
 };
+
+export const ReservationManagementAPI = {
+  getAllReservationsByCreatedBy : "/api/Reservation/getAllReservationsByCreatedBy"
+};
