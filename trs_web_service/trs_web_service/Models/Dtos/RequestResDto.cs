@@ -4,10 +4,12 @@
     {
        public string Id { get; set; }
         public string AgentId { get; set; }
+
+        public UserDto AgentDetails { get; set; }
         public string CreatedBy { get; set; }
         public UserDto CreatedByDetails { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<BookingResDto> Bookings { get; set; }
+        public BookingResDto Booking { get; set; }
         public bool IsReqAccepted { get; set; }
     }
 }

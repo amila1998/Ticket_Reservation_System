@@ -28,6 +28,11 @@ namespace trs_web_service.Services
                 throw new Exception("There is no train under requested registration number");
             }
 
+            if (schedule.TrainStops.Count == 0)
+            {
+                throw new Exception("Train Stop stations must be greater than 0");
+            }
+
             TrainSchedule newSchedule = new()
             {
                 DayType = (DayType)schedule.DayType,
@@ -148,10 +153,15 @@ namespace trs_web_service.Services
         {
             var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
             var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
-            if (reservations.Count > 0)
+            if (schedule.TrainStops.Count == 0)
+            {
+                throw new Exception("Train Stop stations must be greater than 0");
+            }
+                if (reservations.Count > 0)
             {
                foreach (var reservation in reservations)
                 {
+                    
                     foreach(var book in reservation.Bookings)
                     {
                         foreach(var cancelDate in schedule.CancelDates)

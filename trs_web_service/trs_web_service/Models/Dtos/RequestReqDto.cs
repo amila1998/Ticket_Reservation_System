@@ -7,7 +7,7 @@ namespace trs_web_service.Models.Dtos
         public string AgentId { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<BookingDto> Bookings { get; set; }
+        public BookingDto Booking { get; set; }
         public bool IsReqAccepted { get; set; }
     }
 }
