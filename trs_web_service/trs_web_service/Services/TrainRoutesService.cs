@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿///// Services/TrainRoutesService.cs
+
+using Microsoft.AspNetCore.Routing;
 using MongoDB.Bson;
 using trs_web_service.Infrastructure;
 using trs_web_service.Models.Domains;
@@ -15,6 +17,12 @@ namespace trs_web_service.Services
             _repository = repository;
         }
 
+
+        /// <summary>
+        /// Create a Train Route
+        /// </summary>
+        /// <param TrainRouteReqDtoe></param>
+        /// <returns></returns>
         public async Task CreateRoute(TrainRouteReqDto req)
         {
             var exRoute = _repository.GetRouteByStartAndEnd(req.StartStation,req.EndStation);
@@ -47,6 +55,12 @@ namespace trs_web_service.Services
             await _repository.CreateAsync(trainRoutes);
         }
 
+
+        /// <summary>
+        /// delete a Train Route
+        /// </summary>
+        /// <param train route id></param>
+        /// <returns></returns>
         public async Task DeleteRoute(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
@@ -59,6 +73,12 @@ namespace trs_web_service.Services
             await _repository.DeleteRoute(exRoute.Id);
         }
 
+
+        /// <summary>
+        /// disable a Train Route
+        /// </summary>
+        /// <param train route id></param>
+        /// <returns></returns>
         public async Task DisableRoute(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
@@ -71,6 +91,11 @@ namespace trs_web_service.Services
             await _repository.DisableRoute(exRoute.Id);
         }
 
+        /// <summary>
+        /// enable a Train Route
+        /// </summary>
+        /// <param train route id></param>
+        /// <returns></returns>
         public async Task EnableRoute(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
@@ -82,6 +107,11 @@ namespace trs_web_service.Services
             await _repository.EnableRoute(exRoute.Id);
         }
 
+        /// <summary>
+        /// update a Train Route
+        /// </summary>
+        /// <param train route id and TrainRouteReqDto></param>
+        /// <returns></returns>
         public async Task UpdateRoute(string id,TrainRouteReqDto req)
         {
             if (!ObjectId.TryParse(id, out var objectId))
@@ -94,6 +124,12 @@ namespace trs_web_service.Services
             await _repository.UpdateRoute(exRoute);
         }
 
+
+        /// <summary>
+        /// get all Train Route
+        /// </summary>
+        /// <param ></param>
+        /// <returns>List<TrainRouteResDto></returns>
         public async Task<List<TrainRouteResDto>> GetAllRoutes()
         {
             List<TrainRoutes> routes = await _repository.GetAllTrainRoutesAsync();
@@ -131,6 +167,12 @@ namespace trs_web_service.Services
             return trainRouteResDtos;
         }
 
+
+        /// <summary>
+        /// get all Train Route by not active
+        /// </summary>
+        /// <param ></param>
+        /// <returns>List<TrainRouteResDto></returns>
         public async Task<List<TrainRouteResDto>> GetAllRoutesByNotInActive()
         {
             List<TrainRoutes> routes = await _repository.GetAllTrainRoutesByNotInActiveAsync();

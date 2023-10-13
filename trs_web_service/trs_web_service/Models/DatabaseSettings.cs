@@ -1,4 +1,6 @@
-﻿namespace trs_web_service.Models
+﻿// Models/DatabaseSettings.cs
+
+namespace trs_web_service.Models
 {
     public class DatabaseSettings
     {

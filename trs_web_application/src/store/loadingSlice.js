@@ -1,4 +1,4 @@
-//loadingSlice.js
+//store/loadingSlice.js
 
 import { createSlice } from "@reduxjs/toolkit";
 

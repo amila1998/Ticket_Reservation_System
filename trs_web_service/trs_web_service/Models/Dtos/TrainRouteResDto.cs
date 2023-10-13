@@ -1,4 +1,7 @@
-﻿using trs_web_service.Models.Domains;
+﻿////Models/Dtos/TrainRouteResDto.cs
+
+
+using trs_web_service.Models.Domains;
 
 namespace trs_web_service.Models.Dtos
 {

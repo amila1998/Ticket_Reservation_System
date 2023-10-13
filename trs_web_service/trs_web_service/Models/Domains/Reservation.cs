@@ -1,7 +1,10 @@
-﻿using MongoDB.Bson;
+﻿//Models/Domain/Reservation.cs
+
+using MongoDB.Bson;
 
 namespace trs_web_service.Models.Domains
 {
+    
     public class Reservation
     {
         public ObjectId Id { get; set; }
@@ -19,6 +22,7 @@ namespace trs_web_service.Models.Domains
 
     }
 
+    //Class for Booking
     public class Booking
     {
         public string Id { get; set; }

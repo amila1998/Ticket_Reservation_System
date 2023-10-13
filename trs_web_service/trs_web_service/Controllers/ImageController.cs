@@ -1,4 +1,6 @@
-﻿using CloudinaryDotNet.Actions;
+﻿/// Services/CloudinaryImageUploadService.cs
+
+using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

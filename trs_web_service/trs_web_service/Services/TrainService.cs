@@ -1,4 +1,6 @@
-﻿using trs_web_service.Infrastructure;
+﻿/// Services/TrainService.cs
+
+using trs_web_service.Infrastructure;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
 
@@ -17,7 +19,13 @@ namespace trs_web_service.Services
 			_reservationRepository = reservationRepository;
 		}
 
-		public async Task CreateTrainAsync(TrainReqBodyDto train)
+
+        /// <summary>
+        /// create a train
+        /// </summary>
+        /// <param TrainReqBodyDto></param>
+        /// <returns></returns>
+        public async Task CreateTrainAsync(TrainReqBodyDto train)
 		{
 			var exTrain = await _repository.GetByRegistraionNoAsync(train.RegistraionNo);
 			if (exTrain != null)
@@ -36,7 +44,14 @@ namespace trs_web_service.Services
 			await _repository.CreateAsync(newTrain);
 		}
 
-		public async Task<IEnumerable<TrainResDto>> GetAllTrainsAsync()
+
+
+        /// <summary>
+        /// get all trains
+        /// </summary>
+        /// <param TrainReqBodyDto></param>
+        /// <returns>TrainResDto list</returns>
+        public async Task<IEnumerable<TrainResDto>> GetAllTrainsAsync()
 		{
 			List<TrainResDto> trains = new();
 			var trainList = await _repository.GetAllTrainsAsync();
@@ -54,7 +69,13 @@ namespace trs_web_service.Services
 			return trains;
 		}
 
-		public async Task ChangeActiveStatus(string regNo)
+
+        /// <summary>
+        /// change active status in  atrain
+        /// </summary>
+        /// <param train registration number></param>
+        /// <returns></returns>
+        public async Task ChangeActiveStatus(string regNo)
 		{
 			var train = await _repository.GetByRegistraionNoAsync(regNo) ?? throw new Exception("No train under this registration number");
 			bool changeActiveStatus = !train.IsActive;
@@ -94,7 +115,13 @@ namespace trs_web_service.Services
 			}
 		}
 
-		public async Task UpdateTrain(TrainReqBodyDto train)
+
+        /// <summary>
+        ///update a  atrain
+        /// </summary>
+        /// <param TrainReqBodyDto></param>
+        /// <returns></returns>
+        public async Task UpdateTrain(TrainReqBodyDto train)
 		{
 			var extrain = await _repository.GetByRegistraionNoAsync(train.RegistraionNo) ?? throw new Exception("No train under this registration number");
 			await _repository.UpdateTrain(train);
