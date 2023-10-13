@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/back"
+    android:padding="20dp"
+    android:layout_height="match_parent"
+
+    tools:context=".activities.ui.profile.ProfileFragment">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:layout_margin="5dp"
+                android:text="@string/my_profile">
+
+            </TextView>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/profile"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:elevation="10dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:gravity="center_horizontal">
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:id="@+id/editProfile"
+                    android:layout_marginRight="10dp"
+                    android:textAllCaps="false"
+                    android:text="@string/edit_profile">
+
+                </Button>
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:id="@+id/deactivate"
+                    android:textAllCaps="false"
+                    android:text="@string/deactivate">
+
+                </Button>
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:id="@+id/logout"
+                    android:layout_marginLeft="10dp"
+                    android:textAllCaps="false"
+                    android:text="@string/logout">
+
+                </Button>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:text="@string/name_field">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:layout_margin="5dp"
+                    android:id="@+id/name">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:text="@string/email_field">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:layout_margin="5dp"
+                    android:id="@+id/email">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:text="@string/nic_field">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:layout_margin="5dp"
+                    android:id="@+id/nic">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:text="@string/contactNumber_field">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:layout_margin="5dp"
+                    android:id="@+id/contactNumber">
+
+                </TextView>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

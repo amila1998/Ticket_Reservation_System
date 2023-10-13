@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back"
+    tools:context=".activities.SignInActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo">
+
+            </ImageView>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:hint="@string/nic_field"
+                android:background="@color/white"
+                android:id="@+id/nic">
+
+            </EditText>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:hint="@string/password_field"
+                android:inputType="textPassword"
+                android:id="@+id/password">
+
+            </EditText>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_signIn"
+                android:textAllCaps="false"
+                android:text="@string/sign_in_button">
+
+            </Button>
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/create_new_account_txt"
+                android:layout_height="wrap_content"
+                android:text="@string/create_new_account"
+                android:textColor="@color/design_default_color_primary_dark"
+                android:textSize="20dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

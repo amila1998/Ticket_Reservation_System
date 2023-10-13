@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:title="@string/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp" />
+
+    <item
+        android:id="@+id/navigation_bookings"
+        android:title="@string/navigation_bookings"
+        android:icon="@drawable/bookings" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:title="@string/navigation_profile"
+        android:icon="@drawable/profile" />
+
+</menu>
