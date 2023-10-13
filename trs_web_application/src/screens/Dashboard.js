@@ -9,8 +9,10 @@ import UserManagement from "../components/UserManagement";
 import TicketBookingManagement from "../components/TicketBookingManagement";
 import TrainManagement from "../components/TrainManagement";
 import TrainRoutesManagement from "../components/TrainRoutesManagement";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
+    const user = useSelector((state) => state.auth.user);
     const [isDasboardSelected, setIsDashboardSelected]=useState(true)
     const [isUserManagementSelected, setIsUserManagementSelected]=useState(false)
     const [isTicketBookingManagementSelected, setIsTicketBookingManagementSelected]=useState(false)
@@ -49,22 +51,26 @@ const Dashboard = () => {
 
           <div className="nav_text">User Management</div>
         </div>
-        <div
-          className={
-            isTicketBookingManagementSelected ? "nav_item_selected" : "nav_item"
-          }
-          onClick={() => {
-            setIsDashboardSelected(false);
-            setIsUserManagementSelected(false);
-            setIsTicketBookingManagementSelected(true);
-            setIsTrainManagementSelected(false);
-            setIsRouteManagementSelected(false);
-          }}
-        >
-          <img width={20} src={ticket_icon} />
+        {user.role == "travel_agent" && (
+          <div
+            className={
+              isTicketBookingManagementSelected
+                ? "nav_item_selected"
+                : "nav_item"
+            }
+            onClick={() => {
+              setIsDashboardSelected(false);
+              setIsUserManagementSelected(false);
+              setIsTicketBookingManagementSelected(true);
+              setIsTrainManagementSelected(false);
+              setIsRouteManagementSelected(false);
+            }}
+          >
+            <img width={20} src={ticket_icon} />
 
-          <div className="nav_text">Ticket Booking Management</div>
-        </div>
+            <div className="nav_text">Ticket Booking Management</div>
+          </div>
+        )}
         <div
           className={
             isTrainManagementSelected ? "nav_item_selected" : "nav_item"
@@ -101,7 +107,9 @@ const Dashboard = () => {
       <div className="dash">
         {isDasboardSelected && <DashboardComp />}
         {isUserManagementSelected && <UserManagement />}
-        {isTicketBookingManagementSelected && <TicketBookingManagement />}
+        {user.role == "travel_agent" && isTicketBookingManagementSelected && (
+          <TicketBookingManagement />
+        )}
         {isTrainManagementSelected && <TrainManagement />}
         {isRouteManagementSelected && <TrainRoutesManagement />}
       </div>
