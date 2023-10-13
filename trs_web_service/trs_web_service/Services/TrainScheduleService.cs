@@ -140,7 +140,8 @@ namespace trs_web_service.Services
                             EndTime = schedule.EndTime,
                             TrainClasses = schedule.TrainClasses,
                             CancelDates = schedule.CancelDates,
-  
+                            TrainRouteId = schedule.TrainRouteId,
+
                         };
                         schedules.Add(trainScheduleResDto);
                     }

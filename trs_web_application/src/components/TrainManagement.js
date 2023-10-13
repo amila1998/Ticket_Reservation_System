@@ -41,17 +41,12 @@ const TrainManagement = () => {
   const [isLoading, setIsLoading] = useState("");
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [stopView, setStopView] = useState(false);
-  console.log("🚀 ~ file: TrainManagement.js:42 ~ TrainManagement ~ stopView:", stopView)
   const [train, setTrain] = useState({
     name: "",
     imagePath:
       "https://res.cloudinary.com/amiladevin1998/image/upload/v1696069476/download_cmzzo6.png",
     registraionNo: "",
   });
-  console.log(
-    "🚀 ~ file: TrainManagement.js:46 ~ TrainManagement ~ train:",
-    train
-  );
   const [callback, setCallback] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isSEdit, setIsSEdit] = useState(false);
@@ -357,10 +352,6 @@ const TrainManagement = () => {
   const [trainRoutesOptions, setTrainRoutesOptions] = useState([]);
   const [trainRoutesOptionsSelect, setTrainRoutesOptionsSelect] = useState("");
   const [trainStopsOptions, setTrainStopsOptions] = useState([]);
-  console.log(
-    "🚀 ~ file: TrainManagement.js:255 ~ TrainManagement ~ trainStopsOptions:",
-    trainStopsOptions
-  );
   const [trainStopsOptionsSelect, setTrainStopsOptionsSelect] = useState([]);
   const [cancelDates, setCancelDates] = useState([]);
   const [dateCancelId, setDateCancelId] = useState(0);
@@ -379,10 +370,6 @@ const TrainManagement = () => {
     trainRouteId: "",
     speed: "",
   });
-  console.log(
-    "🚀 ~ file: TrainManagement.js:258 ~ TrainManagement ~ schedule:",
-    schedule
-  );
 
   const getShedules = async () => {
     setIsLoading(true);
@@ -414,7 +401,8 @@ const TrainManagement = () => {
     }
   };
 
-  const getAllTrainRoutes = async () => {
+  const getAllTrainRoutes = async (params) => {
+    console.log("🚀 ~ file: TrainManagement.js:418 ~ getAllTrainRoutes ~ params:", params)
     try {
       const res = await getAxiosInstance().get(
         TrainRoutesManagementAPI.getAllActiveRoutes,
@@ -439,6 +427,42 @@ const TrainManagement = () => {
           routes.push(route);
         }
         setTrainRoutesOptions(routes);
+        if (params) {
+          if (res.data && res.data.length > 0) {
+            console.log("🚀 ~ file: TrainManagement.js:432 ~ getAllTrainRoutes ~ res.data:", res.data)
+            for (const tr of res.data) {
+              console.log("🚀 ~ file: TrainManagement.js:434 ~ getAllTrainRoutes ~ tr:", tr)
+              if (params.trainRouteId == tr.id) {
+                let stations = [];
+                console.log("🚀 ~ file: TrainManagement.js:437 ~ getAllTrainRoutes ~ stations:", stations)
+                for (const o of tr.stations) {
+                  const data = {
+                    ...o,
+                    label: o.order + ". " + o.name,
+                    value: o.name,
+                  };
+                  stations.push(data);
+                }
+                setTrainStopsOptions(stations);
+                console.log(
+                  "🚀 ~ file: TrainManagement.js:444 ~ getAllTrainRoutes ~ stations:",
+                  stations
+                );
+                if (stations.length > 0) {
+                  let selectstops = [];
+                  for (const s of stations) {
+                    for (const ss of params.trainStops) {
+                      if (ss.trainStop.name === s.value) {
+                        selectstops.push(s);
+                      }
+                    }
+                  }
+                  setTrainStopsOptionsSelect(selectstops);
+                }
+              }
+            }
+          }
+        }
       }
     } catch (error) {
       console.log(
@@ -523,10 +547,12 @@ const TrainManagement = () => {
     setTrainRoutes([]);
     setTrainRoutesOptions([]);
     setTrainRoutesOptionsSelect("");
+    setSTrainClasses([]);
     setTrainStopsOptionsSelect([]);
     setTrainStopsOptions([]);
     setCancelDates([]);
     setSTrainSpeed("");
+    setIsSEdit(false)
   };
 
   function calculateTravelTime(startTime, stationCount, speed) {
@@ -660,6 +686,42 @@ const TrainManagement = () => {
 
       // Combine the formatted hours and minutes to create a 24-hour time string
       return `${formattedHours}:${formattedMinutes}`;
+    }
+  }
+
+  const handleEditSchduleBtn=async(data) => {
+    setSchedule({
+      id: data.id,
+      dayType: data.dayType,
+      trainRegistraionNo: data.trainRegistraionNo,
+      isCancel: data.isCancel,
+      trainStops: data.trainStops,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      trainClasses: data.trainClasses,
+      cancelDates: data.cancelDates,
+      trainRouteId: data.trainRouteId,
+      speed: data.speed,
+    });
+    getAllTrainRoutes(data);
+    for (const dT of DayType) {
+      if (dT.value === data.dayType) {
+        setSDayType(dT);
+      }
+    }
+    let sClasses = [];
+    for (const ct of ClassTypes) {
+      for (const cts of data.trainClasses) {
+        if (ct.value === cts) {
+          sClasses.push(ct);
+        }
+      }
+    }
+    setSTrainClasses(sClasses);
+    for (const sp of TrainSpeed) {
+      if (sp.value === data.speed) {
+        setSTrainSpeed(sp);
+      }
     }
   }
 
@@ -1627,7 +1689,7 @@ const TrainManagement = () => {
                             trainRouteId: "",
                             speed: "",
                           });
-                          getAllTrainRoutes();
+                          getAllTrainRoutes(null);
                         }}
                       >
                         Add New Schedule
@@ -1639,7 +1701,6 @@ const TrainManagement = () => {
               {schedules.length > 0 ? (
                 <>
                   {
-                    //TODO: BODY
                     <>
                       {schedules.map((train, index) => (
                         <>
@@ -1674,12 +1735,7 @@ const TrainManagement = () => {
                               <div
                                   onClick={() => {
                                     setIsSEdit(true);
-                                    // setTrain({
-                                    //   ...train,
-                                    //   name: u.name,
-                                    //   registraionNo: u.registraionNo,
-                                    //   imagePath: u.imagePath,
-                                    // });
+                                    handleEditSchduleBtn(train);
                                   }
                                 }
                                   style={{
@@ -1693,6 +1749,7 @@ const TrainManagement = () => {
                                   data-toggle="tooltip"
                                   data-placement="bottom"
                                   title="Edit Schedule"
+                                  
                                 >
                                   <div
                                     data-toggle="modal"
