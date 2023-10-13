@@ -8,6 +8,7 @@ export const ImageAPI = {
 export const AutherizationAPI = {
   info: "/api/Atherization/info",
   reset_password: "/api/Atherization/reset_password",
+  update_profile: "/api/Atherization/update",
 };
 
 export const UserManagementAPI = {
@@ -16,6 +17,7 @@ export const UserManagementAPI = {
   activate_user: "/api/User/activate",
   user_update: "/api/User/update_user",
   user_activate_request: "/api/User/request_active_account",
+  deactivate_user: "/api/User/deactivate",
 };
 
 export const TrainRoutesManagementAPI = {
