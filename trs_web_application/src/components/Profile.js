@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import profile from "../assets/profile_picture.jpg";
-
+import { useSelector } from "react-redux";
+import edit_icon from "../assets/icons/pen-to-square-solid.svg";
+import photo_icon from "../assets/icons/camera-retro-solid.svg";
 const Profile = () => {
+  const inputFile = useRef(null);
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -9,6 +12,14 @@ const Profile = () => {
     phone: "",
   });
 
+  const [isUserEdit, setIsUserEdit] = useState(false);
+  console.log("🚀 ~ file: Profile.js:15 ~ Profile ~ isUserEdit:", isUserEdit)
+  const loginUser = useSelector((state) => state.auth.user);
+
+  const handleInput = () => {
+    inputFile.current.click();
+  };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -40,14 +51,34 @@ const Profile = () => {
               <h1 style={{ color: "#000000" }}>Admin User Profile</h1>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-4"></div>
-            <div class="col-xs-12 col-sm-12 col-md-4">
-              <img
-                src={profile}
-                width={150}
-                height={150}
-                style={{ borderRadius: "500px" }}
-              ></img>
-            </div>
+            {!isUserEdit ? (
+              <div class="col-xs-12 col-sm-12 col-md-4">
+                <img
+                  src={profile}
+                  width={150}
+                  height={150}
+                  style={{ borderRadius: "500px" }}
+                ></img>
+              </div>
+            ) : (
+              <div class="col-xs-12 col-sm-12 col-md-4" onClick={handleInput}>
+                <img
+                  src={profile}
+                  width={150}
+                  height={150}
+                  style={{ borderRadius: "500px" }}
+                ></img>
+                <input
+                  name="train image"
+                  ref={inputFile}
+                  type="file"
+                  className="profile_avatar-input"
+                  id="imageUpload"
+                  accept="image/*"
+                  // onChange={handleImageChange}
+                />
+              </div>
+            )}
           </div>
         </div>
         <div class="container" style={{ padding: "35px" }}>
@@ -63,29 +94,30 @@ const Profile = () => {
               <input
                 class="form-control"
                 type="text"
-                value="Disabled readonly input"
+                defaultValue={loginUser.name}
                 aria-label="Disabled input example"
-                disabled
-                readonly
+                disabled={!isUserEdit}
+                readonly={!isUserEdit}
               />
             </div>
-            <div class="mb-3">
-              <label
-                for="formGroupExampleInput2"
-                class="form-label"
-                style={{ color: "#000000" }}
-              >
-                Password
-              </label>
-              <input
-                class="form-control"
-                type="text"
-                value="Disabled readonly input"
-                aria-label="Disabled input example"
-                disabled
-                readonly
-              />
-            </div>
+            {isUserEdit && (
+              <div class="mb-3">
+                <label
+                  for="formGroupExampleInput2"
+                  class="form-label"
+                  style={{ color: "#000000" }}
+                >
+                  Password
+                </label>
+                <input
+                  class="form-control"
+                  type="text"
+                  // value="Disabled readonly input"
+                  defaultValue="test"
+                  aria-label="Disabled input example"
+                />
+              </div>
+            )}
             <div class="mb-3">
               <label
                 for="formGroupExampleInput2"
@@ -97,10 +129,10 @@ const Profile = () => {
               <input
                 class="form-control"
                 type="text"
-                value="Disabled readonly input"
+                defaultValue={loginUser.role}
                 aria-label="Disabled input example"
-                disabled
-                readonly
+                disabled={!isUserEdit}
+                readonly={!isUserEdit}
               />
             </div>
             <div class="mb-3">
@@ -114,10 +146,10 @@ const Profile = () => {
               <input
                 class="form-control"
                 type="text"
-                value="Disabled readonly input"
+                defaultValue={loginUser.nic}
                 aria-label="Disabled input example"
-                disabled
-                readonly
+                disabled={!isUserEdit}
+                readonly={!isUserEdit}
               />
             </div>
             <div class="mb-3">
@@ -131,12 +163,64 @@ const Profile = () => {
               <input
                 class="form-control"
                 type="text"
-                value="Disabled readonly input"
+                defaultValue={loginUser.contactNo}
                 aria-label="Disabled input example"
-                disabled
-                readonly
+                disabled={!isUserEdit}
+                readonly={!isUserEdit}
               />
             </div>
+            <center>
+              {!isUserEdit ? (
+                <div
+                  onClick={() => {
+                    setIsUserEdit(true);
+                  }}
+                  className="btn"
+                  style={{
+                    cursor: "pointer",
+                    margin: "5px",
+                    borderRadius: "50px",
+                    justifyContent: "center",
+                    backgroundColor: "rgb(212, 194, 2)",
+                    alignItems: "center",
+                    display: "flex",
+                    width: "30%",
+                  }}
+                >
+                  <center>
+                    <img
+                      style={{
+                        margin: "10px",
+                      }}
+                      width={18}
+                      src={edit_icon}
+                    />
+                  </center>
+                  <h6 style={{ margin: "10px", color: "#FFF" }}>
+                    Edit Profile
+                  </h6>
+                </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    setIsUserEdit(true);
+                  }}
+                  className="btn"
+                  style={{
+                    cursor: "pointer",
+                    margin: "5px",
+                    borderRadius: "50px",
+                    justifyContent: "center",
+                    backgroundColor: "rgb(212, 194, 2)",
+                    alignItems: "center",
+                    display: "flex",
+                    width: "30%",
+                  }}
+                >
+                  <h6 style={{ margin: "10px", color: "#FFF" }}>Submit</h6>
+                </div>
+              )}
+            </center>
           </div>
         </div>
       </div>
