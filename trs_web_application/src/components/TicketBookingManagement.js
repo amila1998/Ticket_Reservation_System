@@ -9,7 +9,7 @@ import delete_icon from "../assets/icons/trash-solid.svg";
 import go_back_icon from "../assets/icons/arrow-left-long.svg";
 import { useSelector } from "react-redux";
 import { getAxiosInstance } from "../utils/axios";
-import { ReservationManagementAPI } from "../utils/api";
+import { RequestManagementAPI, ReservationManagementAPI } from "../utils/api";
 
 
 const TicketBookingManagement = () => {
@@ -17,11 +17,15 @@ const TicketBookingManagement = () => {
   const auth = useSelector((state) => state.auth.user);
   const [reservations, setReservations] = useState([]);
   const [bookingReqDetails, setBookingReqDetails] = useState([]);
+  const [bookingRequests, setBookingRequests] = useState([]);
+  const [bookingReqDetail, setBookingReqDetail] = useState("");
   const [fReservations, setFReservations] = useState("");
   const [filterTraveller, setFilterTraveller] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
   const [isLoading, setIsLoading] = useState("");
+  const [isRLoading, setIsRLoading] = useState("");
   const [callback, setCallback] = useState(true);
+  const [callbackR, setCallbackR] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [isShowAllBookingRequests, setIsShowAllBookingRequests] =
     useState(true);
@@ -84,6 +88,42 @@ const TicketBookingManagement = () => {
     setReservations(ReservationList);
   }, [filterTraveller]);
 
+
+  //Requests
+
+  const getAllRequests =async()=>{
+    try {
+      setIsRLoading(true)
+      const path = RequestManagementAPI.getAllRequests;
+      const res = await getAxiosInstance().get(
+        path,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      setBookingRequests(res.data);
+    } catch (error) {
+      console.log("🚀 ~ file: TicketBookingManagement.js:94 ~ getAllRequests ~ error:", error)
+
+    }finally{
+      setIsRLoading(false);
+    }
+
+  }
+
+  useEffect(() => {
+    callbackR && getAllRequests();
+    setCallbackR(false)
+  }, [callbackR]);
+
+  const handleRequest=async(data)=>{
+    setBookingReqDetail(data)
+  }
+
+  const handleCreateModalClose=()=>{
+     setBookingReqDetail('');
+  }
+
   return (
     <>
       <ToastContainer
@@ -102,6 +142,71 @@ const TicketBookingManagement = () => {
         <div style={{ display: "flex", alignItems: "baseline" }}>
           <img width={25} src={ticket_icon} />
           <h5 style={{ marginLeft: "10px" }}>Ticket Booking Management</h5>
+        </div>
+        <div
+          className="modal fade"
+          id="exampleModalCenter"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div
+              style={{
+                borderRadius: "10px",
+                backgroundColor: "#ffff",
+                border: "none",
+                color: "#0000 !important",
+              }}
+              className="modal-content"
+            >
+              <div className="modal-header">
+                <h5
+                  style={{ color: "black" }}
+                  className="modal-title"
+                  id="exampleModalLongTitle"
+                >
+                  {isEdit ? "Edit Reservation" : "Create Reservation"}
+                </h5>
+                <button
+                  style={{
+                    borderRadius: "50px",
+                    backgroundColor: "red",
+                    border: "none",
+                    color: "#ffff",
+                  }}
+                  type="button"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  // onClick={handleCreateModalClose}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div style={{ color: "black" }} className="modal-body">
+                <form></form>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  // onClick={handleCreateModalClose}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-dismiss="modal"
+                  // onClick={isEdit ? updateTrain : createTrain}
+                >
+                  {isEdit ? "Update" : "Create"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="">
           <div className="row">
@@ -173,11 +278,13 @@ const TicketBookingManagement = () => {
                         <table className="table table-striped table-hover table align-middle">
                           <thead className="thead-dark">
                             <tr>
-                              <th scope="col" >User Name</th>
-                              <th scope="col" style={{
-                                                  verticalAlign: "middle",
-                                                  
-                                                }}>
+                              <th scope="col">User Name</th>
+                              <th
+                                scope="col"
+                                style={{
+                                  verticalAlign: "middle",
+                                }}
+                              >
                                 <center>Bookings</center>
                               </th>
                               <th scope="col">Total Price</th>
@@ -187,7 +294,9 @@ const TicketBookingManagement = () => {
                           <tbody>
                             {reservations.map((u) => (
                               <tr key={u.id} className="pointer">
-                                <td class="vertical-align-middle;">{u.ownerDetails.name}</td>
+                                <td class="vertical-align-middle;">
+                                  {u.ownerDetails.name}
+                                </td>
                                 <td>
                                   <table>
                                     <thead>
@@ -216,7 +325,7 @@ const TicketBookingManagement = () => {
                                           <td>{b.tickectCount}</td>
                                           <td>
                                             {" "}
-                                            {auth.role == "backoffice" && (
+                                            {auth.role == "travel_agent" && (
                                               <div
                                                 style={{
                                                   display: "flex",
@@ -261,7 +370,7 @@ const TicketBookingManagement = () => {
                                                     </center>
                                                   </div>
                                                 </div>
-                                                <div
+                                                {/* <div
                                                   style={{
                                                     cursor: "pointer",
                                                     margin: "5px",
@@ -285,7 +394,7 @@ const TicketBookingManagement = () => {
                                                       src={delete_icon}
                                                     />
                                                   </center>
-                                                </div>
+                                                </div> */}
                                               </div>
                                             )}
                                           </td>
@@ -296,7 +405,7 @@ const TicketBookingManagement = () => {
                                 </td>
                                 <td>Rs.{u.totalPrice}</td>
                                 <td>
-                                  {auth.role == "backoffice" && (
+                                  {/* {auth.role == "travel_agent" && (
                                     <div
                                       style={{
                                         cursor: "pointer",
@@ -321,7 +430,7 @@ const TicketBookingManagement = () => {
                                         />
                                       </center>
                                     </div>
-                                  )}
+                                  )} */}
                                 </td>
                               </tr>
                             ))}
@@ -349,321 +458,129 @@ const TicketBookingManagement = () => {
                     overflow: "auto",
                   }}
                 >
-                  {isShowAllBookingRequests ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                        marginTop: "10px",
-                        marginBottom: "10px",
-                        padding: "10px",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <h5
-                          style={{ marginLeft: "10px", marginBottom: "10px" }}
-                        >
-                          Booking Requests
-                        </h5>
-                      </div>
-                      <div>
-                        {bookingReqDetails.map((bookingDetails, index) => (
-                          <>
-                            <div
-                              className="container"
-                              style={{
-                                backgroundColor: "rgb(0,0,0,0.7)",
-                                padding: "10px",
-                                borderRadius: "10px",
-                                height: "auto",
-                                width: "98%",
-                                marginBottom: "10px",
-                              }}
-                              key={index}
-                            >
-                              <div
-                                class="row gy-3"
-                                onClick={() => {
-                                  setIsShowAllBookingRequests(false);
-                                  setBookingReqDetails({
-                                    ...bookingReqDetails,
-                                    bookings : bookingDetails.bookings
-                                    // id: bookingDetails.id,
-                                    // pickStation:
-                                    //   bookingDetails.bookings[0].pickStation,
-                                    // dropStation:
-                                    //   bookingDetails.bookings[0].dropStation,
-                                    // startTime:
-                                    //   bookingDetails.bookings[0].scheduleDetails
-                                    //     .startTime,
-                                    // endTime:
-                                    //   bookingDetails.bookings[0].scheduleDetails
-                                    //     .endTime,
-                                  });
-                                }}
-                                style={{
-                                  padding: "5px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                <div >
-                                  <div class="row" >
-                                    <div class="col-3" >
-                                      <img
-                                        src={
-                                          bookingDetails.ownerDetails?.imagePath
-                                        }
-                                        width={60}
-                                        className="profile_image"
-                                      ></img>
-                                    </div>
-                                    <div class="col-9">
-                                      <div style={{ textWrap: "wrap" }}>
-                                        <h5>
-                                          {bookingDetails.ownerDetails?.name}
-                                        </h5>
-                                        <h7>
-                                          This User have{" "}
-                                          {bookingDetails.bookings.length}{" "}
-                                          bookings
-                                        </h7>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                {/* <div
-                                  style={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    gap: "20px",
-                                    alignContent: "center",
-                                    alignItems: "center",
-                                    marginBottom: "10px",
-                                  }}
-                                >
-                                  <div class="avatar2">
-                                    <img
-                                      width={10}
-                                      src={
-                                        bookingDetails.ownerDetails?.imagePath
-                                      }
-                                      alt="User Image"
-                                    />
-                                  </div>
-                                  <div style={{ textWrap: "wrap" }}>
-                                    <h5>{bookingDetails.ownerDetails?.name}</h5>
-                                    <h7>
-                                      This User have{" "}
-                                      {bookingDetails.bookings.length} bookings
-                                    </h7>
-                                  </div>
-                                </div> */}
-                                {/*
-                                <div class="col-12	col-sm-12	col-md-3	col-lg-3	col-xl-3">
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "flex-start",
-                                      gap: "18px",
-                                    }}
-                                  >
-                                    <h6>End station</h6>
-                                    <h6>
-                                      {bookingDetails.bookings[0].dropStation}
-                                    </h6>
-                                  </div>
-                                </div>
-                                 <div class="col-12	col-sm-12	col-md-3	col-lg-3	col-xl-3">
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "flex-start",
-                                      gap: "18px",
-                                    }}
-                                  >
-                                    <h6>Start Time</h6>
-                                    <h6>
-                                      {
-                                        bookingDetails.bookings[0]
-                                          .scheduleDetails.startTime
-                                      }
-                                    </h6>
-                                  </div>
-                                </div>
-                                <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
-                                <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4">
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "flex-start",
-                                      gap: "18px",
-                                    }}
-                                  >
-                                    <h6>End Time</h6>
-                                    <h6>
-                                      {
-                                        bookingDetails.bookings[0]
-                                          .scheduleDetails.endTime
-                                      }
-                                    </h6>
-                                  </div>
-                                </div> */}
-                              </div>
-                            </div>
-                          </>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="container">
-                      <div className="row">
+                  <div
+                    style={{
+                      justifyContent: "center",
+                      alignContent: "center",
+                      alignItems: "center",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                      padding: "10px",
+                    }}
+                  >
+                    {isRLoading ? (
+                      <>
                         <div
                           style={{
                             display: "flex",
-                            float: "",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
                           }}
                         >
-                          <div
-                            onClick={() => {
-                              setIsShowAllBookingRequests(true);
-                              setBookingReqDetails({
-                                ...bookingReqDetails,
-                                bookings : bookingReqDetails.bookings
-
-                              })
-                            }}
-                            style={{
-                              cursor: "pointer",
-                              margin: "5px",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            title="Go Back"
-                          >
-                            <div
-                              data-toggle="modal"
-                              data-target="#exampleModalCenter"
-                            >
-                              <center>
-                                <img
+                          <Loading />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <center>
+                            <h5 style={{ textAlign: "center" }}>
+                              Booking Requests
+                            </h5>
+                          </center>
+                        </div>
+                        <div>
+                          {bookingRequests.length > 0 ? (
+                            bookingRequests.map((bookReq) => (
+                              <>
+                                <div
+                                  data-toggle="modal"
+                                  data-target="#exampleModalCenter"
+                                  className="container"
                                   style={{
-                                    margin: "10px",
+                                    backgroundColor: "rgb(0,0,0,0.9)",
+                                    padding: "10px",
+                                    borderRadius: "10px",
+                                    height: "auto",
+                                    width: "98%",
+                                    marginBottom: "10px",
+                                    cursor: "pointer",
+                                    transition: "transform 0.2s",
                                   }}
-                                  width={25}
-                                  src={go_back_icon}
-                                />
+                                  key={bookReq.id}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform =
+                                      "scale(1.05)"; // Zoom in on hover
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform =
+                                      "scale(1)"; // Reset to the original size on hover out
+                                  }}
+                                  onClick={() => {
+                                    handleRequest(bookReq);
+                                  }}
+                                >
+                                  <div style={{ display: "flex", gap: 5 }}>
+                                    <img
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        borderRadius: "50px",
+                                      }}
+                                      src={bookReq.createdByDetails.imagePath}
+                                    ></img>
+                                    <h5>{bookReq.createdByDetails.name}</h5>
+                                  </div>
+                                  <div style={{ fontSize: 12 }}>
+                                    Booking Date :{" "}
+                                    {new Date(
+                                      bookReq.booking.bookingDate
+                                    ).getUTCDate()}
+                                    {"."}
+                                    {new Date(
+                                      bookReq.booking.bookingDate
+                                    ).getUTCMonth()}
+                                    {"."}
+                                    {new Date(
+                                      bookReq.booking.bookingDate
+                                    ).getUTCFullYear()}
+                                    {" - "}
+                                    {new Date(
+                                      bookReq.booking.bookingDate
+                                    ).getUTCHours()}
+                                    {":"}
+                                    {new Date(
+                                      bookReq.booking.bookingDate
+                                    ).getUTCMinutes()}
+                                    {":"}
+                                    {new Date(
+                                      bookReq.booking.bookingDate
+                                    ).getUTCMilliseconds()}
+                                  </div>
+                                  <div style={{ fontSize: 10 }}>
+                                    Pick Station: {bookReq.booking.pickStation}
+                                  </div>
+                                  <div style={{ fontSize: 10 }}>
+                                    End Station: {bookReq.booking.dropStation}
+                                  </div>
+                                  <div style={{ fontSize: 10 }}>
+                                    Request Accepted: {bookReq.isReqAccepted ? "Accepted":"Not Accepted"}
+                                  </div>
+                                </div>
+                              </>
+                            ))
+                          ) : (
+                            <div>
+                              <center>
+                                <Nodata />
                               </center>
                             </div>
-                          </div>
-                          <div
-                            style={{ display: "flex", alignItems: "baseline" }}
-                          >
-                            <h5
-                              style={{
-                                alignContent: "center",
-                                marginTop: "15px",
-                              }}
-                            >
-                              Booking Details
-                            </h5>
-                          </div>
+                          )}
                         </div>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            marginTop: "0px",
-                            marginBottom: "0px",
-                            padding: "10px",
-                            flexWrap: "wrap",
-                          }}
-                        >
-                          <div></div>
-                          <div
-                            className="container"
-                            style={{
-                              backgroundColor: "rgb(0,0,0,0.7)",
-                              padding: "10px",
-                              borderRadius: "10px",
-                              height: "auto",
-                              width: "98%",
-                              marginBottom: "10px",
-                            }}
-                          >
-                            <div
-                              class="row gy-3"
-                              onClick={() => {
-                                setIsShowAllBookingRequests(false);
-                                setBookingReqDetails({
-                                  ...bookingReqDetails,
-                                  bookings : bookingReqDetails.bookings
-  
-                                })
-                              }}
-                              style={{
-                                padding: "5px",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <div>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "18px",
-                                    padding: "5px",
-                                  }}
-                                >
-                                  <h6>Start Station</h6>
-                                  <h6>{bookingReqDetails.pickStation}</h6>
-                                </div>
-
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "32px",
-                                    padding: "5px",
-                                  }}
-                                >
-                                  <h6>End Station</h6>
-                                  <h6>{bookingReqDetails.dropStation}</h6>
-                                </div>
-
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "30px",
-                                    padding: "5px",
-                                  }}
-                                >
-                                  <h6>Start Time</h6>
-                                  <h6>{bookingReqDetails.startTime}</h6>
-                                </div>
-
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "38px",
-                                    padding: "5px",
-                                  }}
-                                >
-                                  <h6>End Time</h6>
-                                  <h6>{bookingReqDetails.endTime}</h6>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

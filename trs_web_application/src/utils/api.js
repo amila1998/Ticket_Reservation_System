@@ -41,5 +41,9 @@ export const TrainScheduleManagementAPI = {
 };
 
 export const ReservationManagementAPI = {
-  getAllReservationsByCreatedBy : "/api/Reservation/getAllReservationsByCreatedBy"
+  getAllReservationsByCreatedBy : "/api/Reservation/getAllReservationsByCreatedBy",
+};
+
+export const RequestManagementAPI = {
+  getAllRequests : "/api/Request/getMyRequestsByAgentId",
 };

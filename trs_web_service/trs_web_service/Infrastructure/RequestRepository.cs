@@ -32,10 +32,10 @@ namespace trs_web_service.Infrastructure
         public async Task<List<Request>> GetAllNotAcceptedRequestsByAgentIDAsync(string agentId)
         {
             // Define a filter to match reservations with at least one booking created by the specified user
-            var filter = Builders<Request>.Filter.Eq(r => r.AgentId, agentId) & Builders<Request>.Filter.Eq(r => r.IsReqAccepted, false);
-            
+            var filter = Builders<Request>.Filter.Eq(r => r.AgentId, agentId);
+            var sort = Builders<Request>.Sort.Descending(r => r.CreatedAt);
 
-            return await _collection.Find(filter).ToListAsync();
+            return await _collection.Find(filter).Sort(sort).ToListAsync();
         }
 
         public async Task<Request> GeByIdAsync(ObjectId id)
