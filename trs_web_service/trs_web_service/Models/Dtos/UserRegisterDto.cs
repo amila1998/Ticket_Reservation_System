@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Models/Dtos/UserRegisterDto.cs
+
+using System.ComponentModel.DataAnnotations;
 
 namespace trs_web_service.Models.Dtos
 {

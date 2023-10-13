@@ -1,4 +1,5 @@
-/* eslint-disable jsx-a11y/alt-text */
+//components/TrainManagement.js
+
 import React, { useEffect, useRef, useState } from "react";
 import user_icon from "../assets/icons/user-solid.svg";
 import plus_icon from "../assets/icons/plus-solid.svg";
@@ -53,15 +54,13 @@ const TrainManagement = () => {
   const [filterRegNo, setFilterRegNo] = useState("");
   const [filterActive, setFilterActive] = useState("");
 
-
-  const trainStopView =()=>{
+  const trainStopView = () => {
     if (stopView) {
-      setStopView(false)
+      setStopView(false);
     } else {
-      setStopView(true)
+      setStopView(true);
     }
-
-  }
+  };
 
   const getAllTrains = async () => {
     try {
@@ -101,7 +100,9 @@ const TrainManagement = () => {
     let trainList = ftrains;
     if (trainList.length > 0 && (filterRegNo != null || filterRegNo != "")) {
       trainList = trainList.filter((train) => {
-        return train.registraionNo.toLowerCase().includes(filterRegNo.toLowerCase());
+        return train.registraionNo
+          .toLowerCase()
+          .includes(filterRegNo.toLowerCase());
       });
     }
     if (trainList.length > 0 && filterActive) {
@@ -116,8 +117,7 @@ const TrainManagement = () => {
     //   });
     // }
     setTrains(trainList);
-  }, [filterActive , filterRegNo]);
-
+  }, [filterActive, filterRegNo]);
 
   const createTrain = async () => {
     try {
@@ -188,69 +188,72 @@ const TrainManagement = () => {
   };
 
   const updateTrain = async () => {
-       try {
-         setLoadingBtn(true);
-         if (!train.registraionNo) {
-           toast.error("Train registration number requried", {
-             position: "top-right",
-             autoClose: 5000,
-             hideProgressBar: false,
-             closeOnClick: true,
-             pauseOnHover: true,
-             draggable: true,
-             progress: undefined,
-             theme: "light",
-           });
-           return;
-         } else if (!train.name) {
-           toast.error("Train name requried", {
-             position: "top-right",
-             autoClose: 5000,
-             hideProgressBar: false,
-             closeOnClick: true,
-             pauseOnHover: true,
-             draggable: true,
-             progress: undefined,
-             theme: "light",
-           });
-           return;
-         } else {
-           const res = await getAxiosInstance().put(
-             TrainsManagementAPI.update,
-             train,
-             {
-               headers: { Authorization: `bearer ${token}` },
-             }
-           );
-           toast.success("Train updated successfully", {
-             position: "top-right",
-             autoClose: 5000,
-             hideProgressBar: false,
-             closeOnClick: true,
-             pauseOnHover: true,
-             draggable: true,
-             progress: undefined,
-             theme: "light",
-           });
-           handleCreateModalClose();
-           setCallback(true);
-         }
-       } catch (error) {
-       console.log("🚀 ~ file: TrainManagement.js:204 ~ updateTrain ~ error:", error)
-     
-         toast.error(error.response ? error.response.data : error.message, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-       } finally {
-         setLoadingBtn(false);
-       }
+    try {
+      setLoadingBtn(true);
+      if (!train.registraionNo) {
+        toast.error("Train registration number requried", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else if (!train.name) {
+        toast.error("Train name requried", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else {
+        const res = await getAxiosInstance().put(
+          TrainsManagementAPI.update,
+          train,
+          {
+            headers: { Authorization: `bearer ${token}` },
+          }
+        );
+        toast.success("Train updated successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        handleCreateModalClose();
+        setCallback(true);
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: TrainManagement.js:204 ~ updateTrain ~ error:",
+        error
+      );
+
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setLoadingBtn(false);
+    }
   };
 
   const changeActiveStatus = async (data) => {
@@ -402,7 +405,10 @@ const TrainManagement = () => {
   };
 
   const getAllTrainRoutes = async (params) => {
-    console.log("🚀 ~ file: TrainManagement.js:418 ~ getAllTrainRoutes ~ params:", params)
+    console.log(
+      "🚀 ~ file: TrainManagement.js:418 ~ getAllTrainRoutes ~ params:",
+      params
+    );
     try {
       const res = await getAxiosInstance().get(
         TrainRoutesManagementAPI.getAllActiveRoutes,
@@ -429,12 +435,21 @@ const TrainManagement = () => {
         setTrainRoutesOptions(routes);
         if (params) {
           if (res.data && res.data.length > 0) {
-            console.log("🚀 ~ file: TrainManagement.js:432 ~ getAllTrainRoutes ~ res.data:", res.data)
+            console.log(
+              "🚀 ~ file: TrainManagement.js:432 ~ getAllTrainRoutes ~ res.data:",
+              res.data
+            );
             for (const tr of res.data) {
-              console.log("🚀 ~ file: TrainManagement.js:434 ~ getAllTrainRoutes ~ tr:", tr)
+              console.log(
+                "🚀 ~ file: TrainManagement.js:434 ~ getAllTrainRoutes ~ tr:",
+                tr
+              );
               if (params.trainRouteId == tr.id) {
                 let stations = [];
-                console.log("🚀 ~ file: TrainManagement.js:437 ~ getAllTrainRoutes ~ stations:", stations)
+                console.log(
+                  "🚀 ~ file: TrainManagement.js:437 ~ getAllTrainRoutes ~ stations:",
+                  stations
+                );
                 for (const o of tr.stations) {
                   const data = {
                     ...o,
@@ -552,7 +567,7 @@ const TrainManagement = () => {
     setTrainStopsOptions([]);
     setCancelDates([]);
     setSTrainSpeed("");
-    setIsSEdit(false)
+    setIsSEdit(false);
   };
 
   function calculateTravelTime(startTime, stationCount, speed) {
@@ -689,7 +704,7 @@ const TrainManagement = () => {
     }
   }
 
-  const handleEditSchduleBtn=async(data) => {
+  const handleEditSchduleBtn = async (data) => {
     setSchedule({
       id: data.id,
       dayType: data.dayType,
@@ -723,7 +738,7 @@ const TrainManagement = () => {
         setSTrainSpeed(sp);
       }
     }
-  }
+  };
 
   if (tManage) {
     return (
@@ -1725,67 +1740,88 @@ const TrainManagement = () => {
                               <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
                               <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
                               <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4">
-                              <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "flex-end",
-                                    gap: "18px",
-                                  }}
-                                >
-                              <div
-                                  onClick={() => {
-                                    setIsSEdit(true);
-                                    handleEditSchduleBtn(train);
-                                  }
-                                }
-                                  style={{
-                                    cursor: "pointer",
-                                    margin: "5px",
-                                    borderRadius: "50px",
-                                    justifyContent: "center",
-                                    backgroundColor: "rgb(212, 194, 2)",
-                                    alignItems: "center",
-                                  }}
-                                  data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="Edit Schedule"
-                                  
-                                >
+                                {auth.role == "backoffice" && (
                                   <div
-                                    data-toggle="modal"
-                                    data-target="#exampleModalCenter3"
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "flex-end",
+                                      gap: "18px",
+                                    }}
                                   >
-                                    <center>
-                                      <img
-                                        style={{ margin: "10px" }}
-                                        width={10}
-                                        src={edit_icon}
-                                      />
-                                    </center>
+                                    <div
+                                      onClick={() => {
+                                        setIsSEdit(true);
+                                        handleEditSchduleBtn(train);
+                                      }}
+                                      style={{
+                                        cursor: "pointer",
+                                        margin: "5px",
+                                        borderRadius: "50px",
+                                        justifyContent: "center",
+                                        backgroundColor: "rgb(212, 194, 2)",
+                                        alignItems: "center",
+                                      }}
+                                      data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="Edit Schedule"
+                                    >
+                                      <div
+                                        data-toggle="modal"
+                                        data-target="#exampleModalCenter3"
+                                      >
+                                        <center>
+                                          <img
+                                            style={{ margin: "10px" }}
+                                            width={10}
+                                            src={edit_icon}
+                                          />
+                                        </center>
+                                      </div>
+                                    </div>
+                                    <div
+                                      style={{
+                                        cursor: "pointer",
+                                        margin: "5px",
+                                        borderRadius: "50px",
+                                        justifyContent: "center",
+                                        backgroundColor: "rgb(181, 2, 2)",
+                                        alignItems: "center",
+                                      }}
+                                      data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="Delete Schedule"
+                                    >
+                                      <center>
+                                        <img
+                                          style={{ margin: "10px" }}
+                                          width={10}
+                                          src={delete_icon}
+                                        />
+                                      </center>
+                                    </div>
+                                    <div
+                                      style={{
+                                        cursor: "pointer",
+                                        margin: "5px",
+                                        borderRadius: "50px",
+                                        justifyContent: "center",
+                                        backgroundColor: "blue",
+                                        alignItems: "center",
+                                      }}
+                                      data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="Cancel Schedule"
+                                    >
+                                      <center>
+                                        <img
+                                          style={{ margin: "10px" }}
+                                          width={10}
+                                          src={wrong_icon}
+                                        />
+                                      </center>
+                                    </div>
                                   </div>
-                              </div>
-                              <div
-                                  style={{
-                                    cursor: "pointer",
-                                    margin: "5px",
-                                    borderRadius: "50px",
-                                    justifyContent: "center",
-                                    backgroundColor: "rgb(181, 2, 2)",
-                                    alignItems: "center",
-                                  }}
-                                  data-toggle="tooltip"
-                                  data-placement="bottom"
-                                  title="Delete Schedule"
-                                >
-                                  <center>
-                                    <img
-                                      style={{ margin: "10px" }}
-                                      width={10}
-                                      src={delete_icon}
-                                    />
-                                  </center>
-                              </div>
-                              </div>
+                                )}
                               </div>
                               <div class="col-12	col-sm-12	col-md-4	col-lg-4	col-xl-4">
                                 <div
@@ -1859,27 +1895,30 @@ const TrainManagement = () => {
                                 </div>
                                 <div class="col-4	col-sm-12	col-md-4	col-lg-4	col-xl-4"></div>
                                 <div class="col-4	col-sm-12	col-md-4	col-lg-4	col-xl-4">
-                                  {!stopView ? (<div  onClick={()=>trainStopView()}>
-                                    <center>
-                                      <img
-                                        style={{ margin: "10px" }}
-                                        width={25}
-                                        src={dropdown_icon}
-                                      />
-                                    </center>
-                                  </div>):
-                                  (<div  onClick={()=>trainStopView()}>
-                                    <center>
-                                      <img
-                                        style={{ margin: "10px" }}
-                                        width={25}
-                                        src={close_icon}
-                                      />
-                                    </center>
-                                  </div>)}
+                                  {!stopView ? (
+                                    <div onClick={() => trainStopView()}>
+                                      <center>
+                                        <img
+                                          style={{ margin: "10px" }}
+                                          width={25}
+                                          src={dropdown_icon}
+                                        />
+                                      </center>
+                                    </div>
+                                  ) : (
+                                    <div onClick={() => trainStopView()}>
+                                      <center>
+                                        <img
+                                          style={{ margin: "10px" }}
+                                          width={25}
+                                          src={close_icon}
+                                        />
+                                      </center>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                              {stopView &&
+                              {stopView && (
                                 <>
                                   {train.trainStops.map((stop, stopIndex) => (
                                     <li key={stopIndex}>
@@ -1887,7 +1926,7 @@ const TrainManagement = () => {
                                     </li>
                                   ))}
                                 </>
-                              }
+                              )}
                             </div>
                           </div>
                         </>

@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿/// Services/TrainScheduleService.cs
+
+using MongoDB.Bson;
 using System.Text.RegularExpressions;
 using trs_web_service.Infrastructure;
 using trs_web_service.Models.Domains;
@@ -20,6 +22,12 @@ namespace trs_web_service.Services
             _routesRepository = routesRepository;
             _reservationRepository = reservationRepository;
         }
+
+        /// <summary>
+        /// create a new schedule for a train
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns></returns>
         public async Task CreateTrainScheduleAsync(TrainScheduleReqDto schedule)
         {
             var exTrain = await _trainRepository.GetByRegistraionNoAsync(schedule.TrainRegistraionNo);
@@ -48,6 +56,12 @@ namespace trs_web_service.Services
             await _repository.CreateAsync(newSchedule);
         }
 
+
+        /// <summary>
+        /// get all schedules
+        /// </summary>
+        /// <param ></param>
+        /// <returns><TrainScheduleTravelerResDto</returns>
         public async Task<IEnumerable<TrainScheduleTravelerResDto>> GetAllShedulesAsync()
         {
             List<TrainScheduleTravelerResDto> trainSchedules = new();
@@ -111,6 +125,12 @@ namespace trs_web_service.Services
             return trainSchedules;
         }
 
+
+        /// <summary>
+        /// get all schedules for a train
+        /// </summary>
+        /// <param train registration number></param>
+        /// <returns><TrainScheduleResDto</returns>
         public async Task<IEnumerable<TrainScheduleResDto>> GetAllShedulesForManageAsync(string tRegNo)
         {
             List<TrainScheduleResDto> schedules = new();
@@ -150,6 +170,12 @@ namespace trs_web_service.Services
             return schedules;
         }
 
+
+        /// <summary>
+        /// update a schedule
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns><</returns>
         public async Task UpdateSchedule(TrainScheduleReqDto schedule)
         {
             var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
@@ -184,6 +210,12 @@ namespace trs_web_service.Services
             await _repository.UpdateTrainSchedule(objectId,schedule);
         }
 
+
+        /// <summary>
+        /// change active status in a schedules
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns></returns>
         public async Task ChangeCancelStatusInSchedule(TrainScheduleReqDto schedule)
         {
             var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
@@ -213,6 +245,12 @@ namespace trs_web_service.Services
             await _repository.CancelShedule(objectId, schedule);
         }
 
+
+        /// <summary>
+        /// delete a schedules
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns></returns>
         public async Task DeleteSchedule(TrainScheduleReqDto schedule)
         {
             var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");

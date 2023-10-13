@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/// Services/AuthenticationController.cs
+
+using Microsoft.AspNetCore.Mvc;
 using trs_web_service.Models.Dtos;
 using trs_web_service.Services;
 

@@ -1,3 +1,5 @@
+/* app.css */
+
 .App {
  max-height: 100vh;
  min-height: 100vh;
@@ -185,6 +187,21 @@
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 50%;
+}
+
+.selectedTab{
+   width: 100%;
+  padding: 10;
+  text-align:center;
+  background-color: #6fc1ff;
+cursor: pointer;
+}
+.unselectedTab{
+   width: 100%;
+  padding: 10;
+  text-align:center;
+  background-color: #ffffff;
+  cursor: pointer;
 }
 
 .profile_avatar-wrapper {

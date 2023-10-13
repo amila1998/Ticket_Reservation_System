@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿//Models/Domain/User.cs
+
+using MongoDB.Bson;
 using System.ComponentModel.DataAnnotations;
 
 namespace trs_web_service.Models.Domains

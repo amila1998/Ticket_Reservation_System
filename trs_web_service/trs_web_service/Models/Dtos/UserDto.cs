@@ -1,4 +1,6 @@
-﻿namespace trs_web_service.Models.Dtos
+﻿////Models/Dtos/UserDto.cs
+
+namespace trs_web_service.Models.Dtos
 {
     public class UserDto
     {

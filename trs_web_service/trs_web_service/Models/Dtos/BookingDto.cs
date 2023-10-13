@@ -1,7 +1,9 @@
-﻿using MongoDB.Bson;
+﻿////Models/Dtos/BookingDto.cs
+
 
 namespace trs_web_service.Models.Dtos
 {
+    
     public class BookingDto
     {
         public string Id { get; set; }
@@ -15,6 +17,8 @@ namespace trs_web_service.Models.Dtos
         public float TickectPrice { get; set; }
     }
 
+
+    //Class for BookingResDto
     public class BookingResDto
     {
         public string Id { get; set; }

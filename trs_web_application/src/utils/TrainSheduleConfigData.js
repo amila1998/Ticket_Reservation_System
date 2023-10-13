@@ -1,3 +1,5 @@
+//TrainSheduleConfigData.js
+
 export const DayType = [
   { label: "All", value: 0 },
   { label: "Weekday", value: 1 },

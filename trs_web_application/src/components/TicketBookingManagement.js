@@ -1,3 +1,5 @@
+//components/TicketBookingManagement.js
+
 import React, { useState, useEffect } from "react";
 import Nodata from "../utils/Nodata";
 import Loading from "../utils/loading";
@@ -18,7 +20,7 @@ const TicketBookingManagement = () => {
   const [reservations, setReservations] = useState([]);
   const [bookingReqDetails, setBookingReqDetails] = useState([]);
   const [bookingRequests, setBookingRequests] = useState([]);
-  const [bookingReqDetail, setBookingReqDetail] = useState("");
+  const [bookingReqDetail, setBookingReqDetail] = useState({});
   const [fReservations, setFReservations] = useState("");
   const [filterTraveller, setFilterTraveller] = useState("");
   const [filterDateFrom, setFilterDateFrom] = useState("");
@@ -27,8 +29,17 @@ const TicketBookingManagement = () => {
   const [callback, setCallback] = useState(true);
   const [callbackR, setCallbackR] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
-  const [isShowAllBookingRequests, setIsShowAllBookingRequests] =
-    useState(true);
+  const [isShowAllBookingRequests, setIsShowAllBookingRequests] =useState(true);
+  const [reservation, setReservation] = useState({
+    createdAt: "",
+    bookings: [],
+    ownerId: "0",
+    totalPrice: 0,
+  });
+
+  const [isNewReservation,setIsNewReservation]=useState(true)
+
+
 
   const getAllReservationsByCreatedBy = async () => {
     try {
@@ -124,6 +135,34 @@ const TicketBookingManagement = () => {
      setBookingReqDetail('');
   }
 
+  const updateReservation = async()=>{
+    try {
+      
+    } catch (error) {
+      console.log("🚀 ~ file: TicketBookingManagement.js:131 ~ updateReservation ~ error:", error)
+      
+    }
+    
+  }
+
+  const createReservation = async()=>{
+    try {
+      
+    } catch (error) {
+      console.log("🚀 ~ file: TicketBookingManagement.js:141 ~ createReservation ~ error:", error)
+      
+    }
+  }
+
+  const deleteReservation = async()=>{
+    try {
+      
+    } catch (error) {
+      console.log("🚀 ~ file: TicketBookingManagement.js:150 ~ deleteReservation ~ error:", error)
+      
+    }
+  }
+
   return (
     <>
       <ToastContainer
@@ -179,20 +218,137 @@ const TicketBookingManagement = () => {
                   type="button"
                   data-dismiss="modal"
                   aria-label="Close"
-                  // onClick={handleCreateModalClose}
+                  onClick={handleCreateModalClose}
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div style={{ color: "black" }} className="modal-body">
-                <form></form>
+                <form>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignContent: "center",
+                      margin: "auto",
+                    }}
+                  >
+                    <div
+                      onClick={() => {
+                        setIsNewReservation(true);
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "10px",
+                        textAlign: "center",
+                        backgroundColor: isNewReservation
+                          ? "#6fc1ff"
+                          : "#ffffff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      New
+                    </div>
+                    <div
+                      onClick={() => {
+                        setIsNewReservation(false);
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "10px",
+                        textAlign: "center",
+                        backgroundColor: !isNewReservation
+                          ? "#6fc1ff"
+                          : "#ffffff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Exists
+                    </div>
+                  </div>
+                  {isNewReservation ? (
+                    <>
+                      <div style={{ padding: 5, fontWeight: 500 }}>
+                        <div>Traveler Details</div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Name : {bookingReqDetail?.createdByDetails?.name}
+                        </div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          NIC/Passport No :{" "}
+                          {bookingReqDetail?.createdByDetails?.nic}
+                        </div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Contact No :{" "}
+                          {bookingReqDetail?.createdByDetails?.contactNo}
+                        </div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Email : {bookingReqDetail?.createdByDetails?.email}
+                        </div>
+                      </div>
+                      <div style={{ padding: 5, fontWeight: 500 }}>
+                        <div>Train Details</div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Train Name :{" "}
+                          {bookingReqDetail?.booking?.trainDetails?.name}
+                        </div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Registration Number :{" "}
+                          {
+                            bookingReqDetail?.booking?.trainDetails
+                              ?.registraionNo
+                          }
+                        </div>
+                      </div>
+                      <div style={{ padding: 5, fontWeight: 500 }}>
+                        <div>Booking Details</div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Booking Date:{" "}
+                          {new Date(
+                            bookingReqDetail?.booking?.bookingDate
+                          ).getUTCDate()}
+                          {"."}
+                          {new Date(
+                            bookingReqDetail?.booking?.bookingDate
+                          ).getUTCMonth()}
+                          {"."}
+                          {new Date(
+                            bookingReqDetail?.booking?.bookingDate
+                          ).getUTCFullYear()}
+                          {" - "}
+                          {new Date(
+                            bookingReqDetail?.booking?.bookingDate
+                          ).getUTCHours()}
+                          {":"}
+                          {new Date(
+                            bookingReqDetail?.booking?.bookingDate
+                          ).getUTCMinutes()}
+                          {":"}
+                          {new Date(
+                            bookingReqDetail?.booking?.bookingDate
+                          ).getUTCMilliseconds()}
+                        </div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Pick Station :{" "}
+                          {bookingReqDetail?.booking?.pickStation}
+                        </div>
+                        <div style={{ marginLeft: 10, fontSize: 12 }}>
+                          Drop Station :{" "}
+                          {bookingReqDetail?.booking?.dropStation}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </form>
               </div>
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-secondary"
                   data-dismiss="modal"
-                  // onClick={handleCreateModalClose}
+                  onClick={handleCreateModalClose}
                 >
                   Close
                 </button>
@@ -200,7 +356,7 @@ const TicketBookingManagement = () => {
                   type="button"
                   className="btn btn-primary"
                   data-dismiss="modal"
-                  // onClick={isEdit ? updateTrain : createTrain}
+                  onClick={isEdit ? updateReservation : createReservation}
                 >
                   {isEdit ? "Update" : "Create"}
                 </button>
@@ -565,7 +721,10 @@ const TicketBookingManagement = () => {
                                     End Station: {bookReq.booking.dropStation}
                                   </div>
                                   <div style={{ fontSize: 10 }}>
-                                    Request Accepted: {bookReq.isReqAccepted ? "Accepted":"Not Accepted"}
+                                    Request Accepted:{" "}
+                                    {bookReq.isReqAccepted
+                                      ? "Accepted"
+                                      : "Not Accepted"}
                                   </div>
                                 </div>
                               </>

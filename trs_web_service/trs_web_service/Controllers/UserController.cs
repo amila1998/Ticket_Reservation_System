@@ -1,4 +1,6 @@
-﻿using Amazon.Auth.AccessControlPolicy;
+﻿/// Controllers/UserController.cs
+
+using Amazon.Auth.AccessControlPolicy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

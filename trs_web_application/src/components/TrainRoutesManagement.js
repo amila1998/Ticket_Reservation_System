@@ -1,3 +1,5 @@
+//components/TrainRouteRoutesManagement.js
+
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 import user_icon from "../assets/icons/user-solid.svg";
@@ -27,7 +29,7 @@ const TrainRouteRoutesManagement = () => {
   const [sStartStation, setSStartStation] = useState("");
   const [sEndStation, setSEndStation] = useState("");
   const [fStations, setfStations] = useState([]);
-  const [stopStationOrder,setStopStationOrder]=useState(0)
+  const [stopStationOrder, setStopStationOrder] = useState(0);
 
   const [trainRoute, setTrainRoute] = useState({
     id: "",
@@ -36,12 +38,13 @@ const TrainRouteRoutesManagement = () => {
     endStation: "",
     stations: [],
   });
-  console.log("🚀 ~ file: TrainRoutesManagement.js:39 ~ TrainRouteRoutesManagement ~ trainRoute:", trainRoute)
-
+  console.log(
+    "🚀 ~ file: TrainRoutesManagement.js:39 ~ TrainRouteRoutesManagement ~ trainRoute:",
+    trainRoute
+  );
 
   useEffect(() => {
-    if(sStartStation && sStartStation.value){
-      
+    if (sStartStation && sStartStation.value) {
       setTrainRoute({ ...trainRoute, startStation: sStartStation.value });
     }
   }, [sStartStation]);
@@ -53,19 +56,19 @@ const TrainRouteRoutesManagement = () => {
   useEffect(() => {
     if (fStations && fStations.length > 0) {
       let st = [];
-        for (let index = 0; index < fStations.length; index++) {
-            const order = index + 1;    
-            st.push({ name: fStations[index].value, order: order });
-        }
-       setTrainRoute({ ...trainRoute, stations: st });
+      for (let index = 0; index < fStations.length; index++) {
+        const order = index + 1;
+        st.push({ name: fStations[index].value, order: order });
+      }
+      setTrainRoute({ ...trainRoute, stations: st });
     }
   }, [fStations]);
-  
+
   const [callback, setCallback] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const [filterRegNo, setFilterRegNo] = useState("");
   const [filterActive, setFilterActive] = useState("");
-  const [loadingBtn,setLoadingBtn]=useState(false)
+  const [loadingBtn, setLoadingBtn] = useState(false);
 
   const getAllTrainRoutes = async () => {
     try {
@@ -83,16 +86,16 @@ const TrainRouteRoutesManagement = () => {
         "🚀 ~ file: TrainRoutesManagement.js:39 ~ getAllTrainRoutes ~ error:",
         error
       );
-       toast.error(error.response ? error.response.data : error.message, {
-         position: "top-right",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -104,154 +107,152 @@ const TrainRouteRoutesManagement = () => {
   }, [callback]);
 
   const updateTrainRoute = async () => {
-     try {
-       setLoadingBtn(true);
-       if (!trainRoute.startStation) {
-         toast.error("Start station requried", {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-       } else if (!trainRoute.endStation) {
-         toast.error("End station requried", {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-       } else if (trainRoute.stations > 1) {
-         toast.error("Stop stations must be greater than 1", {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         return;
-       } else {
-         const res = await getAxiosInstance().put(
-           TrainRoutesManagementAPI.update + "/" + trainRoute.id,
-           trainRoute,
-           {
-             headers: { Authorization: `bearer ${token}` },
-           }
-         );
-         toast.success("Route update successfully", {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-         handleCreateModalClose();
-         setCallback(true);
-       }
-     } catch (error) {
-       console.log(
-         "🚀 ~ file: TrainRoutesManagement.js:108 ~ createTrainRoute ~ error:",
-         error
-       );
-       toast.error(error.response ? error.response.data : error.message, {
-         position: "top-right",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
-     } finally {
-       setLoadingBtn(false);
-     }
+    try {
+      setLoadingBtn(true);
+      if (!trainRoute.startStation) {
+        toast.error("Start station requried", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else if (!trainRoute.endStation) {
+        toast.error("End station requried", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else if (trainRoute.stations > 1) {
+        toast.error("Stop stations must be greater than 1", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else {
+        const res = await getAxiosInstance().put(
+          TrainRoutesManagementAPI.update + "/" + trainRoute.id,
+          trainRoute,
+          {
+            headers: { Authorization: `bearer ${token}` },
+          }
+        );
+        toast.success("Route update successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        handleCreateModalClose();
+        setCallback(true);
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: TrainRoutesManagement.js:108 ~ createTrainRoute ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setLoadingBtn(false);
+    }
   };
   const changeActiveStatus = async (data) => {
     try {
-        const path = data.isDisable ? TrainRoutesManagementAPI.enable : TrainRoutesManagementAPI.disable 
-           const res = await getAxiosInstance().put(
-             path+"/"+data.id,
-             null,
-             {
-               headers: { Authorization: `bearer ${token}` },
-             }
-           );
-            toast.success("Opereation successfully completed", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-            setCallback(true);
-        
+      const path = data.isDisable
+        ? TrainRoutesManagementAPI.enable
+        : TrainRoutesManagementAPI.disable;
+      const res = await getAxiosInstance().put(path + "/" + data.id, null, {
+        headers: { Authorization: `bearer ${token}` },
+      });
+      toast.success("Opereation successfully completed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setCallback(true);
     } catch (error) {
-        console.log("🚀 ~ file: TrainRoutesManagement.js:106 ~ changeActiveStatus ~ error:", error)
-         toast.error(error.response ? error.response.data : error.message, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
+      console.log(
+        "🚀 ~ file: TrainRoutesManagement.js:106 ~ changeActiveStatus ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
   const deleteRoute = async (id) => {
     try {
-        const path = TrainRoutesManagementAPI.delete
-           const res = await getAxiosInstance().put(
-             path+"/"+id,
-             null,
-             {
-               headers: { Authorization: `bearer ${token}` },
-             }
-           );
-            toast.success("Delete successfully completed", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-            setCallback(true);
-        
+      const path = TrainRoutesManagementAPI.delete;
+      const res = await getAxiosInstance().put(path + "/" + id, null, {
+        headers: { Authorization: `bearer ${token}` },
+      });
+      toast.success("Delete successfully completed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setCallback(true);
     } catch (error) {
-        console.log("🚀 ~ file: TrainRoutesManagement.js:106 ~ changeActiveStatus ~ error:", error)
-         toast.error(error.response ? error.response.data : error.message, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
+      console.log(
+        "🚀 ~ file: TrainRoutesManagement.js:106 ~ changeActiveStatus ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -264,89 +265,92 @@ const TrainRouteRoutesManagement = () => {
       endStation: "",
       stations: [],
     });
-    setfStations([])
-    setSEndStation("")
-    setSStartStation("")
+    setfStations([]);
+    setSEndStation("");
+    setSStartStation("");
     setIsEdit(false);
-    setStopStationOrder(0)
+    setStopStationOrder(0);
   };
 
-  const createTrainRoute = async(e)=>{
+  const createTrainRoute = async (e) => {
     try {
-        setLoadingBtn(true)
-        if (!trainRoute.startStation) {
-          toast.error("Start station requried", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          return
-        } else if (!trainRoute.endStation) {
-          toast.error("End station requried", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          return;
-        } else if (trainRoute.stations > 1) {
-          toast.error("Stop stations must be greater than 1", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          return;
-        } else {
-          const res = await getAxiosInstance().post(
-            TrainRoutesManagementAPI.create,
-            trainRoute,
-            {
-              headers: { Authorization: `bearer ${token}` },
-            }
-          );
-           toast.success("Route created successfully", {
-             position: "top-right",
-             autoClose: 5000,
-             hideProgressBar: false,
-             closeOnClick: true,
-             pauseOnHover: true,
-             draggable: true,
-             progress: undefined,
-             theme: "light",
-           });
-           handleCreateModalClose();
-           setCallback(true)
-        }
+      setLoadingBtn(true);
+      if (!trainRoute.startStation) {
+        toast.error("Start station requried", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else if (!trainRoute.endStation) {
+        toast.error("End station requried", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else if (trainRoute.stations > 1) {
+        toast.error("Stop stations must be greater than 1", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      } else {
+        const res = await getAxiosInstance().post(
+          TrainRoutesManagementAPI.create,
+          trainRoute,
+          {
+            headers: { Authorization: `bearer ${token}` },
+          }
+        );
+        toast.success("Route created successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        handleCreateModalClose();
+        setCallback(true);
+      }
     } catch (error) {
-        console.log("🚀 ~ file: TrainRoutesManagement.js:108 ~ createTrainRoute ~ error:", error)
-         toast.error(error.response ? error.response.data : error.message, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-           theme: "light",
-         });
-    } finally{
-        setLoadingBtn(false);
+      console.log(
+        "🚀 ~ file: TrainRoutesManagement.js:108 ~ createTrainRoute ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setLoadingBtn(false);
     }
-  }
+  };
 
   return (
     <>
@@ -643,7 +647,7 @@ const TrainRouteRoutesManagement = () => {
                               }}
                               key={s.order}
                             >
-                              {s.order+". "+s.name}
+                              {s.order + ". " + s.name}
                             </div>
                           ))}
                         </td>

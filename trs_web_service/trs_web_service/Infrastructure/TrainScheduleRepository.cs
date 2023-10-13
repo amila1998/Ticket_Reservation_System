@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿//
+
+using MongoDB.Bson;
 using MongoDB.Driver;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
@@ -6,7 +8,7 @@ using trs_web_service.Models.Dtos;
 namespace trs_web_service.Infrastructure
 {
     public class TrainScheduleRepository
-    { 
+    {
         private readonly IMongoCollection<TrainSchedule> _collection;
 
         public TrainScheduleRepository(IMongoDatabase database)
@@ -14,11 +16,17 @@ namespace trs_web_service.Infrastructure
             _collection = database.GetCollection<TrainSchedule>("TrainShedules");
         }
 
+        /// <summary>
+        /// Create a new train schedule asynchronously.
+        /// </summary>
         public async Task CreateAsync(TrainSchedule schedule)
         {
             await _collection.InsertOneAsync(schedule);
         }
 
+        /// <summary>
+        /// Retrieve train schedules by train registration number asynchronously.
+        /// </summary>
         public async Task<List<TrainSchedule>> GetBySheduleByTrainRegistraionNoAsync(string regNo)
         {
             // Create a filter to find the schedule with the given train reg no
@@ -27,6 +35,9 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieve non-canceled train schedules by train registration number asynchronously.
+        /// </summary>
         public async Task<List<TrainSchedule>> GetBySheduleByTrainRegistraionNoAndNoCancelAsync(string regNo)
         {
             // Create a filter to find the schedule with the given train reg no
@@ -35,7 +46,9 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
-
+        /// <summary>
+        /// Retrieve all train schedules for a specific train registration number asynchronously.
+        /// </summary>
         public async Task<List<TrainSchedule>> GetAllTrainShedulesAsync(string tRegNo)
         {
             // Create a filter to match documents where IsDelete is not true and IsCancel not true
@@ -45,6 +58,9 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieve all train schedules for travelers asynchronously.
+        /// </summary>
         public async Task<List<TrainSchedule>> GetAllTrainShedulesForTravelersAsync()
         {
             // Create a filter to match documents where IsDelete is not true and IsCancel not true
@@ -54,6 +70,9 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieve a train schedule by its ID asynchronously.
+        /// </summary>
         public async Task<TrainSchedule> GetAllByIdAsync(ObjectId id)
         {
             // Create a filter to match documents where _id is equal to the provided id and IsDelete is not true
@@ -63,21 +82,27 @@ namespace trs_web_service.Infrastructure
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Update a train schedule asynchronously.
+        /// </summary>
         public async Task<TrainSchedule> UpdateTrainSchedule(ObjectId id, TrainScheduleReqDto schedule)
         {
-                var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id);
+            var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id);
 
-                var update = Builders<TrainSchedule>.Update
-                    .Set(u => u.CancelDates, schedule.CancelDates)
-                    .Set(u => u.TrainStops, schedule.TrainStops)
-                    .Set(u => u.TrainClasses, schedule.TrainClasses);
+            var update = Builders<TrainSchedule>.Update
+                .Set(u => u.CancelDates, schedule.CancelDates)
+                .Set(u => u.TrainStops, schedule.TrainStops)
+                .Set(u => u.TrainClasses, schedule.TrainClasses);
 
-                // Find and update
-                var updated = await _collection.FindOneAndUpdateAsync(filter, update);
+            // Find and update
+            var updated = await _collection.FindOneAndUpdateAsync(filter, update);
 
-                return updated;
-            }
+            return updated;
+        }
 
+        /// <summary>
+        /// Delete a train schedule asynchronously.
+        /// </summary>
         public async Task DeleteTrainSchedule(ObjectId id)
         {
             var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id);
@@ -88,6 +113,9 @@ namespace trs_web_service.Infrastructure
             await _collection.FindOneAndUpdateAsync(filter, update);
         }
 
+        /// <summary>
+        /// Cancel or uncancel a train schedule by ID asynchronously.
+        /// </summary>
         public async Task CancelShedule(ObjectId id, TrainScheduleReqDto schedule)
         {
             var filter = Builders<TrainSchedule>.Filter.Eq(u => u.Id, id);
@@ -98,6 +126,9 @@ namespace trs_web_service.Infrastructure
             await _collection.FindOneAndUpdateAsync(filter, update);
         }
 
+        /// <summary>
+        /// Cancel all schedules for a specific train registration number asynchronously.
+        /// </summary>
         public async Task CancelSheduleByTrainRegNo(string regNo)
         {
             var filter = Builders<TrainSchedule>.Filter.Eq(u => u.TraingRegistraionNo, regNo);
@@ -107,6 +138,5 @@ namespace trs_web_service.Infrastructure
             // Find and update the user document
             await _collection.FindOneAndUpdateAsync(filter, update);
         }
-
     }
 }

@@ -1,4 +1,6 @@
-﻿//using Microsoft.IdentityModel.Tokens;
+﻿///// Services/TokenGenerator.cs
+
+//using Microsoft.IdentityModel.Tokens;
 //using System.IdentityModel.Tokens.Jwt;
 //using System.Security.Claims;
 //using System.Text;
@@ -24,6 +26,12 @@ namespace trs_web_service.Services
             _configuration = configuration;
         }
 
+
+        /// <summary>
+        /// Create a JWT Token for login
+        /// </summary>
+        /// <param user ID and Role></param>
+        /// <returns>token</returns>
         public string GenerateToken(string id, string role)
         {
             List<Claim> claims = new()
@@ -48,6 +56,12 @@ namespace trs_web_service.Services
             return jwt;
         }
 
+
+        /// <summary>
+        /// Create a JWT Token for Forgot password
+        /// </summary>
+        /// <param user ID and Role></param>
+        /// <returns>token</returns>
         public string GenerateTokenForForgotPassword(string id, string role)
         {
             List<Claim> claims = new()

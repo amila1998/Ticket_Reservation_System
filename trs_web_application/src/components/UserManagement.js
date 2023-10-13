@@ -1,3 +1,5 @@
+////components/UserManagement.js
+
 import React, { useEffect, useState } from "react";
 import user_icon from "../assets/icons/user-solid.svg";
 import plus_icon from "../assets/icons/plus-solid.svg";
@@ -13,6 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const UserManagement = () => {
+  // Define state variables
   const [users, setUsers] = useState([]);
   const [fusers, setFUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,8 +27,9 @@ const UserManagement = () => {
   const [filterRole, setFilterRole] = useState("");
   const [filterNIC, setFilterNIC] = useState("");
   const [filterIsActive, setFilterIsActive] = useState("");
-  const [isPasswordReset,setIsPasswordReset]=useState(false)
+  const [isPasswordReset, setIsPasswordReset] = useState(false);
 
+  // Define the user object for create and update operations
   const [user, setUser] = useState({
     name: "",
     password: "000000",
@@ -36,6 +40,7 @@ const UserManagement = () => {
     email: "",
   });
 
+  // Function to close the user creation modal
   const handleCreateModalClose = () => {
     setUser({
       ...user,
@@ -47,9 +52,10 @@ const UserManagement = () => {
       contactNo: "",
       email: "",
     });
-    setIsEdit(false)
+    setIsEdit(false);
   };
 
+  // Function to retrieve all users from the server
   const getAllUsers = async () => {
     try {
       setIsLoading(true);
@@ -79,10 +85,12 @@ const UserManagement = () => {
     }
   };
 
+  // Use 'useEffect' to fetch users when the component mounts or callback changes
   useEffect(() => {
     callback && getAllUsers();
   }, [callback]);
 
+  // Use 'useEffect' to filter the user list based on filter criteria
   useEffect(() => {
     let userList = fusers;
     if (userList.length > 0 && (filterName != null || filterName != "")) {
@@ -109,6 +117,7 @@ const UserManagement = () => {
     setUsers(userList);
   }, [filterIsActive, filterName, filterRole, filterNIC]);
 
+  // Function to create a new user
   const createUser = async (e) => {
     e.preventDefault();
     try {
@@ -119,7 +128,7 @@ const UserManagement = () => {
           headers: { Authorization: `bearer ${token}` },
         }
       );
-      toast.success("User created successfully !", {
+      toast.success("User created successfully!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -149,10 +158,12 @@ const UserManagement = () => {
     }
   };
 
-  const activateUser =async(nic)=>{
+  // Function to activate a user by NIC
+  const activateUser = async (nic) => {
     try {
       const res = await getAxiosInstance().put(
-        UserManagementAPI.activate_user + `/${nic}`,null,
+        UserManagementAPI.activate_user + `/${nic}`,
+        null,
         {
           headers: { Authorization: `bearer ${token}` },
         }
@@ -167,22 +178,26 @@ const UserManagement = () => {
         progress: undefined,
         theme: "light",
       });
-      setCallback(true);  
+      setCallback(true);
     } catch (error) {
-      console.log("🚀 ~ file: UserManagement.js:154 ~ activateUser ~ error:", error)
-            toast.error(error.response ? error.response.data : error.message, {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+      console.log(
+        "🚀 ~ file: UserManagement.js:154 ~ activateUser ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
-  }
+  };
 
+  // Function to update a user
   const updateUser = async (e) => {
     e.preventDefault();
     try {
@@ -191,7 +206,7 @@ const UserManagement = () => {
         {
           nic: user.nic,
           role: user.role,
-          isPasswordReset:isPasswordReset,
+          isPasswordReset: isPasswordReset,
           password: user.password,
         },
         {
@@ -621,9 +636,9 @@ const UserManagement = () => {
                       type="button"
                       className="btn btn-primary"
                       data-dismiss="modal"
-                      onClick={isEdit?updateUser:createUser}
+                      onClick={isEdit ? updateUser : createUser}
                     >
-                      {isEdit?"Update":"Create"}
+                      {isEdit ? "Update" : "Create"}
                     </button>
                   </div>
                 </div>

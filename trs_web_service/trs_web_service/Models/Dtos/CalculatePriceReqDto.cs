@@ -1,4 +1,6 @@
-﻿namespace trs_web_service.Models.Dtos
+﻿////Models/Dtos/CalculatePriceReqDto.cs
+
+namespace trs_web_service.Models.Dtos
 {
     public class CalculatePriceReqDto
     {

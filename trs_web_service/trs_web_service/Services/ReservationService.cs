@@ -1,4 +1,6 @@
-﻿using CloudinaryDotNet.Actions;
+﻿/// Services/ReservationService.cs
+
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using MongoDB.Bson;
@@ -31,6 +33,12 @@ namespace trs_web_service.Services
             _userRepository = userRepository;
         }
 
+
+        /// <summary>
+        /// Create a New Reservation
+        /// </summary>
+        /// <param ReservationReqDto and User Id></param>
+        /// <returns>Id</returns>
         public async Task CreateReservation(ReservationReqDto req, ObjectId userId)
         {
             var bookingCount = req.Bookings.Count();
@@ -166,6 +174,12 @@ namespace trs_web_service.Services
             await _repository.CreateReservationAsync(reservation);
         }
 
+
+        /// <summary>
+        /// Update a  Reservation
+        /// </summary>
+        /// <param ReservationReqDto and User Id and reservation Id></param>
+        /// <returns>Id</returns>
         public async Task UpdateReservation(string reserveId, ObjectId userId, ReservationReqDto req)
         {
             if (!ObjectId.TryParse(reserveId, out var reservObjectId))
@@ -313,6 +327,12 @@ namespace trs_web_service.Services
             await _repository.UpdateReservationAsync(reservation);
         }
 
+
+        /// <summary>
+        /// Get Calculated Booking Price
+        /// </summary>
+        /// <param CalculatePriceReqDto></param>
+        /// <returns>calculated Price</returns>
         public async Task<float> GetCalculateBookingPrice(CalculatePriceReqDto req)
         {
 
@@ -402,6 +422,12 @@ namespace trs_web_service.Services
             return totalPrice;
         }
 
+
+        /// <summary>
+        /// Get Edit enable Reservation List 
+        /// </summary>
+        /// <param Owner Id></param>
+        /// <returns>List<ReservationResDto></returns>
         public async Task<List<ReservationResDto>> GetExitEditEnableReservations(string ownerId)
         {
             List<ReservationResDto> reservationList = new();
@@ -487,6 +513,12 @@ namespace trs_web_service.Services
 
         }
 
+
+        /// <summary>
+        /// Get  Reservation List  by owner ID
+        /// </summary>
+        /// <param Owner Id></param>
+        /// <returns>List<ReservationResDto></returns>
         public async Task<List<ReservationResDto>> GetAllReservationsByOwnerIdAsync(string ownerId)
         {
             List<ReservationResDto> reservationList = new();
@@ -592,6 +624,12 @@ namespace trs_web_service.Services
 
         }
 
+
+        /// <summary>
+        /// Get  Reservation List by who created
+        /// </summary>
+        /// <param User Id></param>
+        /// <returns>List<ReservationResDto></returns>
         public async Task<List<ReservationResDto>> GetAllReservationsByCreatedByAsync(string userId)
         {
             List<ReservationResDto> reservationList = new();
@@ -692,6 +730,12 @@ namespace trs_web_service.Services
 
         }
 
+
+        /// <summary>
+        /// method to calculate the booking price
+        /// </summary>
+        /// <param no of persons and train stop count></param>
+        /// <returns>Total Price</returns>
         private static float CalculateBookingPrice(double noOfPersons, int trainStops)
         {
             // Define the minimum price per person
@@ -707,6 +751,12 @@ namespace trs_web_service.Services
             return totalPrice;
         }
 
+
+        /// <summary>
+        /// Generate a random Unique Id
+        /// </summary>
+        /// <paramlength></param>
+        /// <returns>ID</returns>
         private static string GenerateRandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -721,6 +771,11 @@ namespace trs_web_service.Services
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Delete a reservation
+        /// </summary>
+        /// <param reservation Id></param>
+        /// <returns></returns>
         public async Task Delete(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))

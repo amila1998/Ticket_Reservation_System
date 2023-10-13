@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿/// Services/RequestService.cs
+
+using MongoDB.Bson;
 using Org.BouncyCastle.Ocsp;
 using System.Text;
 using trs_web_service.Infrastructure;
@@ -27,6 +29,11 @@ namespace trs_web_service.Services
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Create New Reservation
+        /// </summary>
+        /// <param RequestReqDto and userId>The Request to create and Auth User Id.</param>
+        /// <returns>T</returns>
         public async Task CreateRequest(RequestReqDto req, ObjectId userId)
         {
             ;
@@ -140,6 +147,12 @@ namespace trs_web_service.Services
 
         }
 
+
+        /// <summary>
+        /// Update a Reservation
+        /// </summary>
+        /// <param reservation Id and RequestReqDto and userId>The Request to update and Auth User Id and the reseravation Id.</param>
+        /// <returns>T</returns>
         public async Task UpdateRequest(string reserveId, ObjectId userId, RequestReqDto req)
         {
 
@@ -263,6 +276,12 @@ namespace trs_web_service.Services
             await _repository.CreateRequestAsync(request);
         }
 
+
+        /// <summary>
+        /// Delete a Reservation
+        /// </summary>
+        /// <param reservation Id>The Reservation Id</param>
+        /// <returns>T</returns>
         public async Task DeleteRequest(string reserveId)
         {
 
@@ -280,6 +299,11 @@ namespace trs_web_service.Services
             await _repository.DeleteReservationAsync(reqObjectId);
         }
 
+        /// <summary>
+        /// Get Requests
+        /// </summary>
+        /// <param User Id>The requesting data's owner id</param>
+        /// <returns>Request List</returns>
         public async Task<List<RequestResDto>> GetAllRequestsByOwnerID(string userId)
         {
             List<RequestResDto> requestResDtos = new();
@@ -384,6 +408,11 @@ namespace trs_web_service.Services
             return requestResDtos;
         }
 
+        /// <summary>
+        /// Get Requests
+        /// </summary>
+        /// <param User Id>The requesting data's travel agent id</param>
+        /// <returns>Request List</returns>
         public async Task<List<RequestResDto>> GetAllRequestsByAgentId(string userId)
         {
             List<RequestResDto> requestResDtos = new();
@@ -488,6 +517,11 @@ namespace trs_web_service.Services
             return requestResDtos;
         }
 
+        /// <summary>
+        /// Get Price for one booking
+        /// </summary>
+        /// <param No of Persons and Train Stop station count>
+        /// <returns>Calculated Price</returns>
         private static float CalculateBookingPrice(double noOfPersons, int trainStops)
         {
             // Define the minimum price per person
@@ -503,6 +537,11 @@ namespace trs_web_service.Services
             return totalPrice;
         }
 
+        /// <summary>
+        /// Genarete a Unique Id
+        /// </summary>
+        /// <param legnth>
+        /// <returns>Id</returns>
         private static string GenerateRandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

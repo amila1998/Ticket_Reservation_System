@@ -1,3 +1,5 @@
+//component/Loging.js
+
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,9 +9,12 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 
 const Login = () => {
+  // Define state variables for NIC and password
   const [nic, setNic] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+
+  // Handle the user login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -20,7 +25,7 @@ const Login = () => {
       localStorage.setItem("isLogin", true);
       localStorage.setItem("token", res.data.token);
       dispatch(authActions.login(res.data.token));
-      toast.info("Login Successfull !", {
+      toast.info("Login Successful!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -44,6 +49,7 @@ const Login = () => {
       });
     }
   };
+
 
   return (
     <>

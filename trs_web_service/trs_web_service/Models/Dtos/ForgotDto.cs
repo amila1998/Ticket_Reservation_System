@@ -1,4 +1,6 @@
-﻿namespace trs_web_service.Models.Dtos
+﻿////Models/Dtos/ForgotDto.cs
+
+namespace trs_web_service.Models.Dtos
 {
     public class ForgotDto
     {

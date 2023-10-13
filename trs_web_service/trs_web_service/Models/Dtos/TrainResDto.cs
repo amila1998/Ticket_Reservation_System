@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿////Models/Dtos/TrainResDto.cs
+
+using MongoDB.Bson;
 
 namespace trs_web_service.Models.Dtos
 {
