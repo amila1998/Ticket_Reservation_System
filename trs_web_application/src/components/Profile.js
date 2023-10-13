@@ -1,3 +1,5 @@
+//components/Profile.js
+
 import React, { useRef, useState } from "react";
 import profile from "../assets/profile_picture.jpg";
 import { useSelector } from "react-redux";
@@ -10,24 +12,27 @@ import { AutherizationAPI, ImageAPI, UserManagementAPI } from "../utils/api";
 import close_icon from "../assets/icons/wrong-svgrepo-com.svg";
 
 const Profile = () => {
+  // Define a ref for the input file
   const inputFile = useRef(null);
+
+  // Get the user's token from the Redux store
   const token = useSelector((state) => state.auth.token);
 
-
+  // Define state variables for user editing
   const [isUserEdit, setIsUserEdit] = useState(false);
-  console.log("🚀 ~ file: Profile.js:15 ~ Profile ~ isUserEdit:", isUserEdit)
   const loginUser = useSelector((state) => state.auth.user);
+  const [user, setUser] = useState({
+    name: loginUser.name,
+    imagePath: loginUser.imagePath,
+    contactNo: loginUser.contactNo,
+  });
 
-    const [user, setUser] = useState({
-      name: loginUser.name,
-      imagePath: loginUser.imagePath,
-      contactNo: loginUser.contactNo,
-    });
-
+  // Function to open the file input dialog
   const handleInput = () => {
     inputFile.current.click();
   };
-  
+
+  // Function to handle changes in user data
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -36,47 +41,44 @@ const Profile = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  // Function to submit user data updates
+  const handleSubmit = async (e) => {
     try {
-       const res = await getAxiosInstance().put(
-          AutherizationAPI.update_profile,
-         user,
-          {
-            headers: { Authorization: `bearer ${token}` },
-          }
-        );
-        setIsUserEdit(false);
-        toast.success(
-          "User Profile Update Successfull",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          }
-        );
-        window.location.href = "/profile";
-      
+      const res = await getAxiosInstance().put(
+        AutherizationAPI.update_profile,
+        user,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      setIsUserEdit(false);
+      toast.success("User Profile Update Successful", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      window.location.href = "/profile";
     } catch (error) {
-      console.log("🚀 ~ file: Profile.js:43 ~ handleSubmit ~ error:", error)
-       toast.error(error.response ? error.response.data : error.message, {
-         position: "top-right",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
+      console.log("🚀 ~ file: Profile.js:43 ~ handleSubmit ~ error:", error);
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
-  
+  // Function to handle changes in the user's profile image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -86,13 +88,12 @@ const Profile = () => {
           let formData = new FormData();
           formData.append("files", file);
 
-          // upload to cloudinary
+          // Upload the image to Cloudinary
           const res = await getAxiosInstance().post(ImageAPI.uplaod, formData, {
             headers: {
               "content-type": "multipart/form-data",
               Authorization: `bearer ${token}`,
             },
-            
             onUploadProgress: (x) => {
               if (x.total < 1024000)
                 return toast("Uploading", {
@@ -102,10 +103,10 @@ const Profile = () => {
                 });
             },
           });
-        setUser({
-          ...user,
-          imagePath: res.data
-        });
+          setUser({
+            ...user,
+            imagePath: res.data,
+          });
         } catch (err) {
           toast(err.response.data.msg, {
             className: "toast-failed",
@@ -117,47 +118,45 @@ const Profile = () => {
     }
   };
 
-  const deactivateAccount = async()=>{
+  // Function to deactivate the user's account
+  const deactivateAccount = async () => {
     try {
-       const res = await getAxiosInstance().put(
-         UserManagementAPI.deactivate_user+"/"+loginUser.nic,
-         null,
-         {
-           headers: { Authorization: `bearer ${token}` },
-         }
-       );
-       setIsUserEdit(false);
-       toast.success("User Account Deactivated", {
-         position: "top-right",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
-       window.location.href = "/";
+      const res = await getAxiosInstance().put(
+        UserManagementAPI.deactivate_user + "/" + loginUser.nic,
+        null,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      setIsUserEdit(false);
+      toast.success("User Account Deactivated", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      window.location.href = "/";
     } catch (error) {
-       console.log(
-         "🚀 ~ file: Profile.js:124 ~ deactivateAccount ~ error:",
-         error
-       );
-       toast.error(error.response ? error.response.data : error.message, {
-         position: "top-left",
-         autoClose: 5000,
-         hideProgressBar: false,
-         closeOnClick: true,
-         pauseOnHover: true,
-         draggable: true,
-         progress: undefined,
-         theme: "light",
-       });
+      console.log(
+        "🚀 ~ file: Profile.js:124 ~ deactivateAccount ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
-  }
-
-
-
+  };
   return (
     <>
       <ToastContainer
@@ -339,7 +338,7 @@ const Profile = () => {
                     >
                       <div
                         onClick={() => {
-                          deactivateAccount()
+                          deactivateAccount();
                         }}
                         className="btn"
                         style={{

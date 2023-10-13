@@ -1,3 +1,5 @@
+//App.js
+// Import necessary modules
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -16,13 +18,16 @@ import DeactivateAccounts from "./utils/DeactivateAccounts";
 import Profile from "./components/Profile";
 import { ResetPassword } from "./components/ResetPassword";
 
+// Define the main App component
 function App() {
+  // Define and extract state variables using useSelector and useDispatch
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const isLoading = useSelector((state) => state.loading.isMainLoading);
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
+  // Effect hook to handle authentication and loading
   useEffect(() => {
     if (!isLoggedIn && !token) {
       dispatch(loadingActions.setIsMainLoading());
@@ -37,6 +42,7 @@ function App() {
     }
   }, [isLoggedIn, token]);
 
+  // Effect hook to retrieve user information
   useEffect(() => {
     if (isLoggedIn && isLoggedIn) {
       const getInfo = async () => {
@@ -57,6 +63,7 @@ function App() {
     }
   }, [isLoggedIn, token]);
 
+  // Render the main components of the app based on user authentication status
   return (
     <>
       {isLoading ? (
@@ -108,7 +115,10 @@ function App() {
                     )
                   }
                 />
-                <Route path="/resetPassword/:token" element={<ResetPassword/>}/>
+                <Route
+                  path="/resetPassword/:token"
+                  element={<ResetPassword />}
+                />
               </Routes>
             </Router>
           </main>
@@ -119,4 +129,5 @@ function App() {
   );
 }
 
+// Export the main App component
 export default App;

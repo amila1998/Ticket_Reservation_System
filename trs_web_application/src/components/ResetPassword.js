@@ -1,3 +1,5 @@
+//components/ResetPassword.js
+
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -6,16 +8,20 @@ import { getAxiosInstance } from "../utils/axios";
 import { AutherizationAPI } from "../utils/api";
 import logo from "../assets/train.png";
 
+// Define the ResetPassword component
 export const ResetPassword = () => {
+  // Define state variables for password and confirmPassword
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Get the 'token' parameter from the route
   const { token } = useParams();
 
+  // Function to handle the password reset
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      if (password != confirmPassword) {
+      if (password !== confirmPassword) {
         toast.error("Passwords are not matched", {
           position: "top-right",
           autoClose: 5000,
@@ -35,7 +41,7 @@ export const ResetPassword = () => {
           }
         );
         toast.success(
-          "Password reset completed. Please Login again with your new password",
+          "Password reset completed. Please login again with your new password",
           {
             position: "top-right",
             autoClose: 5000,
@@ -66,6 +72,8 @@ export const ResetPassword = () => {
       });
     }
   };
+
+  // Return the ResetPassword component JSX
 
   return (
     <>

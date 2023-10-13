@@ -1,5 +1,7 @@
-import React from 'react'
-import unAuth from "../assets/401 Error Unauthorized-rafiki.png"
+//Unauthorized.js
+
+import React from "react";
+import unAuth from "../assets/401 Error Unauthorized-rafiki.png";
 
 const Unauthorized = () => {
   return (
@@ -9,6 +11,6 @@ const Unauthorized = () => {
       </center>
     </div>
   );
-}
+};
 
-export default Unauthorized
+export default Unauthorized;
