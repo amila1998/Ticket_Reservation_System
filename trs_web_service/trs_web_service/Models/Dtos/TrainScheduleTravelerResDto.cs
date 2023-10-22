@@ -1,4 +1,6 @@
-﻿using trs_web_service.Models.Domains;
+﻿////Models/Dtos/TrainScheduleTravelerResDto.cs
+
+using trs_web_service.Models.Domains;
 
 namespace trs_web_service.Models.Dtos
 {
@@ -9,6 +11,7 @@ namespace trs_web_service.Models.Dtos
 
     }
 
+    //Class for TrainsForTraverDto
     public class TrainsForTraverDto
     {
         public string Id { get; set; }
@@ -16,6 +19,8 @@ namespace trs_web_service.Models.Dtos
         public string RegistraionNo { get; set; }
         public string ImagePath { get; set; }
     }
+
+    //class for ScheduleForTravelerDto
 
     public class ScheduleForTravelerDto
     {

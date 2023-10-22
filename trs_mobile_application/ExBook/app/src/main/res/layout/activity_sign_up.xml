@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back"
+    android:padding="20dp"
+    tools:context=".activities.SignUpActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="25dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_now"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:textStyle="bold
+"
+                >
+
+            </TextView>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:hint="@string/name_field"
+                android:id="@+id/name">
+
+            </EditText>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:hint="@string/email_field"
+                android:inputType="textEmailAddress"
+                android:id="@+id/email">
+
+            </EditText>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:hint="@string/nic_field"
+                android:id="@+id/nic">
+
+            </EditText>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:hint="@string/contactNumber_field"
+                android:inputType="phone"
+                android:id="@+id/contact">
+
+            </EditText>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:hint="@string/password_field"
+                android:inputType="textPassword"
+                android:id="@+id/password">
+
+            </EditText>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:hint="@string/retype_password_field"
+                android:inputType="textPassword"
+                android:id="@+id/re_password">
+
+            </EditText>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_signUp"
+                android:layout_gravity="right"
+                android:textAllCaps="false"
+                android:text="@string/sign_up_button">
+
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

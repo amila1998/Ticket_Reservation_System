@@ -1,3 +1,6 @@
+//Program.cs
+
+
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +20,7 @@ using trs_web_service.Services;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Options;
 
+// Create a WebApplication builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Register Configuration
@@ -26,19 +30,17 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    // Configure Swagger and define security definitions
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
-
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
@@ -65,7 +67,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("nottraveler", policy => policy.RequireRole("backoffice", "travel_agent"));
 });
 
-// Cloudinary
+// Cloudinary Configuration
 Account account = new(
     configuration["Cloudinary:CloudName"],
     configuration["Cloudinary:ApiKey"],
@@ -88,7 +90,7 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
     return client.GetDatabase(settings.DatabaseName);
 });
 
-
+// Register application services
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthenticationService>();
@@ -102,7 +104,10 @@ builder.Services.AddScoped<TrainScheduleRepository>();
 builder.Services.AddScoped<TrainScheduleService>();
 builder.Services.AddScoped<ReservationRepository>();
 builder.Services.AddScoped<ReservationService>();
+builder.Services.AddScoped<RequestRepository>();
+builder.Services.AddScoped<RequestService>();
 
+// Build the application
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -116,8 +121,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+// Configure CORS policy
 app.UseCors(options => options
-    .WithOrigins("http://localhost:3000", "http://localhost:5000") // Add the origins you need
+    .WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:5000", "https://elaborate-starburst-d61897.netlify.app", "https://expressbook.netlify.app") // Add the origins you need
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()

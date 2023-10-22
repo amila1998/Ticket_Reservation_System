@@ -1,4 +1,6 @@
-﻿namespace trs_web_service.Models.Dtos
+﻿////Models/Dtos/UserDto.cs
+
+namespace trs_web_service.Models.Dtos
 {
     public class UserDto
     {
@@ -24,5 +26,9 @@
             this.IsSendActiveStatus = IsSendActiveStatus;
             this.Email = Email;
         }
+
+        public UserDto() { }
+
+   
     }
 }

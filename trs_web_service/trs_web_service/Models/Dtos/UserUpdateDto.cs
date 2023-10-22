@@ -1,4 +1,7 @@
-﻿namespace trs_web_service.Models.Dtos
+﻿//Models/Dtos/UpdateUserDto.cs
+
+
+namespace trs_web_service.Models.Dtos
 {
     public class UpdateUserDto
     {

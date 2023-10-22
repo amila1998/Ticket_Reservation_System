@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson;
+﻿//Models/Domain/TrainRoutes.cs
+
+
+using MongoDB.Bson;
 
 namespace trs_web_service.Models.Domains
 {
@@ -12,10 +15,6 @@ namespace trs_web_service.Models.Domains
         public bool IsDisable { get; set; }
         public bool IsDelete { get; set; }
 
-        public static implicit operator TrainRoutes(List<TrainRoutes> v)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class TrainStopStations

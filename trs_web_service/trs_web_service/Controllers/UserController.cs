@@ -1,4 +1,6 @@
-﻿using Amazon.Auth.AccessControlPolicy;
+﻿/// Controllers/UserController.cs
+
+using Amazon.Auth.AccessControlPolicy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,37 @@ namespace trs_web_service.Controllers
                 return Ok(users);
             }catch(Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("getTravelAgents")]
+        public async Task<IActionResult> GetTravelAgents()
+        {
+            try
+            {
+                var users = await _userService.GetTravelAgents();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "nottraveler")]
+        [HttpGet("getTravelers")]
+        public async Task<IActionResult> GetTravelers()
+        {
+            try
+            {
+                var users = await _userService.GetTravelers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
@@ -53,7 +85,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
          
         }
@@ -69,7 +101,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -85,7 +117,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-               return BadRequest(ex);
+               return BadRequest(ex.Message);
             }
             
         }
@@ -101,7 +133,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
           
         }
@@ -117,7 +149,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -133,7 +165,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -149,7 +181,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }

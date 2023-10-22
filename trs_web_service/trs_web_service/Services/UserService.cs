@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson;
+﻿/// Services/UserService.cs
+
+
+using MongoDB.Bson;
 using trs_web_service.Infrastructure;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
@@ -15,6 +18,12 @@ namespace trs_web_service.Services
             _repository = repository;
         }
 
+
+        /// <summary>
+        /// get all users
+        /// </summary>
+        /// <param ></param>
+        /// <returns>UserDto List</returns>
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             List<UserDto> users = new();
@@ -33,11 +42,71 @@ namespace trs_web_service.Services
             return users;
         }
 
+
+        /// <summary>
+        /// get all travel agents
+        /// </summary>
+        /// <param ></param>
+        /// <returns>UserDto List</returns>
+        public async Task<IEnumerable<UserDto>> GetTravelAgents()
+        {
+            List<UserDto> users = new();
+            var userList = await _repository.GetTravelAgents();
+            if (userList != null)
+            {
+                foreach (var user in userList)
+                {
+                    // Convert the ObjectId to the desired format
+                    string formattedId = user.Id.ToString().Substring(0, 24);
+                    UserDto newUser = new(formattedId, user.Name, user.Role, user.NIC, user.ImagePath, user.ContactNo, user.IsActive, user.IsSendActiveStatus, user.Email);
+                    users.Add(newUser);
+                }
+
+            }
+            return users;
+        }
+
+
+        /// <summary>
+        /// get all travelers
+        /// </summary>
+        /// <param ></param>
+        /// <returns>UserDto List</returns>
+        public async Task<IEnumerable<UserDto>> GetTravelers()
+        {
+            List<UserDto> users = new();
+            var userList = await _repository.GetTravelers();
+            if (userList != null)
+            {
+                foreach (var user in userList)
+                {
+                    // Convert the ObjectId to the desired format
+                    string formattedId = user.Id.ToString().Substring(0, 24);
+                    UserDto newUser = new(formattedId, user.Name, user.Role, user.NIC, user.ImagePath, user.ContactNo, user.IsActive, user.IsSendActiveStatus, user.Email);
+                    users.Add(newUser);
+                }
+
+            }
+            return users;
+        }
+
+
+        /// <summary>
+        /// get user by nic
+        /// </summary>
+        /// <param user Nic ></param>
+        /// <returns>User</returns>
         public async Task<User> GetUserByNICAsync(string nic)
         {
             return await _repository.GetByNICAsync(nic);
         }
 
+
+        /// <summary>
+        /// get user by Id
+        /// </summary>
+        /// <param user Id></param>
+        /// <returns>UserDto</returns>
         public async Task<UserDto> GetUserByID(string id)
         {
             if (!ObjectId.TryParse(id, out var objectId))
@@ -59,21 +128,32 @@ namespace trs_web_service.Services
             }
         }
 
+        /// <summary>
+        /// Deactivate user
+        /// </summary>
+        /// <param NIC></param>
+        /// <returns>User</returns>
         public async Task<User> DeactivateUserAsync(string nic)
         {
             if (nic == "00000000V") 
             {
-                throw new Exception("Have not an account");
+                throw new Exception("can not do any operation for super user");
             }
             var exUser = await _repository.GetByNICAsync(nic);
             return exUser == null ? throw new Exception("Have not an account") : await _repository.DeactivateUserAsync(nic);
         }
 
+
+        /// <summary>
+        /// send a active status
+        /// </summary>
+        /// <param Nic></param>
+        /// <returns>User</returns>
         public async Task<User> SendActiveStatusAsync(string nic)
         {
             if (nic == "00000000V")
             {
-                throw new Exception("Have not an account");
+                throw new Exception("can not do any operation for super user");
             }
             var exUser = await _repository.GetByNICAsync(nic);
             if(exUser == null)
@@ -91,6 +171,11 @@ namespace trs_web_service.Services
             return await _repository.SendActiveStatusAsync(nic);
         }
 
+        /// <summary>
+        /// user update
+        /// </summary>
+        /// <param UserUpdateDto and user Id></param>
+        /// <returns>User</returns>
         public async Task<User> UserUpdateProfile(UserUpdateDto user, string id)
         {
 
@@ -103,12 +188,17 @@ namespace trs_web_service.Services
 
             if (info.NIC == "00000000V")
             {
-                throw new Exception("Can not update Super backoffice account");
+                throw new Exception("can not do any operation for super user");
             }
   
             return await _repository.UserUpdateProfile(user, objectId);
         }
 
+        /// <summary>
+        /// Reset Password
+        /// </summary>
+        /// <param password and NIC></param>
+        /// <returns>User</returns>
         public async Task<User> ResetPassword(string password, string id)
         {
 
@@ -121,19 +211,25 @@ namespace trs_web_service.Services
 
             if (info.NIC == "00000000V")
             {
-                throw new Exception("Can not update Super backoffice account");
+                throw new Exception("can not do any operation for super user");
             }
 
             return await _repository.ResetPassword(EncryptPassword(password), objectId);
         }
 
+
+        /// <summary>
+        /// Reset Password
+        /// </summary>
+        /// <param password and NIC></param>
+        /// <returns>User</returns>
         public async Task<User> UpdateUser(UpdateUserDto user)
         {
             var info = await _repository.GetByNICAsync(user.NIC) ?? throw new Exception("Have not an account");
 
             if (info.NIC == "00000000V")
             {
-                throw new Exception("Can not update Super backoffice account");
+                throw new Exception("can not do any operation for super user");
             }
 
             user.Password = EncryptPassword(user.Password);
@@ -143,12 +239,24 @@ namespace trs_web_service.Services
             return await _repository.UpdateUser(user);
         }
 
+
+        /// <summary>
+        /// Activate Use
+        /// </summary>
+        /// <param  NIC></param>
+        /// <returns>User</returns>
         public async Task<User> ActivateUserAsync(string nic)
         {
             var exUser = await _repository.GetByNICAsync(nic);
             return exUser == null ? throw new Exception("Have not an account") : await _repository.ActivateUserAsync(nic);
         }
 
+
+        /// <summary>
+        /// Activate Use
+        /// </summary>
+        /// <param  NIC></param>
+        /// <returns>User</returns>
         public async Task CreateTravelerAsync(UserRegisterDto user)
         {
             var exUser = await _repository.GetByNICAsync(user.NIC);
@@ -175,6 +283,12 @@ namespace trs_web_service.Services
             await _repository.CreateAsync(newUser);
         }
 
+
+        /// <summary>
+        /// create a user
+        /// </summary>
+        /// <param  UserRegisterDto></param>
+        /// <returns></returns>
         public async Task CreateUserAsync(UserRegisterDto user)
         {
             var exUser = await _repository.GetByNICAsync(user.NIC);
@@ -196,6 +310,12 @@ namespace trs_web_service.Services
             await _repository.CreateAsync(newUser);
         }
 
+
+        /// <summary>
+        /// method to encrypt password
+        /// </summary>
+        /// <param  password></param>
+        /// <returns>encrypted password</returns>
         private static string EncryptPassword(string password)
         {
             // Generate a salt for the password hash

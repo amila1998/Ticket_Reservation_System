@@ -1,3 +1,5 @@
+
+// Nodata.js
 import React from "react";
 import no_data_anim from "../assets/no_data.gif";
 

@@ -1,4 +1,7 @@
-﻿using CloudinaryDotNet.Actions;
+﻿/// Services/CloudinaryImageUploadService.cs
+
+
+using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -18,6 +21,11 @@ namespace Sample.UserManagement.Application
             _cloudinary = cloudinary;
         }
 
+        /// <summary>
+        /// Uploads an image to Cloudinary and returns the image URL.
+        /// </summary>
+        /// <param name="imageFile">The image file to upload.</param>
+        /// <returns>The URL of the uploaded image.</returns>
         public async Task<string> UploadImageAsync(IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)
@@ -46,9 +54,15 @@ namespace Sample.UserManagement.Application
 
             return imageUrl;
         }
+
+        /// <summary>
+        /// Validates if the given file name has an allowed image file extension.
+        /// </summary>
+        /// <param name="fileName">The name of the file to validate.</param>
+        /// <returns>True if the file has an allowed image file extension; otherwise, false.</returns>
         private bool IsImageFile(string fileName)
         {
-            // method to validate the file extension or MIME type
+            // Method to validate the file extension or MIME type
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
             var fileExtension = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
             return Array.IndexOf(allowedExtensions, fileExtension) >= 0;

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿/// Controllers/TrainScheduleController.cs
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using trs_web_service.Models.Dtos;
@@ -28,7 +30,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -43,7 +45,7 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -58,7 +60,52 @@ namespace trs_web_service.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "backoffice")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateSchedule(TrainScheduleReqDto req)
+        {
+            try
+            {
+                await _service.UpdateSchedule(req);
+                return Ok("Train Schedule Updated Successfully !");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "backoffice")]
+        [HttpPut ("deleteSchedule")]
+        public async Task<IActionResult> DeleteSchedule(TrainScheduleReqDto req)
+        {
+            try
+            {
+                await _service.DeleteSchedule(req);
+                return Ok("Train Schedule Updated Successfully !");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "backoffice")]
+        [HttpPut("changeCancelStatusInSchedule")]
+        public async Task<IActionResult> ChangeCancelStatusInSchedule(TrainScheduleReqDto req)
+        {
+            try
+            {
+                await _service.ChangeCancelStatusInSchedule(req);
+                return Ok("Train Schedule cancel status updated Successfully !");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

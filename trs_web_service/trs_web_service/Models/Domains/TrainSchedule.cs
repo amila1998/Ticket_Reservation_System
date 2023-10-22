@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson;
+﻿//Models/Domain/TrainSchedule.cs
+
+
+using MongoDB.Bson;
 
 namespace trs_web_service.Models.Domains
 {

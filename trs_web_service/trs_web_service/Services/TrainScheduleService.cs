@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson;
+﻿/// Services/TrainScheduleService.cs
+
+using MongoDB.Bson;
+using System.Text.RegularExpressions;
 using trs_web_service.Infrastructure;
 using trs_web_service.Models.Domains;
 using trs_web_service.Models.Dtos;
@@ -10,19 +13,32 @@ namespace trs_web_service.Services
         private readonly TrainRepository _trainRepository;
         private readonly TrainScheduleRepository _repository;
         private readonly TrainRoutesRepository _routesRepository;
+        private readonly ReservationRepository _reservationRepository;
 
-        public TrainScheduleService(TrainRepository repository, TrainScheduleRepository trainScheduleRepository, TrainRoutesRepository routesRepository)
+        public TrainScheduleService(TrainRepository repository, TrainScheduleRepository trainScheduleRepository, TrainRoutesRepository routesRepository, ReservationRepository reservationRepository)
         {
             _trainRepository = repository;
             _repository = trainScheduleRepository;
             _routesRepository = routesRepository;
+            _reservationRepository = reservationRepository;
         }
+
+        /// <summary>
+        /// create a new schedule for a train
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns></returns>
         public async Task CreateTrainScheduleAsync(TrainScheduleReqDto schedule)
         {
             var exTrain = await _trainRepository.GetByRegistraionNoAsync(schedule.TrainRegistraionNo);
             if (exTrain == null)
             {
                 throw new Exception("There is no train under requested registration number");
+            }
+
+            if (schedule.TrainStops.Count == 0)
+            {
+                throw new Exception("Train Stop stations must be greater than 0");
             }
 
             TrainSchedule newSchedule = new()
@@ -40,6 +56,12 @@ namespace trs_web_service.Services
             await _repository.CreateAsync(newSchedule);
         }
 
+
+        /// <summary>
+        /// get all schedules
+        /// </summary>
+        /// <param ></param>
+        /// <returns><TrainScheduleTravelerResDto</returns>
         public async Task<IEnumerable<TrainScheduleTravelerResDto>> GetAllShedulesAsync()
         {
             List<TrainScheduleTravelerResDto> trainSchedules = new();
@@ -103,6 +125,12 @@ namespace trs_web_service.Services
             return trainSchedules;
         }
 
+
+        /// <summary>
+        /// get all schedules for a train
+        /// </summary>
+        /// <param train registration number></param>
+        /// <returns><TrainScheduleResDto</returns>
         public async Task<IEnumerable<TrainScheduleResDto>> GetAllShedulesForManageAsync(string tRegNo)
         {
             List<TrainScheduleResDto> schedules = new();
@@ -132,7 +160,8 @@ namespace trs_web_service.Services
                             EndTime = schedule.EndTime,
                             TrainClasses = schedule.TrainClasses,
                             CancelDates = schedule.CancelDates,
-  
+                            TrainRouteId = schedule.TrainRouteId,
+
                         };
                         schedules.Add(trainScheduleResDto);
                     }
@@ -141,28 +170,111 @@ namespace trs_web_service.Services
             return schedules;
         }
 
-        public async Task CancelShedule(string id)
+
+        /// <summary>
+        /// update a schedule
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns><</returns>
+        public async Task UpdateSchedule(TrainScheduleReqDto schedule)
         {
-            if (!ObjectId.TryParse(id, out var objectId))
+            var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
+            var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
+            if (schedule.TrainStops.Count == 0)
+            {
+                throw new Exception("Train Stop stations must be greater than 0");
+            }
+                if (reservations.Count > 0)
+            {
+               foreach (var reservation in reservations)
+                {
+                    
+                    foreach(var book in reservation.Bookings)
+                    {
+                        foreach(var cancelDate in schedule.CancelDates)
+                        {
+                            DateTime today = DateTime.Today;
+                            DateTime tempDate = Convert.ToDateTime(cancelDate);
+                            if(today > book.BookingDate && tempDate == book.BookingDate)
+                            {
+                                throw new Exception("There is have up coming booking :"+ book.BookingDate);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!ObjectId.TryParse(schedule.Id, out var objectId))
             {
                 throw new Exception("Invalid ID format");
             }
-            var schedule = await _repository.GetAllByIdAsync(objectId) ?? throw new Exception("No shedule");
-            // TODO: any have bookings
-
-            await _repository.CancelShedule(objectId);
-
+            await _repository.UpdateTrainSchedule(objectId,schedule);
         }
 
-        //public async Task UpdateTrain(TrainReqBodyDto train)
-        //{
-        //    var extrain = await _repository.GetByRegistraionNoAsync(train.RegistraionNo) ?? throw new Exception("No train under this registration number");
-        //    //TODO: should check there is any resevation or shedules
 
-        //    await _repository.UpdateTrain(train);
+        /// <summary>
+        /// change active status in a schedules
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns></returns>
+        public async Task ChangeCancelStatusInSchedule(TrainScheduleReqDto schedule)
+        {
+            var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
+            var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
+            if (reservations.Count > 0)
+            {
+                foreach (var reservation in reservations)
+                {
+                    foreach (var book in reservation.Bookings)
+                    {
+                        foreach (var cancelDate in schedule.CancelDates)
+                        {
+                            DateTime today = DateTime.Today;
+                            DateTime tempDate = Convert.ToDateTime(cancelDate);
+                            if (today > book.BookingDate && tempDate == book.BookingDate)
+                            {
+                                throw new Exception("There is have up coming booking :" + book.BookingDate);
+                            }
+                        }
+                    }
+                }
+            }
+            if (!ObjectId.TryParse(schedule.Id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+            await _repository.CancelShedule(objectId, schedule);
+        }
 
 
-        //}
+        /// <summary>
+        /// delete a schedules
+        /// </summary>
+        /// <param TrainScheduleReqDto></param>
+        /// <returns></returns>
+        public async Task DeleteSchedule(TrainScheduleReqDto schedule)
+        {
+            var exschedule = await _repository.GetBySheduleByTrainRegistraionNoAsync(schedule.TrainRegistraionNo) ?? throw new Exception("No train under this registration number");
+
+            var reservations = await _reservationRepository.GetReservationsByScheduleIdAsync(schedule.Id);
+            if (reservations.Count > 0)
+            {
+                DateTime today = DateTime.Today;
+
+                foreach (var reservation in reservations)
+                {
+                    if (today > reservation.ValidDate)
+                    {
+                        throw new Exception("There are Valid reservations");
+                    }
+                }
+            }
+
+            if (!ObjectId.TryParse(schedule.Id, out var objectId))
+            {
+                throw new Exception("Invalid ID format");
+            }
+            await _repository.DeleteTrainSchedule(objectId);
+        }
 
     }
 }

@@ -1,4 +1,6 @@
-﻿using CloudinaryDotNet.Actions;
+﻿/// Services/CloudinaryImageUploadService.cs
+
+using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +33,7 @@ namespace Sample.UserManagement.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
 
             }
         }
