@@ -68,6 +68,30 @@ namespace trs_web_service.Services
 
 
         /// <summary>
+        /// get all travelers
+        /// </summary>
+        /// <param ></param>
+        /// <returns>UserDto List</returns>
+        public async Task<IEnumerable<UserDto>> GetTravelers()
+        {
+            List<UserDto> users = new();
+            var userList = await _repository.GetTravelers();
+            if (userList != null)
+            {
+                foreach (var user in userList)
+                {
+                    // Convert the ObjectId to the desired format
+                    string formattedId = user.Id.ToString().Substring(0, 24);
+                    UserDto newUser = new(formattedId, user.Name, user.Role, user.NIC, user.ImagePath, user.ContactNo, user.IsActive, user.IsSendActiveStatus, user.Email);
+                    users.Add(newUser);
+                }
+
+            }
+            return users;
+        }
+
+
+        /// <summary>
         /// get user by nic
         /// </summary>
         /// <param user Nic ></param>

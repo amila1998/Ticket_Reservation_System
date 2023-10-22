@@ -119,11 +119,16 @@ namespace trs_web_service.Controllers
 
         [Authorize]
         [HttpGet("getAllReservationsByCreatedBy")]
-        public async Task<IActionResult> GetAllReservationsByCreatedBy(string ownerId)
+        public async Task<IActionResult> GetAllReservationsByCreatedBy()
         {
             try
             {
-                var reservations = await _service.GetAllReservationsByCreatedByAsync(ownerId);
+                // Get the user's identity
+                var userIdentity = User.Identity as ClaimsIdentity;
+
+                // Retrieve the user's ID and role from the claims
+                var userId = userIdentity.FindFirst(ClaimTypes.Name)?.Value;
+                var reservations = await _service.GetAllReservationsByCreatedByAsync(userId);
                 return Ok(reservations);
             }
             catch (Exception ex)

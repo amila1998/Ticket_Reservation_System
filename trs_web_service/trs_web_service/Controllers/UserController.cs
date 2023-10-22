@@ -56,6 +56,21 @@ namespace trs_web_service.Controllers
         }
 
         [Authorize(Policy = "nottraveler")]
+        [HttpGet("getTravelers")]
+        public async Task<IActionResult> GetTravelers()
+        {
+            try
+            {
+                var users = await _userService.GetTravelers();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "nottraveler")]
         [HttpGet("{nic}")]
         public async Task<IActionResult> GetUserByNIC(string nic)
         {
