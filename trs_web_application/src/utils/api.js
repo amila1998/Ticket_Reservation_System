@@ -26,6 +26,7 @@ export const UserManagementAPI = {
   user_update: "/api/User/update_user", // Endpoint for updating user details
   user_activate_request: "/api/User/request_active_account", // Endpoint for requesting activation
   deactivate_user: "/api/User/deactivate", // Endpoint for deactivating a user
+  getTravelers: "/api/User/getTravelers" , // Endpoint for retrieving travelers
 };
 
 // Define the Train Routes Management API endpoints

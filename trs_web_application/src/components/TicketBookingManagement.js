@@ -7,12 +7,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ticket_icon from "../assets/icons/ticket-solid.svg";
 import edit_icon from "../assets/icons/pen-to-square-solid.svg";
+import plus_icon from "../assets/icons/plus-solid.svg";
 import delete_icon from "../assets/icons/trash-solid.svg";
-import go_back_icon from "../assets/icons/arrow-left-long.svg";
 import { useSelector } from "react-redux";
 import { getAxiosInstance } from "../utils/axios";
-import { RequestManagementAPI, ReservationManagementAPI } from "../utils/api";
-
+import {
+  RequestManagementAPI,
+  ReservationManagementAPI,
+  UserManagementAPI,
+} from "../utils/api";
+import Select from "react-select";
+import Spinner from "../utils/Spinner";
 
 const TicketBookingManagement = () => {
   const token = useSelector((state) => state.auth.token);
@@ -29,7 +34,9 @@ const TicketBookingManagement = () => {
   const [callback, setCallback] = useState(true);
   const [callbackR, setCallbackR] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
-  const [isShowAllBookingRequests, setIsShowAllBookingRequests] =useState(true);
+  const [isResEdit, setIsResEdit] = useState(false);
+  const [isShowAllBookingRequests, setIsShowAllBookingRequests] =
+    useState(true);
   const [reservation, setReservation] = useState({
     createdAt: "",
     bookings: [],
@@ -37,20 +44,23 @@ const TicketBookingManagement = () => {
     totalPrice: 0,
   });
 
-  const [isNewReservation,setIsNewReservation]=useState(true)
-
-
+  const [travelers, setTravelers] = useState([]);
+  console.log(
+    "🚀 ~ file: TicketBookingManagement.js:48 ~ TicketBookingManagement ~ travelers:",
+    travelers
+  );
+  const [travelersOptions, setTravelersOptions] = useState([]);
+  const [travelersOptionsSelect, setTravelersOptionsSelect] = useState("");
+  const [loadingBtn, setLoadingBtn] = useState(false);
+  const [isNewReservation, setIsNewReservation] = useState(true);
 
   const getAllReservationsByCreatedBy = async () => {
     try {
       setIsLoading(true);
       const path = ReservationManagementAPI.getAllReservationsByCreatedBy;
-      const res = await getAxiosInstance().get(
-        path + "?ownerId=" + "6517cb823f5bb25d602e4cd8",
-        {
-          headers: { Authorization: `bearer ${token}` },
-        }
-      );
+      const res = await getAxiosInstance().get(path, {
+        headers: { Authorization: `bearer ${token}` },
+      });
       setReservations(res.data);
       console.log(
         "🚀 ~ file: TicketBookingManagement.js:39 ~ getAllReservationsByCreatedBy ~ res.data:",
@@ -80,7 +90,7 @@ const TicketBookingManagement = () => {
   };
 
   useEffect(() => {
-    callback && getAllReservationsByCreatedBy();
+    callback && getAllReservationsByCreatedBy() && getTravelers();
     setCallback(false);
   }, [callback]);
 
@@ -99,69 +109,145 @@ const TicketBookingManagement = () => {
     setReservations(ReservationList);
   }, [filterTraveller]);
 
-
   //Requests
 
-  const getAllRequests =async()=>{
+  const getAllRequests = async () => {
     try {
-      setIsRLoading(true)
+      setIsRLoading(true);
       const path = RequestManagementAPI.getAllRequests;
-      const res = await getAxiosInstance().get(
-        path,
+      const res = await getAxiosInstance().get(path, {
+        headers: { Authorization: `bearer ${token}` },
+      });
+      setBookingRequests(res.data);
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: TicketBookingManagement.js:94 ~ getAllRequests ~ error:",
+        error
+      );
+    } finally {
+      setIsRLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    callbackR && getAllRequests();
+    setCallbackR(false);
+  }, [callbackR]);
+
+  const handleRequest = async (data) => {
+    setBookingReqDetail(data);
+  };
+
+  const handleCreateModalClose = () => {
+    setBookingReqDetail("");
+  };
+
+  const getTravelers = async () => {
+    try {
+      const res = await getAxiosInstance().get(UserManagementAPI.getTravelers, {
+        headers: { Authorization: `bearer ${token}` },
+      });
+      if (res.data.length > 0) {
+        setTravelers(res.data);
+        let travelers = [];
+        for (const t of res.data) {
+          const traveler = {
+            ...t,
+            label: t.name + " - " + t.nic,
+            value: t.id,
+          };
+          travelers.push(traveler);
+        }
+        setTravelersOptions(travelers);
+        setTravelersOptionsSelect(travelers);
+      }
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: TrainManagement.js:291 ~ getAllTrainRoutes ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+  const updateReservation = async () => {
+    try {
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: TicketBookingManagement.js:131 ~ updateReservation ~ error:",
+        error
+      );
+    }
+  };
+
+  const createReservation = async () => {
+    try {
+      const res = await getAxiosInstance().post(
+        ReservationManagementAPI.create,
+        reservation,
         {
           headers: { Authorization: `bearer ${token}` },
         }
       );
-      setBookingRequests(res.data);
+      toast.success("Reservation successfully created !", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleCreateModalClose2();
+      setCallback(true);
     } catch (error) {
-      console.log("🚀 ~ file: TicketBookingManagement.js:94 ~ getAllRequests ~ error:", error)
-
-    }finally{
-      setIsRLoading(false);
+      console.log(
+        "🚀 ~ file: TicketBookingManagement.js:141 ~ createReservation ~ error:",
+        error
+      );
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
+  };
 
-  }
-
-  useEffect(() => {
-    callbackR && getAllRequests();
-    setCallbackR(false)
-  }, [callbackR]);
-
-  const handleRequest=async(data)=>{
-    setBookingReqDetail(data)
-  }
-
-  const handleCreateModalClose=()=>{
-     setBookingReqDetail('');
-  }
-
-  const updateReservation = async()=>{
+  const deleteReservation = async () => {
     try {
-      
     } catch (error) {
-      console.log("🚀 ~ file: TicketBookingManagement.js:131 ~ updateReservation ~ error:", error)
-      
+      console.log(
+        "🚀 ~ file: TicketBookingManagement.js:150 ~ deleteReservation ~ error:",
+        error
+      );
     }
-    
-  }
-
-  const createReservation = async()=>{
-    try {
-      
-    } catch (error) {
-      console.log("🚀 ~ file: TicketBookingManagement.js:141 ~ createReservation ~ error:", error)
-      
-    }
-  }
-
-  const deleteReservation = async()=>{
-    try {
-      
-    } catch (error) {
-      console.log("🚀 ~ file: TicketBookingManagement.js:150 ~ deleteReservation ~ error:", error)
-      
-    }
-  }
+  };
+  const handleCreateModalClose2 = () => {
+    setReservation({
+      createdAt: "",
+      bookings: [],
+      ownerId: "0",
+      totalPrice: 0,
+    });
+    setTravelers([]);
+    setTravelersOptions([]);
+    setTravelersOptionsSelect("");
+    setIsResEdit(false);
+  };
 
   return (
     <>
@@ -181,6 +267,111 @@ const TicketBookingManagement = () => {
         <div style={{ display: "flex", alignItems: "baseline" }}>
           <img width={25} src={ticket_icon} />
           <h5 style={{ marginLeft: "10px" }}>Ticket Booking Management</h5>
+        </div>
+        <div
+          className="modal fade"
+          id="exampleModalCenter3"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div
+              style={{
+                borderRadius: "10px",
+                backgroundColor: "#ffff",
+                border: "none",
+                color: "#0000 !important",
+              }}
+              className="modal-content"
+            >
+              <div className="modal-header">
+                <h5
+                  style={{ color: "black" }}
+                  className="modal-title"
+                  id="exampleModalLongTitle"
+                >
+                  {isResEdit ? "Edit Reservation" : "Create New Reservation"}
+                </h5>
+                <button
+                  style={{
+                    borderRadius: "50px",
+                    backgroundColor: "red",
+                    border: "none",
+                    color: "#ffff",
+                  }}
+                  type="button"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick={handleCreateModalClose2}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div style={{ color: "black" }} className="modal-body">
+                <form>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="exampleFormControlInput22c22"
+                      className="form-label"
+                    >
+                      Select Traveler
+                    </label>
+                    <Select
+                      id="Traveler"
+                      options={travelersOptions}
+                      value={travelersOptionsSelect}
+                      onChange={(e) => {
+                        setTravelersOptionsSelect(e);
+                      }}
+                      placeholder="Search for a traveler..."
+                      isSearchable={true}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="exampleFormControlInput22c22"
+                      className="form-label"
+                    >
+                      Bookings
+                    </label>
+                    <Select
+                      id="Traveler"
+                      options={travelersOptions}
+                      value={travelersOptionsSelect}
+                      onChange={(e) => {
+                        setTravelersOptionsSelect(e);
+                      }}
+                      placeholder="Search for a traveler..."
+                      isSearchable={true}
+                    />
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  onClick={handleCreateModalClose2}
+                  disabled={loadingBtn}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-dismiss="modal"
+                  disabled={loadingBtn}
+                  //onClick={isResEdit ? updateTrainShedule : createTrainShedule}
+                >
+                  {loadingBtn && <Spinner />}
+                  {isResEdit ? "Update" : "Create"}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           className="modal fade"
@@ -429,6 +620,35 @@ const TicketBookingManagement = () => {
                         />
                       </div>
                     </div>
+                    {auth.role == "travel_agent" && (
+                      <div
+                        style={{
+                          cursor: "pointer",
+                          float: "right",
+                          borderRadius: "50px",
+                          justifyContent: "center",
+                          backgroundColor: "rgb(0, 163, 44)",
+                          alignItems: "center",
+                          marginRight: "20px",
+                        }}
+                        data-toggle="modal"
+                        data-target="#exampleModalCenter3"
+                      >
+                        <div
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Create train"
+                        >
+                          <center>
+                            <img
+                              style={{ margin: "10px" }}
+                              width={25}
+                              src={plus_icon}
+                            />
+                          </center>
+                        </div>
+                      </div>
+                    )}
                     {reservations.length > 0 ? (
                       <div style={{ padding: "10px", overflow: "auto" }}>
                         <table className="table table-striped table-hover table align-middle">
