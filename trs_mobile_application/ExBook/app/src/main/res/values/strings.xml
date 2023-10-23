@@ -39,4 +39,7 @@
     <string name="book_now">Book Now</string>
     <string name="request_agent">Request Agent</string>
     <string name="booking_hint">Enter number of tickets</string>
+    <string name="book_train">Book Train</string>
+    <string name="update">Update</string>
+    <string name="forget_password">Forget Password</string>
 </resources>

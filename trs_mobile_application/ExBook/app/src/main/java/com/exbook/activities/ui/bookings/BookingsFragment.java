@@ -19,10 +19,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.exbook.R;
+import com.exbook.activities.BookingActivity;
 import com.exbook.databinding.FragmentBookingsBinding;
 import com.exbook.db.SharedPreferenceHelper;
 import com.exbook.models.TrainScheduleAdapter;
 import com.exbook.models.TrainScheduleModel;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.exbook.constants.Config.BASE_URL;
+import static com.exbook.constants.Config.BOOKINGS_ENDPOINT;
+import static com.exbook.constants.Config.GET_MY_BOOKINGS_ENDPOINT;
 import static com.exbook.constants.Config.TRAINSCHEDULE_ENDPOINT;
 
 
@@ -63,7 +67,7 @@ getMyBookings();
     }
 
     public void getMyBookings(){
-        String url = BASE_URL + TRAINSCHEDULE_ENDPOINT;
+        String url = BASE_URL + GET_MY_BOOKINGS_ENDPOINT + "/" +  SharedPreferenceHelper.getInstance(getActivity()).getUserId();;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
@@ -73,15 +77,19 @@ getMyBookings();
                 for(int i=0;i<response.length();i++){
                     try {
                         JSONObject object = response.getJSONObject(i);
-                        JSONObject trainForTraver = object.getJSONObject("trainForTraver");
-                        String trainId = trainForTraver.getString("id");
+                        System.out.println(object);
+                        JSONArray bookingsArray = object.getJSONArray("bookings");
+                        for(int k=0;k<bookingsArray.length();k++){
+                            JSONObject bookingObject = bookingsArray.getJSONObject(k);
+                            JSONObject trainForTraver = bookingObject.getJSONObject("trainDetails");
+                            String trainId = trainForTraver.getString("id");
 
-                        String trainName = trainForTraver.getString("name");
-                        String registrationNo = trainForTraver.getString("registraionNo");
-                        String imagePath = trainForTraver.getString("imagePath");
-                        JSONArray schedulesArray = object.getJSONArray("schedulesForTraveler");
-                        for (int j = 0; j < schedulesArray.length(); j++) {
-                            JSONObject scheduleObject = schedulesArray.getJSONObject(j);
+                            String trainName = trainForTraver.getString("name");
+                            String registrationNo = trainForTraver.getString("registraionNo");
+                            String imagePath = trainForTraver.getString("imagePath");
+
+                            JSONObject scheduleObject = bookingObject.getJSONObject("scheduleDetails");
+
 
                             String scheduleId = scheduleObject.getString("id");
                             int dayType = scheduleObject.getInt("dayType");
@@ -97,8 +105,8 @@ getMyBookings();
                             // Extract fields from the "trainStops" array
                             JSONArray trainStopsArray = scheduleObject.getJSONArray("trainStops");
                             boolean isAvailable = false;
-                            for (int k = 0; k < trainStopsArray.length(); k++) {
-                                JSONObject trainStopObject = trainStopsArray.getJSONObject(k);
+                            for (int m = 0; m < trainStopsArray.length(); m++) {
+                                JSONObject trainStopObject = trainStopsArray.getJSONObject(m);
                                 JSONObject trainStop = trainStopObject.getJSONObject("trainStop");
                                 String trainStopName = trainStop.getString("name");
                                 int trainStopOrder = trainStop.getInt("order");
@@ -113,6 +121,43 @@ getMyBookings();
 
 
                             }
+              //          }
+
+
+ //                       JSONArray schedulesArray = object.getJSONArray("schedulesForTraveler");
+//                        for (int j = 0; j < schedulesArray.length(); j++) {
+//                            JSONObject scheduleObject = schedulesArray.getJSONObject(j);
+
+//                            String scheduleId = scheduleObject.getString("id");
+//                            int dayType = scheduleObject.getInt("dayType");
+//                            String startStation = scheduleObject.getString("startStation");
+//                            String endStation = scheduleObject.getString("endStation");
+//                            String startTime = scheduleObject.getString("startTime");
+//                            String endTime = scheduleObject.getString("endTime");
+//                            boolean isCancelledToday = scheduleObject.getBoolean("isCancelledToday");
+//                            int speed = scheduleObject.getInt("speed");
+//
+//
+//
+//                            // Extract fields from the "trainStops" array
+//                            JSONArray trainStopsArray = scheduleObject.getJSONArray("trainStops");
+//                            boolean isAvailable = false;
+//                            for (int k = 0; k < trainStopsArray.length(); k++) {
+//                                JSONObject trainStopObject = trainStopsArray.getJSONObject(k);
+//                                JSONObject trainStop = trainStopObject.getJSONObject("trainStop");
+//                                String trainStopName = trainStop.getString("name");
+//                                int trainStopOrder = trainStop.getInt("order");
+//                                String navTime = trainStopObject.getString("navTime");
+//
+//                                // Now you can use the extracted data as needed
+//                                // For example, you can print it or store it in data structures
+//                                System.out.println("Train ID: " + trainId);
+//                                System.out.println("Train Name: " + trainName);
+//
+//
+//
+//
+//                            }
 
                                 TrainScheduleModel model1 = new TrainScheduleModel( trainName, "Colombo", "Badulla", startTime,endTime,imagePath);
 

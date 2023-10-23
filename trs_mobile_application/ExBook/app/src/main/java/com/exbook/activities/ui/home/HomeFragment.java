@@ -35,6 +35,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.exbook.R;
 import com.exbook.activities.BookingActivity;
+import com.exbook.activities.SplashActivity;
 import com.exbook.databinding.FragmentHomeBinding;
 import com.exbook.db.SharedPreferenceHelper;
 import com.exbook.models.TrainScheduleAdapter;
@@ -71,6 +72,7 @@ public class HomeFragment extends Fragment {
     List<String> FROM_ARRAY = new ArrayList<>();
     List<String> TO_ARRAY = new ArrayList<>();
     List<String> NAME_ARRAY = new ArrayList<>();
+    List<String> DATE_ARRAY = new ArrayList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -79,6 +81,8 @@ public class HomeFragment extends Fragment {
 
         context = getContext();
         trainScheduleAdapter = new TrainScheduleAdapter(getActivity(), R.layout.t_list_item);
+        String token = SharedPreferenceHelper.getInstance(getActivity()).getToken();
+        System.out.println("Token "+token);
 
 
 
@@ -177,17 +181,19 @@ public class HomeFragment extends Fragment {
     public void getSchedule(String from,String to) {
         String url = BASE_URL + TRAINSCHEDULE_ENDPOINT;
 
+
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 System.out.println(response);
+
 
                 for(int i=0;i<response.length();i++){
                     try {
                         JSONObject object = response.getJSONObject(i);
                         JSONObject trainForTraver = object.getJSONObject("trainForTraver");
                         String trainId = trainForTraver.getString("id");
-                        ID_ARRAY.add(trainId);
+
 
                         String trainName = trainForTraver.getString("name");
                         NAME_ARRAY.add(trainName);
@@ -198,6 +204,7 @@ public class HomeFragment extends Fragment {
                             JSONObject scheduleObject = schedulesArray.getJSONObject(j);
 
                             String scheduleId = scheduleObject.getString("id");
+                            ID_ARRAY.add(scheduleId);
                             int dayType = scheduleObject.getInt("dayType");
                             String startStation = scheduleObject.getString("startStation");
                             String endStation = scheduleObject.getString("endStation");
@@ -239,6 +246,7 @@ public class HomeFragment extends Fragment {
                                 TrainScheduleModel model1 = new TrainScheduleModel( trainName, from, to, startTime,endTime,imagePath);
                                 trainScheduleAdapter.add(model1);
                                 listView.setAdapter(trainScheduleAdapter);
+                                trainScheduleAdapter.notifyDataSetChanged();
                             }
                         }
                     } catch (JSONException e) {

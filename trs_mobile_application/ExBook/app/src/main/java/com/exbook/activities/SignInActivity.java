@@ -22,7 +22,7 @@ public class SignInActivity extends AppCompatActivity {
 EditText nic,password;
 Button signIn_btn;
 Common common;
-TextView newAccount;
+TextView newAccount,forgetPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +31,15 @@ TextView newAccount;
         password = (EditText) findViewById(R.id.password);
         signIn_btn = (Button) findViewById(R.id.btn_signIn);
         newAccount = (TextView) findViewById(R.id.create_new_account_txt);
+        forgetPass = (TextView) findViewById(R.id.forget_password);
         common = Common.getInstance(SignInActivity.this);
 
         signIn_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(common.validate_password(password.getText().toString()) && common.validate_nic(nic.getText().toString())){
-                    //login(nic.getText().toString(),password.getText().toString());
-                    login("981710788V","123456");
+                    login(nic.getText().toString(),password.getText().toString());
+                    //login("981710788V","123456");
                 }else{
                     //show alert
                 }
@@ -48,6 +49,14 @@ TextView newAccount;
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SignInActivity.this,SignUpActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        forgetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SignInActivity.this,PasswordRecoveryActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -66,6 +75,7 @@ TextView newAccount;
             @Override
             public void onSuccess(String response) {
                 IResponse.super.onSuccess(response);
+                System.out.println("Login Success!");
                 JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
                 String token = jsonObject.get("token").getAsString();
                 System.out.println("Token: " + token);
@@ -79,9 +89,13 @@ TextView newAccount;
                         System.out.println("USER DETAILS " + response);
                         JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
                         String isSendActiveStatus = jsonObject.get("isSendActiveStatus").getAsString();
+                        String Id = jsonObject.get("id").getAsString();
+                        SharedPreferenceHelper.getInstance(SignInActivity.this).saveUserId(Id);
+                        System.out.println(Id);
                         String isActive = jsonObject.get("isActive").getAsString();
                         if (isActive == "true") {
                             Intent i = new Intent(SignInActivity.this, MainActivity.class);
+
                             startActivity(i);
                             finish();
                         } else {

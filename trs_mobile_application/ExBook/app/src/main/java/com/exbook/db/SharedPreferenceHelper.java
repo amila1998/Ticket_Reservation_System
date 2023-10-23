@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import static com.exbook.constants.Config.MyPREFERENCES;
 import static com.exbook.constants.Config.NIC;
 import static com.exbook.constants.Config.TokenKey;
+import static com.exbook.constants.Config.USERID;
+import static com.exbook.constants.Config.USERNAME;
 
 /**
  * Helper class for all sharedPreference usages
@@ -73,6 +75,24 @@ public class SharedPreferenceHelper {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.remove(TokenKey);
         editor.apply();
+    }
+    public void saveUserId(String userId){
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(USERID, userId);
+        editor.apply();
+    }
+    public String getUserId(){
+        String userid  = sharedpreferences.getString(USERID,null);
+        return userid;
+    }
+    public void saveUsername(String userName){
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(USERNAME, userName);
+        editor.apply();
+    }
+    public String getUserName(){
+        String userid  = sharedpreferences.getString(USERNAME,null);
+        return userid;
     }
 
 }
