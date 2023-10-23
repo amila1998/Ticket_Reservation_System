@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
+    android:background="@drawable/gradient_background"
     tools:context=".activities.SignInActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,6 +52,17 @@
                 android:text="@string/sign_in_button">
 
             </Button>
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/forget_password"
+                android:layout_height="wrap_content"
+                android:text="@string/forget_password"
+                android:textColor="@color/design_default_color_primary_dark"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                />
             <TextView
                 android:layout_width="match_parent"
                 android:id="@+id/create_new_account_txt"

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
 import com.exbook.R;
 import com.exbook.activities.CommonMessageActivity;
+import com.exbook.activities.EditProfileActivity;
 import com.exbook.activities.SignInActivity;
 import com.exbook.activities.SplashActivity;
 import com.exbook.databinding.FragmentProfileBinding;
@@ -40,6 +41,7 @@ public class ProfileFragment extends Fragment {
     TextView nametxt,emailtxt,nictxt,contactNumbertxt;
     ImageView profile_img;
     Button logOut,deactivate,editProfile;
+    String uname,ucontact,uimg_path;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -59,6 +61,16 @@ public class ProfileFragment extends Fragment {
           LottieLoading();
           getUserDetails();
         //profile_img.setImageResource(R.drawable.logo);
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getActivity(), EditProfileActivity.class);
+                in.putExtra("name",uname);
+                in.putExtra("contact",ucontact);
+                in.putExtra("imagePath",uimg_path);
+                startActivity(in);
+            }
+        });
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +131,9 @@ public class ProfileFragment extends Fragment {
                 String nic = jsonObject.get("nic").getAsString();
                 String image = jsonObject.get("imagePath").getAsString();
                 String contact = jsonObject.get("contactNo").getAsString();
+                uname = name;
+                ucontact = contact;
+                uimg_path = image;
                 nametxt.setText(name);
                 emailtxt.setText(email);
                 nictxt.setText(nic);
