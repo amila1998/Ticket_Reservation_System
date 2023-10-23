@@ -18,6 +18,24 @@ import {
 } from "../utils/api";
 import Select from "react-select";
 import Spinner from "../utils/Spinner";
+const initialData = {
+  createdAt: "2023-10-23T16:42:52.742Z",
+  bookings: [
+    {
+      id: "0",
+      createdAt: "2023-10-23T16:42:52.742Z",
+      createdBy: "",
+      scheduleId: "6522ece0284f6e94ce47b4d7",
+      pickStation: "Colombo Fort, Western Province",
+      dropStation: "Badulla, Uva Province",
+      bookingDate: "2023-10-23T16:42:52.742Z",
+      ticketCount: 2,
+      ticketPrice: 100,
+    },
+  ],
+  ownerId: "",
+  totalPrice: 200,
+};
 
 const TicketBookingManagement = () => {
   const token = useSelector((state) => state.auth.token);
@@ -53,7 +71,26 @@ const TicketBookingManagement = () => {
   const [travelersOptionsSelect, setTravelersOptionsSelect] = useState("");
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [isNewReservation, setIsNewReservation] = useState(true);
+  const [addReservation, setAddReservation] = useState({
+    createdAt: new Date().toISOString(),
+    bookings: [],
+    ownerId: "",
+    totalPrice: 0,
+  });
+  console.log("🚀 ~ file: TicketBookingManagement.js:75 ~ TicketBookingManagement ~ addReservation:", addReservation)
 
+// const addReservationHandler = (e) => {
+//   setAddReservation({
+//     ...addReservation,
+//    ["ownerId"]: travelersOptionsSelect.id,
+//   });
+//   };
+//     const handleBookingFieldChange = (bookingIndex, field, value) => {
+//       const updatedBookings = [...addReservation.bookings];
+//       updatedBookings[bookingIndex]["createdBy"] = auth.id;
+//       updatedBookings[bookingIndex][field] = value;
+//       setAddReservation({ ...addReservation, bookings: updatedBookings });
+//     };
   const getAllReservationsByCreatedBy = async () => {
     try {
       setIsLoading(true);
@@ -324,6 +361,7 @@ const TicketBookingManagement = () => {
                       value={travelersOptionsSelect}
                       onChange={(e) => {
                         setTravelersOptionsSelect(e);
+                        // addReservationHandler(e);
                       }}
                       placeholder="Search for a traveler..."
                       isSearchable={true}
