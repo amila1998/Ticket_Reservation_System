@@ -52,7 +52,7 @@ export const TrainsManagementAPI = {
 export const TrainScheduleManagementAPI = {
   getSchedules: "/api/TrainSchedule", // Endpoint for retrieving train schedules
   create: "/api/TrainSchedule", // Endpoint for creating a new train schedule
-  update: "", // Endpoint for updating a train schedule (Endpoint needs to be specified)
+  update: "/api/TrainSchedule", // Endpoint for updating a train schedule (Endpoint needs to be specified)
   cancel: "", // Endpoint for canceling a train schedule (Endpoint needs to be specified)
 };
 

@@ -544,7 +544,44 @@ const TrainManagement = () => {
       });
     }
   };
-  const updateTrainShedule = async () => {};
+
+  const updateTrainShedule = async () => {
+    try {
+      const res = await getAxiosInstance().put(
+        TrainScheduleManagementAPI.update,
+        schedule,
+        {
+          headers: { Authorization: `bearer ${token}` },
+        }
+      );
+      toast.success("Schedule successfully updated !", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleCreateModalClose2();
+      setSCallback(true);
+    } catch (error) {
+      console.log("🚀 ~ file: TrainManagement.js:570 ~ updateTrainShedule ~ error:", error)
+      
+      toast.error(error.response ? error.response.data : error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   const handleCreateModalClose2 = () => {
     setSchedule({
       id: "0",
@@ -1202,7 +1239,7 @@ const TrainManagement = () => {
                                   }}
                                   data-toggle="tooltip"
                                   data-placement="bottom"
-                                  title="Edit user"
+                                  title="Edit Train"
                                 >
                                   <div
                                     data-toggle="modal"
@@ -1582,7 +1619,7 @@ const TrainManagement = () => {
                       }
                     >
                       {loadingBtn && <Spinner />}
-                      {isEdit ? "Update" : "Create"}
+                      {isSEdit ? "Update" : "Create"}
                     </button>
                   </div>
                 </div>
