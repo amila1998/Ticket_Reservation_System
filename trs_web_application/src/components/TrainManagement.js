@@ -265,7 +265,7 @@ const TrainManagement = () => {
           headers: { Authorization: `bearer ${token}` },
         }
       );
-      toast.success("Train created successfully", {
+      toast.success("Train Activated successfully", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -1122,15 +1122,15 @@ const TrainManagement = () => {
                               data-placement="bottom"
                               title={
                                 u.isActive
-                                  ? "Deactivate train"
-                                  : "Activate train"
+                                  ? "Activate train"
+                                  : "Deactivate train"
                               }
                             >
                               <center>
                                 <img
                                   style={{ margin: "10px" }}
                                   width={10}
-                                  src={u.isActive ? wrong_icon : correct_icon}
+                                  src={u.isActive ? correct_icon : wrong_icon}
                                 />
                               </center>
                             </div>
@@ -1202,7 +1202,7 @@ const TrainManagement = () => {
                                   }}
                                   data-toggle="tooltip"
                                   data-placement="bottom"
-                                  title="Edit user"
+                                  title="Edit Train"
                                 >
                                   <div
                                     data-toggle="modal"
